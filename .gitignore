@@ -1,0 +1,15 @@
+# Datasets (re-download with src/download_data.py + prep scripts)
+data/
+
+# Friend's repo (separate git repo, github.com/na23b068-svg/De-water)
+external/
+
+# Large outputs: model checkpoints and saved image arrays (some >100 MB, over GitHub's limit)
+*.pt
+*.npz
+
+# Python / editor
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.vscode/

@@ -1,0 +1,10 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/train-00000-of-00157-5cc7c41b0cc9e4f4.parquet
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/train-00026-of-00157-15b6fd5bc61d2527.parquet
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/train-00052-of-00157-20296c4097ad25e9.parquet
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/train-00078-of-00157-4449e7ba9e76f0fd.parquet
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/train-00104-of-00157-8983be932ccac8fc.parquet
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/train-00130-of-00157-f894a3a6bd4f90b9.parquet
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/validation-00000-of-00003-0c667cfcd871aca4.parquet
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/validation-00001-of-00003-5f08f98440587ee9.parquet
+ok /home/aarav-patel/oe5510/final_project/data/nyu/data/validation-00002-of-00003-2d5e2542eae4a0c6.parquet
