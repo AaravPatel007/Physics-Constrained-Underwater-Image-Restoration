@@ -49,7 +49,7 @@ def predict(net, I, z):
     return p, restore(I, z, p)
 
 
-def seathru(net):
+def seathru(net, unet=None, tag=""):
     d = np.load(ROOT / "data" / "seathru_small.npz")
     cl = np.load(ROOT / "results" / "seathru_classical_real.npz")
     names = list(d["names"])
@@ -72,16 +72,23 @@ def seathru(net):
             # Sea-thru's own recipe: remove water along the line of sight, then gray-world for the illuminant
             Jw = gray_world(remove_water(I, t(z[..., None]), p).clamp(0, 1.5))
             outs[f"BetaNet + gray-world [{dn}]"] = Jw[0].permute(1, 2, 0).cpu().numpy()
+        if unet is not None:
+            H, W = I.shape[-2:]
+            pad = (0, -W % 8, 0, -H % 8)  # UNet needs sides divisible by 8
+            with torch.no_grad():
+                Ju = unet(torch.nn.functional.pad(I, pad, mode="reflect"),
+                          torch.nn.functional.pad(t(gt[..., None]), pad, mode="reflect"))[..., :H, :W]
+            outs["UNet (black box, SfM range)"] = Ju[0].permute(1, 2, 0).cpu().numpy()
         res["frames"][name] = frame
         images[name] = outs
         if name in CHARTS:
             res["chart"][name] = {m: chart_error(o, CHARTS[name]) for m, o in outs.items()}
-    np.savez_compressed(ROOT / "results" / "real_seathru_outputs.npz",
+    np.savez_compressed(ROOT / "results" / f"real_seathru_outputs{tag}.npz",
                         **{f"{n}|{m}": o.astype(np.float16) for n, outs in images.items() for m, o in outs.items()})
     return res
 
 
-def uieb(net, unet=None, n=90):
+def uieb(net, unet=None, n=90, tag=""):
     f = sorted((ROOT / "data" / "uieb" / "data").glob("val-*.parquet"))[0]
     rows = pq.read_table(f).to_pylist()[:n]
     raws, refs = [], []
@@ -116,18 +123,23 @@ def uieb(net, unet=None, n=90):
             if i < 8:
                 keep[f"{i}|reference"] = ref.astype(np.float16)
                 keep[f"{i}|depth"] = z.astype(np.float16)
-    np.savez_compressed(ROOT / "results" / "uieb_outputs.npz", **keep)
+    np.savez_compressed(ROOT / "results" / f"uieb_outputs{tag}.npz", **keep)
     summ = {m: {k: float(np.mean(v)) for k, v in d.items()} for m, d in res.items() if m != "coefs"}
     return {"summary": summ, "per_image": res}
 
 
 if __name__ == "__main__":
-    net, _ = load("beta_rgbd")
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ckpt", default="beta_rgbd")
+    ap.add_argument("--tag", default="", help="suffix for the output files, e.g. _ft (default: the main results)")
+    a = ap.parse_args()
+    net, _ = load(a.ckpt)
     unet = load("unet_rgbd")[0] if (ROOT / "results/unet_rgbd/best.pt").exists() else None
-    out = {"seathru": seathru(net)}
+    out = {"seathru": seathru(net, unet, a.tag)}
     if (ROOT / "data" / "uieb" / "data").exists():
-        out["uieb"] = uieb(net, unet)
-    json.dump(out, open(ROOT / "results" / "real_eval.json", "w"), indent=1)
+        out["uieb"] = uieb(net, unet, tag=a.tag)
+    json.dump(out, open(ROOT / "results" / f"real_eval{a.tag}.json", "w"), indent=1)
     print(json.dumps(out["seathru"]["chart"], indent=1))
     if "uieb" in out:
         print(json.dumps(out["uieb"]["summary"], indent=1))

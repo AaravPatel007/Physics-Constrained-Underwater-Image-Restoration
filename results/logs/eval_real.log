@@ -1,0 +1,60 @@
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 11230.52it/s]
+{
+ "D1/T_S03272": {
+  "raw": 29.449219637358016,
+  "gray-world": 8.869735841007985,
+  "Sea-thru (classical, SfM range)": 15.685087419009319,
+  "BetaNet [SfM range]": 15.761562518759801,
+  "BetaNet + gray-world [SfM range]": 11.813892162466127,
+  "BetaNet [DAv2 (no anchor)]": 17.851887988217467,
+  "BetaNet + gray-world [DAv2 (no anchor)]": 14.947109422751302,
+  "BetaNet [DAv2 + 1 range reading]": 16.131148815882437,
+  "BetaNet + gray-world [DAv2 + 1 range reading]": 12.149299644337503
+ },
+ "D1/T_S03425": {
+  "raw": 29.393426517408034,
+  "gray-world": 8.05449731130341,
+  "Sea-thru (classical, SfM range)": 16.637404809183845,
+  "BetaNet [SfM range]": 17.010243339254824,
+  "BetaNet + gray-world [SfM range]": 11.07872071401889,
+  "BetaNet [DAv2 (no anchor)]": 17.50513871698732,
+  "BetaNet + gray-world [DAv2 (no anchor)]": 13.762827369091406,
+  "BetaNet [DAv2 + 1 range reading]": 16.8401939631443,
+  "BetaNet + gray-world [DAv2 + 1 range reading]": 10.918558379751419
+ }
+}
+{
+ "raw": {
+  "psnr": 16.442222864728326,
+  "ssim": 0.7394956970165012,
+  "de2000": 17.512162227889625,
+  "uciqe": 0.3125072941184044
+ },
+ "gray-world": {
+  "psnr": 17.72124158624609,
+  "ssim": 0.7637449155745794,
+  "de2000": 13.787161839401895,
+  "uciqe": 0.25523736129204433
+ },
+ "BetaNet": {
+  "psnr": 17.425726924081474,
+  "ssim": 0.7584845277740397,
+  "de2000": 13.832368263327998,
+  "uciqe": 0.427904803554217
+ },
+ "BetaNet + gray-world": {
+  "psnr": 18.008461509098808,
+  "ssim": 0.7584650173160047,
+  "de2000": 13.861228190498936,
+  "uciqe": 0.40600036316447785
+ },
+ "UNet (black box)": {
+  "psnr": 17.552066438329298,
+  "ssim": 0.8160583578203323,
+  "de2000": 15.692294591221275,
+  "uciqe": 0.38503779735830096
+ },
+ "reference": {
+  "uciqe": 0.3875365469712254
+ }
+}

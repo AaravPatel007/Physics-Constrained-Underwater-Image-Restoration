@@ -1,0 +1,62 @@
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 9672.68it/s]
+{
+ "D1/T_S03272": {
+  "raw": 29.449219637358016,
+  "gray-world": 8.869735841007985,
+  "Sea-thru (classical, SfM range)": 15.685087419009319,
+  "BetaNet [SfM range]": 9.595040859632405,
+  "BetaNet + gray-world [SfM range]": 9.830246917278243,
+  "BetaNet [DAv2 (no anchor)]": 8.493189076141594,
+  "BetaNet + gray-world [DAv2 (no anchor)]": 11.253341387270103,
+  "BetaNet [DAv2 + 1 range reading]": 9.512100784831773,
+  "BetaNet + gray-world [DAv2 + 1 range reading]": 9.750534309865643,
+  "UNet (black box, SfM range)": 2.58895660191178
+ },
+ "D1/T_S03425": {
+  "raw": 29.393426517408034,
+  "gray-world": 8.05449731130341,
+  "Sea-thru (classical, SfM range)": 16.637404809183845,
+  "BetaNet [SfM range]": 9.232302080315312,
+  "BetaNet + gray-world [SfM range]": 8.464361774521977,
+  "BetaNet [DAv2 (no anchor)]": 7.152265613341168,
+  "BetaNet + gray-world [DAv2 (no anchor)]": 9.641639562744446,
+  "BetaNet [DAv2 + 1 range reading]": 9.331977971079079,
+  "BetaNet + gray-world [DAv2 + 1 range reading]": 8.540174064480984,
+  "UNet (black box, SfM range)": 3.924229566737427
+ }
+}
+{
+ "raw": {
+  "psnr": 16.442222864728326,
+  "ssim": 0.7394956970165012,
+  "de2000": 17.512162227889625,
+  "uciqe": 0.3125072941184044
+ },
+ "gray-world": {
+  "psnr": 17.72124158624609,
+  "ssim": 0.7637449155745794,
+  "de2000": 13.787161839401895,
+  "uciqe": 0.25523736129204433
+ },
+ "BetaNet": {
+  "psnr": 13.91443304923458,
+  "ssim": 0.7502863091868514,
+  "de2000": 19.882830588803643,
+  "uciqe": 0.28254131890005535
+ },
+ "BetaNet + gray-world": {
+  "psnr": 16.023154922125485,
+  "ssim": 0.7708847402478025,
+  "de2000": 16.417001397901654,
+  "uciqe": 0.2721240806910727
+ },
+ "UNet (black box)": {
+  "psnr": 17.552066438329298,
+  "ssim": 0.8160583578203323,
+  "de2000": 15.692294591221275,
+  "uciqe": 0.38503779735830096
+ },
+ "reference": {
+  "uciqe": 0.3875365469712254
+ }
+}

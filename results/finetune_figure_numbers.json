@@ -1,0 +1,84 @@
+{
+ "chart_mean_deg": {
+  "Raw": 29.421323077383025,
+  "Gray-world": 8.462116576155697,
+  "Sea-thru classical": 16.16124611409658,
+  "BetaNet before (synthetic only)": 11.446306438242509,
+  "Fine-tune v1: all losses (collapsed)": 9.298871061749763,
+  "No same-dive loss + teacher 0.1": 10.328369592547066,
+  "No same-dive loss + teacher 0.3": 10.853383739479249,
+  "+ same-dive loss + teacher 1.0": 11.776087424308049,
+  "v1 without synthetic anchor": 9.110494757071914,
+  "v1 + UIEB (physics losses)": 9.14730434590011,
+  "v1 + UIEB (+ reference loss)": 9.14457921443171,
+  "Fine-tune: no same-dive loss": 8.834211612150764,
+  "UNet black box": 3.256593084324604
+ },
+ "uieb_psnr": {
+  "Raw": 16.442222864728326,
+  "Gray-world": 17.72124158624609,
+  "BetaNet before (synthetic only)": 18.008461509098808,
+  "Fine-tune v1: all losses (collapsed)": 17.559178213677537,
+  "No same-dive loss + teacher 0.1": 18.1119001824659,
+  "No same-dive loss + teacher 0.3": 18.2650956861313,
+  "+ same-dive loss + teacher 1.0": 17.97286303953056,
+  "v1 without synthetic anchor": 17.138360119717603,
+  "v1 + UIEB (physics losses)": 16.023154922125485,
+  "v1 + UIEB (+ reference loss)": 17.194180030091243,
+  "Fine-tune: no same-dive loss": 17.99211845771382,
+  "UNet black box": 17.552066438329298
+ },
+ "uieb_de2000": {
+  "Raw": 17.512162227889625,
+  "Gray-world": 13.787161839401895,
+  "BetaNet before (synthetic only)": 13.861228190498936,
+  "Fine-tune v1: all losses (collapsed)": 14.261494010440563,
+  "No same-dive loss + teacher 0.1": 14.092531895926264,
+  "No same-dive loss + teacher 0.3": 13.839704319845275,
+  "+ same-dive loss + teacher 1.0": 13.907806974284892,
+  "v1 without synthetic anchor": 15.161347352081252,
+  "v1 + UIEB (physics losses)": 16.417001397901654,
+  "v1 + UIEB (+ reference loss)": 14.858579098732175,
+  "Fine-tune: no same-dive loss": 14.000825466928111,
+  "UNet black box": 15.692294591221275
+ },
+ "synth_beta_D_err_pct": {
+  "BetaNet before (synthetic only)": 19.084854423999786,
+  "Fine-tune v1: all losses (collapsed)": 18.689541021982826,
+  "No same-dive loss + teacher 0.1": 18.990988035996757,
+  "No same-dive loss + teacher 0.3": 18.865597744782768,
+  "+ same-dive loss + teacher 1.0": 18.81297926108042,
+  "v1 without synthetic anchor": 69.70990498860678,
+  "v1 + UIEB (physics losses)": 18.741856018702187,
+  "v1 + UIEB (+ reference loss)": 18.869060277938843,
+  "Fine-tune: no same-dive loss": 18.749049802621208
+ },
+ "between_dive_spread": {
+  "BetaNet before (synthetic only)": 0.24421987000673115,
+  "Fine-tune v1: all losses (collapsed)": 0.047835922667804696,
+  "No same-dive loss + teacher 0.1": 0.24854953008739625,
+  "No same-dive loss + teacher 0.3": 0.24906106323315128,
+  "+ same-dive loss + teacher 1.0": 0.2469093358521224,
+  "v1 without synthetic anchor": 0.05721878887839324,
+  "v1 + UIEB (physics losses)": 0.05553626012214632,
+  "v1 + UIEB (+ reference loss)": 0.057662426551549906,
+  "Fine-tune: no same-dive loss": 0.13436043209195483
+ },
+ "heldout_D3_rel_to_before": {
+  "BetaNet before (synthetic only)": {
+   "dark": 1.0,
+   "range": 1.0,
+   "gray": 1.0
+  },
+  "Fine-tune v1: all losses (collapsed)": {
+   "dark": 0.91339026787487,
+   "range": 0.556659354774885,
+   "gray": 0.8075203531068205
+  },
+  "Fine-tune: no same-dive loss": {
+   "dark": 1.0956928514067776,
+   "range": 0.5690363084121761,
+   "gray": 0.6526390390998369
+  }
+ }
+}

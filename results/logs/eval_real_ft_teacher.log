@@ -1,0 +1,62 @@
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 9837.50it/s]
+{
+ "D1/T_S03272": {
+  "raw": 29.449219637358016,
+  "gray-world": 8.869735841007985,
+  "Sea-thru (classical, SfM range)": 15.685087419009319,
+  "BetaNet [SfM range]": 13.417507227090718,
+  "BetaNet + gray-world [SfM range]": 12.139618374396164,
+  "BetaNet [DAv2 (no anchor)]": 13.967905879137874,
+  "BetaNet + gray-world [DAv2 (no anchor)]": 15.219033885658275,
+  "BetaNet [DAv2 + 1 range reading]": 13.699988839391965,
+  "BetaNet + gray-world [DAv2 + 1 range reading]": 12.526302667481348,
+  "UNet (black box, SfM range)": 2.58895660191178
+ },
+ "D1/T_S03425": {
+  "raw": 29.393426517408034,
+  "gray-world": 8.05449731130341,
+  "Sea-thru (classical, SfM range)": 16.637404809183845,
+  "BetaNet [SfM range]": 13.772496172592023,
+  "BetaNet + gray-world [SfM range]": 11.412556474219935,
+  "BetaNet [DAv2 (no anchor)]": 12.485556656867644,
+  "BetaNet + gray-world [DAv2 (no anchor)]": 13.946513062756155,
+  "BetaNet [DAv2 + 1 range reading]": 13.626211111451681,
+  "BetaNet + gray-world [DAv2 + 1 range reading]": 11.239501415355145,
+  "UNet (black box, SfM range)": 3.924229566737427
+ }
+}
+{
+ "raw": {
+  "psnr": 16.442222864728326,
+  "ssim": 0.7394956970165012,
+  "de2000": 17.512162227889625,
+  "uciqe": 0.3125072941184044
+ },
+ "gray-world": {
+  "psnr": 17.72124158624609,
+  "ssim": 0.7637449155745794,
+  "de2000": 13.787161839401895,
+  "uciqe": 0.25523736129204433
+ },
+ "BetaNet": {
+  "psnr": 17.610666416184145,
+  "ssim": 0.7588476239812455,
+  "de2000": 13.673358935912747,
+  "uciqe": 0.4273992505338457
+ },
+ "BetaNet + gray-world": {
+  "psnr": 17.97286303953056,
+  "ssim": 0.7569057212095447,
+  "de2000": 13.907806974284892,
+  "uciqe": 0.40622027251455517
+ },
+ "UNet (black box)": {
+  "psnr": 17.552066438329298,
+  "ssim": 0.8160583578203323,
+  "de2000": 15.692294591221275,
+  "uciqe": 0.38503779735830096
+ },
+ "reference": {
+  "uciqe": 0.3875365469712254
+ }
+}

@@ -1,0 +1,10 @@
+beta_rgbd              beta_D err  19.1%  separation  0.24  held-out physics 0.652  base
+ft_seathru             beta_D err  18.7%  separation  0.05  held-out physics 0.378  fail
+ft_seathru_noanchor    beta_D err  69.7%  separation  0.06  held-out physics 0.383  fail
+ft_nodive              beta_D err  18.7%  separation  0.13  held-out physics 0.380  PASS
+ft_teacher             beta_D err  18.8%  separation  0.25  held-out physics 0.552  PASS
+ft_uieb                beta_D err  18.7%  separation  0.06  held-out physics 0.383  fail
+ft_uieb_ref            beta_D err  18.9%  separation  0.06  held-out physics 0.380  fail
+ft_nodive_t01          beta_D err  19.0%  separation  0.25  held-out physics 0.426  PASS
+ft_nodive_t03          beta_D err  18.9%  separation  0.25  held-out physics 0.479  PASS
+selected: ft_nodive

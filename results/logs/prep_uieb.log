@@ -1,0 +1,5 @@
+train-00000-of-00003-400f34c28a61ba94.parquet 267
+train-00001-of-00003-5e4553c4feca8b3e.parquet 534
+train-00002-of-00003-8399d261352e3b11.parquet 800
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 5238.07it/s]
+saved 800

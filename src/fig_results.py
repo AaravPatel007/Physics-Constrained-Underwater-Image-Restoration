@@ -145,8 +145,9 @@ def jerlov_plot(S):
 
 
 def training_curves():
-    runs = [("beta_rgbd", OURS, "BetaNet RGB-D"), ("beta_rgb", SERIES[1], "no depth"),
-            ("beta_coefonly", SERIES[2], "coef loss only"), ("beta_imgonly", SERIES[3], "image loss only")]
+    runs = [("beta_rgbd", OURS, "BetaNet RGB-D"), ("beta_rgb", SERIES[1], "BetaNet, no depth"),
+            ("beta_coefonly", SERIES[2], "BetaNet, coefficient loss only"),
+            ("beta_imgonly", SERIES[3], "BetaNet, image loss only"), ("unet_rgbd", MUTED, "UNet black box")]
     fig, ax = plt.subplots(figsize=(10, 4.2))
     for r, c, lab in runs:
         f = RES / r / "log.json"
@@ -154,13 +155,12 @@ def training_curves():
             continue
         L = json.load(open(f))
         e, v = [x["epoch"] for x in L], [x["val_psnr"] for x in L]
-        ax.plot(e, v, color=c)
-        ax.annotate(lab, (e[-1], v[-1]), xytext=(6, 0), textcoords="offset points", va="center", fontsize=10, color=INK2)
+        ax.plot(e, v, color=c, label=lab, ls="--" if r.startswith("unet") else "-")
+    ax.legend(loc="lower right", fontsize=10)
     ax.set_xlabel("epoch")
     ax.set_ylabel("validation PSNR (dB)")
-    ax.set_xlim(0, 50)
-    fig.suptitle("Training (~15 s per epoch on a laptop RTX 3050)", x=0.01, ha="left", fontsize=14,
-                 fontweight="bold", y=1.03)
+    fig.suptitle("Training curves (BetaNet ~15 s / epoch, UNet ~60 s / epoch on a laptop RTX 3050)", x=0.01,
+                 ha="left", fontsize=14, fontweight="bold", y=1.03)
     fig.savefig(FIG / "fig9_training_curves.png")
     plt.close(fig)
 
@@ -175,8 +175,9 @@ def real_grid(R, R1):
             ("st", o, "Sea-thru (classical, SfM range)", "Sea-thru classical (SfM)"),
             ("v1", o1, "BetaNet [SfM range]", "BetaNet v1: no sunlight colour"),
             ("v2", o, "BetaNet + gray-world [SfM range]", "BetaNet v2 (SfM range)"),
-            ("v2d", o, "BetaNet + gray-world [DAv2 + 1 range reading]", "BetaNet v2 (DAv2 + 1 reading)")]
-    fig, axs = plt.subplots(len(frames), len(cols), figsize=(21, 2.45 * len(frames)))
+            ("v2d", o, "BetaNet + gray-world [DAv2 + 1 range reading]", "BetaNet v2 (DAv2 + 1 reading)"),
+            ("unet", o, "UNet (black box, SfM range)", "UNet black box (SfM)")]
+    fig, axs = plt.subplots(len(frames), len(cols), figsize=(24, 2.4 * len(frames)))
     for i, fr in enumerate(frames):
         for j, (key, src, m, title) in enumerate(cols):
             ax = axs[i, j]
@@ -237,7 +238,7 @@ def hero():
                                fontsize=11, color=INK2)
     fig.subplots_adjust(wspace=0.02, hspace=0.03)
     fig.text(0.13, 0.08, "Real Red Sea dive photos (Sea-thru D3, D2, D5). Depth from Depth Anything V2 + one range "
-             "reading; ~2 ms per image for the coefficient network.", fontsize=10, color=INK2)
+             "reading; ~3 ms per image for the coefficient network.", fontsize=10, color=INK2)
     fig.savefig(FIG / "fig0_hero.png")
     plt.close(fig)
 

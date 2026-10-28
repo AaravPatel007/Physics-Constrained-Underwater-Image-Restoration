@@ -56,8 +56,8 @@ Key points from Akkaynak's papers that matter for us:
 | Cai & Metzler 2025 (arXiv 2507.02148) | Benchmarks monocular metric depth underwater (FLSea, SQUID); fine-tunes DAv2 on synthetic underwater Hypersim | yes | Confirms our depth finding (Section 3) |
 
 **Our angle (what is new):** one feed-forward network, trained once, that outputs β_D, β_B, B∞
-(and the illuminant E) for *any* new underwater image in about 2 ms, and recovers the image through the
-physics equation. It is ~500× faster than classical Sea-thru, with no per-scene optimisation (unlike
+(and the illuminant E) for *any* new underwater image in about 3 ms, and recovers the image through the
+physics equation. It is ~120× faster than classical Sea-thru, with no per-scene optimisation (unlike
 DeepSeeColor, SeaThru-NeRF and Osmosis), and its output is interpretable: the coefficients say what kind
 of water it is.
 
@@ -145,14 +145,20 @@ Jerlov profiles.
    asked for, and they are interpretable.
 2. **"The camera is a water-quality sensor"** (done, needs only inference): the predicted β's
    identify the dive site / water type, and stay stable across frames of the same dive.
-3. **Real-time** (done): ~2 ms per image on a laptop RTX 3050 vs ~1.2 s per frame for the classical
+3. **Real-time** (done): 3.2 ms per image on a laptop RTX 3050 vs 0.38 s (same size) for the classical
    pipeline. Matters for AUVs.
-4. **Self-supervised fine-tuning on real images** (next phase): Sea-thru-style losses
-   (dark-pixel backscatter, grey-world on J, smoothness), as in DeepSeeColor, on UIEB/Sea-thru without labels.
+4. **Self-supervised fine-tuning on real images** (done 28 Oct, `docs/project_overview.md` §10): Sea-thru-style
+   losses (dark-pixel backscatter, colour constant with range, gray-world) on 552 real Sea-thru frames plus a
+   synthetic anchor batch. Works on Sea-thru (chart error with the model's own E 16–17° → ~10°). A same-dive
+   consistency loss collapses all dives to one water. On UIEB it hurts, because DAv2 depth has the wrong scale.
 5. **Range-dependent β_D(z)**: predict the 4 Sea-thru parameters of β_D(z) instead of a constant.
 6. **Uncertainty**: predict a variance per coefficient, so the network flags when it can't know
    (e.g. flat scenes with no depth variation).
-7. Stretch: the original proposal's YOLO detection as a downstream test of the restored images.
+7. **Hybrid: physics first, then a learned refiner.** Our black-box UNet beats BetaNet on synthetic data
+   but hallucinates indoor colours on real water. Feeding BetaNet's physics output to a small residual
+   network (the friend's 7-channel BridgeNet/NAFNet is exactly this design) should keep the
+   coefficients and the interpretability while closing the image-quality gap.
+8. Stretch: the original proposal's YOLO detection as a downstream test of the restored images.
 
 ## Sources
 - Sea-thru (CVPR 2019): https://openaccess.thecvf.com/content_CVPR_2019/papers/Akkaynak_Sea-Thru_A_Method_for_Removing_Water_From_Underwater_Images_CVPR_2019_paper.pdf
