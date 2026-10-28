@@ -22,7 +22,7 @@ from fig_results import srgb
 from vizstyle import CH, CH_MARK, INK2, SERIES, no_axes, plt
 
 ROOT = Path(__file__).resolve().parents[1]
-RES, FIG = ROOT / "results", ROOT / "figures"
+RES, FIG = ROOT / "results", ROOT / "figures" / "2_original_finetune"
 BEFORE, BASE, BAD = "#86b6ef", "#c3c2b7", SERIES[1]
 LABEL = {"beta_rgbd": "BetaNet before (synthetic only)",
          "ft_seathru": "Fine-tune v1: all losses (collapsed)",

@@ -10,6 +10,15 @@ Exact numbers come from `results/*.json`; `SUMMARY.md` is the shorter working lo
 
 ---
 
+**How to read this document / talk order.** **Part 1 = Sections 1–9** (BetaNet trained on synthetic water only,
+figures fig0–fig14): this is the finished system and gets the main time at the review. **Part 2 = Section 10**
+(fine-tuning on real dives, figures fig15–fig20, i.e. fig15 is where fine-tuning starts): attempts made afterwards,
+mostly failed, one partial success. Sections 11–13 are plan, repository map and glossary.
+
+---
+
+# PART 1: BetaNet before fine-tuning
+
 ## 1. The problem in one paragraph
 
 Water changes the colour of everything the camera sees, and the change depends on distance. Red light is
@@ -199,6 +208,8 @@ murkiest) nothing works, not even the oracle (10.3 vs raw 11.0), because the sig
 - The real chart evaluation uses 2 frames. UIEB references are subjective "preferred" images.
 - No forward scatter (blur) or marine snow in the synthetic water yet.
 
+# PART 2: After BetaNet: fine-tuning on real dives (mostly failed attempts)
+
 ## 10. Fine-tuning on real dives (session 2, 28 Oct)
 
 The model in Sections 5–8 (`results/beta_rgbd`) was trained only on synthetic water over indoor rooms. This
@@ -275,8 +286,48 @@ One note on the rule: it was amended once, after round 2. Its first spread measu
 each dive, which also shrinks in a collapse, so the collapsed v1 passed. It now uses the spread between dive
 averages directly.
 
+## 10b. Longer base training (session 3, 28 Oct evening)
+
+The original 40-epoch run was past its elbow but still improving when the learning rate reached zero. We
+trained the **same network from scratch** with more data and more epochs (`beta_rgbd_big`):
+
+| | Original (`beta_rgbd`) | Longer run (`beta_rgbd_big`) |
+|---|---|---|
+| NYU training images | 2,881 (19 shards) | 7,428 (49 shards; same 288 validation frames) |
+| Epochs / gradient steps | 40 / ~4.3k | 60 / ~17.8k |
+| Very murky water (mean β_D > 0.8 /m) | 4.9 % | 2.0 % (`--murky-keep 0.4`) |
+
+Paired analysis on the same images (`src/analyze_old_vs_new.py`, `results/old_vs_new_analysis.json`,
+`figures/3_new_runs/old_vs_new_verdict.png`):
+
+| | Original | Longer run | Longer run + fine-tune (`ft_big_nodive`) |
+|---|---|---|---|
+| Synthetic PSNR (654 rooms) | 20.0 | **21.2** (+1.21, 95 % CI 1.02–1.39; better on 70 %) | 21.5 |
+| Median β_D / β_B error | 20 / 23 % | **17 / 18 %** | 16 / 18 % |
+| UIEB PSNR + gray-world | 18.0 | **18.5** (+0.47, CI 0.22–0.72) | 18.2 |
+| Chart error, own E / + gray-world | 16.4 / 11.4° | 16.9 / 11.5° | **8.6 / 9.0°** |
+| Dive separation (higher = waters told apart) | **1.57** | 1.29 | 1.19 |
+| Colour drift with distance, unseen dive D3 | 0.47 | 0.41 | **0.27** |
+
+Findings:
+1. **It has converged**: validation error is flat over the last 10 epochs, and training ≈ validation loss.
+2. **Better at the coefficients and on synthetic and UIEB images**, with tight confidence intervals. Gains are largest
+   in far rooms. One far classroom went cyan; the cause is the haze estimate (B∞), not β_D. Far away the photo is
+   mostly haze, so small haze errors wipe out red.
+3. **Worse at telling real dives apart**: turbid D4 no longer stands out and all real β drop 15–25 %. Untested guess:
+   less murky training water (retrain with `--murky-keep 1.0`).
+4. **Fine-tuning stacks**: it gives the best real colour so far, but it lowers separation further, so the losses
+   need rebalancing (less gray-world, a small teacher weight).
+
+Decision: the longer run becomes the base model going forward. The review's main slides stay on the original
+model (every Part 1 figure is built on it), with one optional "training longer" slide.
+
+# Plan, reference
+
 ## 11. Next steps
 
+0. **Adopt `beta_rgbd_big` as the base.** Check why its dive separation dropped (retrain with `--murky-keep 1.0`),
+   then fine-tune it with rebalanced losses. Add a distance-consistency metric for real photos.
 1. **Choose the teacher weight per use:** 0 for colour correction, 0.1–0.3 when the coefficients are the output.
    A per-image uncertainty head would help decide.
 2. **More realistic synthetic data:** outdoor/natural RGB-D (Hypersim, DIODE), forward-scatter blur and
@@ -296,7 +347,8 @@ docs/project_overview.md     this document
 docs/research_notes.md       literature, datasets, depth method, metrics, friend's repo review
 docs/presentation_plan.md    slide-by-slide plan mapped to the review rubric
 docs/qa_prep.md              likely questions with answers
-figures/fig0 … fig20         all figures (fig0 before/after and fig10 real Sea-thru are the strongest;
+docs/presentation_guide.md   plain-language presenter's guide (equations, data, losses, results, Q&A)
+figures/{1_original_runs,2_original_finetune,3_new_runs}  all figures (fig0 before/after and fig10 real Sea-thru are the strongest;
                              fig15–fig20 = fine-tuning on real dives)
 src/physics.py               image formation model, Jerlov water sampler, restore()
 src/model.py                 BetaNet, UNetDirect baseline
@@ -305,7 +357,9 @@ src/eval_synth.py, eval_real.py, run_classical_seathru.py   evaluation
 src/fig_*.py                 figure scripts
 src/finetune.py              real-dive fine-tuning; eval_finetune.py, select_ft.py, fig_finetune.py around it
 src/download_seathru_all.py  streams Sea-thru frames, shrinks them, deletes the originals
-results/<run>/best.pt        trained weights (beta_rgbd = synthetic-only model; ft_nodive = selected fine-tune)
+src/prep_nyu_more.py, eval_synth_big.py, analyze_old_vs_new.py   longer run: data, eval, paired verdict
+results/<run>/best.pt        trained weights (beta_rgbd = synthetic-only model; ft_nodive = selected fine-tune;
+                             beta_rgbd_big = longer run; ft_big_nodive = fine-tune of it); .pt files are not in git
 external/De-water/           friend's repo, read-only reference
 ```
 
@@ -320,6 +374,9 @@ $PY download_seathru_all.py --sites D3 D4 D5 && $PY download_seathru_all.py --si
   && $PY download_seathru_all.py --sites D1 --stride 4 && $PY prep_uieb.py
 bash ../results/ft_queue.sh; bash ../results/ft_queue2.sh; bash ../results/ft_queue3.sh   # ~1.5 h in total
 $PY fig_finetune.py ft_nodive ft_seathru ft_nodive_t01 ft_nodive_t03 ft_teacher ft_seathru_noanchor ft_uieb ft_uieb_ref
+# longer base training + verdict (session 3; full command list in SUMMARY.md §5)
+$PY prep_nyu_more.py && $PY train.py --model beta --name beta_rgbd_big --data train_big --nval 288 --epochs 60 --murky-keep 0.4
+$PY analyze_old_vs_new.py
 ```
 
 ## 13. Glossary

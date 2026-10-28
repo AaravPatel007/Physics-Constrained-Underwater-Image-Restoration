@@ -8,7 +8,7 @@ from physics import JERLOV_N
 from vizstyle import AXIS, CH, CH_MARK, GRID, INK, INK2, MUTED, SERIES, no_axes, plt
 
 ROOT = Path(__file__).resolve().parents[1]
-RES, FIG = ROOT / "results", ROOT / "figures"
+RES, FIG = ROOT / "results", ROOT / "figures" / "1_original_runs"
 OURS, ABL, BASE = SERIES[0], "#86b6ef", "#c3c2b7"
 LABEL = {"raw": "Raw underwater", "gray-world": "Gray-world", "classical": "Sea-thru classical (true depth)",
          "unet_rgbd": "UNet black box (RGB-D)", "beta_rgb": "BetaNet, no depth (RGB)",

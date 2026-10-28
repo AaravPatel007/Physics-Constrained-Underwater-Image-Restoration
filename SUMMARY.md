@@ -1,7 +1,16 @@
 # PROJECT SUMMARY: read this first when resuming
 
 OE5510 (ML for Ocean Engineering), Group 4. **Intermediate review on 29 Oct 2026** (15-min group talk;
-rubric mapping in `docs/presentation_plan.md`). Last updated: 28 Oct 2026, end of session 2 (real-dive fine-tuning, §3b).
+rubric mapping in `docs/presentation_plan.md`). Last updated: 28 Oct 2026, end of session 3 (longer base training
+and verdict, §3c). Presenter's plain-language guide: `docs/presentation_guide.md`.
+
+> **Talk structure (29 Oct):** **PART 1 = BetaNet before fine-tuning** (§1–3, figures fig0–fig14): cover fully.
+> **PART 2 = fine-tuning on real dives** (§3b, figures **fig15–fig20**; fig15 is the first fine-tuning figure):
+> presented after Part 1 as attempts, mostly failed, one partial success.
+> **Optional slide = the longer training run** (§3c, `figures/3_new_runs/`): "training longer helped synthetic accuracy,
+> not real-dive separation". The main slides stay on the original model (`beta_rgbd`), since every Part 1 figure is built on it.
+
+# PART 1: BetaNet before fine-tuning
 
 ## 1. What changed and why
 - Original proposal (`underwater_proposal.pptx`): enhance images (UIEB-trained CNN), then check whether YOLO detection improves.
@@ -69,6 +78,8 @@ output cap → magenta real images (`results/v1_no_illuminant/`). v2 adds E: mag
 
 **Speed:** BetaNet 3.2 ms, UNet 10 ms, classical Sea-thru 0.38 s (240×320) / 1.2 s (600×400) → ~120× faster.
 
+# PART 2: After BetaNet: fine-tuning on real dives (failed attempts + one partial success)
+
 ## 3b. Session 2 (28 Oct): fine-tuning on real dives (`docs/project_overview.md` §10 has the full story)
 **Data:** streamed every 1st frame of D3/D4/D5, every 2nd of D2 and every 4th of D1 from HF, shrunk to 300 px
 high and deleted the originals: 658 frames with SfM range in `data/seathru_train/` (494 MB, of a 38 GB dataset).
@@ -95,7 +106,7 @@ then lowest held-out physics loss. Chart frames and UIEB are reported, never use
 | v1 + UIEB + reference loss | 9.8 / 8.5° | 9.5 / 9.3° | 17.19 / 14.86 | – | 0.06 | 18.9 % |
 Gray-world alone: chart 8.9 / 8.1°, UIEB 17.72 / 13.79. Synthetic test PSNR is 20.4 for every anchored model (20.0 before).
 
-**Findings to present:** (1) real fine-tuning fixes colour on held-out dives (chart error with the network's own E
+**Findings to present (failed attempts first):** (1) real fine-tuning fixes colour on held-out dives (chart error with the network's own E
 halves: 16–17° → ~10°, i.e. gray-world is no longer needed) without hurting synthetic accuracy. (2) **Collapse:**
 with the same-dive loss every dive gets one "average water" (β_D red 0.14–0.16 everywhere); the images still look
 fine, so only the dive-spread check catches it (identifiability again). (3) No synthetic anchor → coefficients
@@ -106,13 +117,44 @@ Visual caveat: fine-tuned outputs are neutral but flatter; open-water pixels (no
 Note: the selection rule was amended once after round 2 (first spread metric divided by within-dive spread and let
 the collapsed model pass); documented in `select_ft.py`.
 
+## 3c. Session 3 (28 Oct evening): longer base training; review scope
+**Scope:** the talk follows the Part 1 / Part 2 structure above. Fine-tuning is shown as attempts. Its next version
+needs rebalanced losses: a lower gray-world weight (it flattens colourful scenes) and no same-dive loss. Presenter
+guide: `docs/presentation_guide.md`.
+
+**Longer run `beta_rgbd_big`:** same model trained from scratch on 49 NYU shards (7,428 frames, `data/nyu_train_big.npz` via
+`src/prep_nyu_more.py`; the same 288 validation frames), 60 epochs, murky water (mean β_D > 0.8 /m) kept at 40 % → 2 % of
+training (`physics.sample_water(murky_keep=…)`, `train.py --murky-keep`). The process ended at epoch 48 (laptop at 95 °C;
+the thermal guard was not running), then continued from epoch 47 with `--resume-epoch` (the LR schedule is fast-forwarded,
+AdamW moments restart). Best checkpoint = epoch 59.
+Results (`results/synth_eval_big.json`, `real_eval_big.json`): synthetic 20.0 → **21.2 dB**, ΔE 14.0 → 13.5; β_D error
+14/20/23 → 12/16/20 %, β_B 22/23/24 → 17/17/20 %; +0.8 to 1.4 dB in every Jerlov type. Real: chart unchanged (11.7/11.2°);
+UIEB + GW 18.0 → 18.5 dB, ΔE 13.9 → 13.2 (now beats gray-world). Real β all ~15–25 % lower; D4 no longer clearly the
+most turbid. Per-image: better by >3 dB in ~1/3 of rooms, worse by >3 dB in ~1/10. Cyan classroom example (NYU test 120, 3C): the
+cause is the haze estimate, not β_D. Swapping coefficients one at a time: β_D alone gives 26.2 dB, B∞ alone 15.5 dB. At 8 m
+>90 % of red is haze, so a 7 % red-haze over-estimate wipes red out, and leftover green haze is amplified ×6.
+UIEB per image: better on 58/90 (`figures/3_new_runs/uieb_original_vs_longer.png`, `src/fig_uieb_compare.py`).
+Sea-thru (`seathru_original_vs_longer.png`, `src/fig_seathru_compare.py`): images nearly the same, but the per-dive read-out
+is worse. D4 (turbid) is no longer distinct (0.38 → 0.28, ties D1). Untested guess: less murky training water; test with
+`--murky-keep 1.0`.
+**Verdict** (`src/analyze_old_vs_new.py` → `results/old_vs_new_analysis.json`, `figures/3_new_runs/old_vs_new_verdict.png`;
+also `ft_big_nodive` = the ft_nodive recipe on the new base):
+- Synthetic: +1.21 dB, CI 1.02–1.39. Better on 70 % of rooms; the largest gain is in far rooms (+1.4).
+- β_D and β_B errors are significantly lower. UIEB + GW: +0.47 dB, CI 0.22–0.72.
+- The chart frames are unchanged. Dive separation is worse: 1.57 → 1.29.
+- Converged: val coef error is flat over the last 10 epochs.
+- Fine-tuning the new base gives the chart (own E) 8.6°, D3 drift 0.27 and synth 21.5, but separation 1.19.
+- Decision: the new base model going forward. For the 29 Oct talk, keep the original for the main slides and add one
+  "training longer" slide. Rebalance the fine-tuning losses (less gray, small teacher weight) before fine-tuning the new base. Figures: `figures/3_new_runs/` (loss curves, examples, results).
+
 ## 4. Files
 ```
 SUMMARY.md                  ← this file
 docs/research_notes.md      literature (Akkaynak etc.), datasets, depth methodology, metrics, friend's repo review
 docs/presentation_plan.md   slide-by-slide plan mapped to the rubric + speaker split
 docs/qa_prep.md             likely questions with answers
-figures/fig0…fig14          all figures (regenerate with the fig_*.py scripts)
+docs/presentation_guide.md  plain-language guide for presenting: equations, data, losses, results, Q&A, longer run
+figures/1_original_runs (fig0…fig14, Part 1), 2_original_finetune (fig15…fig20, Part 2), 3_new_runs (longer run; see figures/README.md)
 src/physics.py              image-formation model, Jerlov water sampler, restore()
 src/model.py                BetaNet (ResNet-18 → 12 numbers), UNetDirect (black-box baseline)
 src/train.py                training (on-the-fly synthetic water); --no-depth, --lambda-img, --lambda-coef
@@ -130,7 +172,12 @@ src/thermal_guard.py        CPU-temperature guard for project processes (not wri
 results/ft_*/               fine-tuned checkpoints + log.json; real_eval_<name>.json, *_outputs_<name>.npz per model
 results/ft_queue*.sh        the three fine-tuning queues (2 CPU threads, nice 10, 3-min cool-downs)
 src/fig_physics.py (fig1-3), fig_method.py (fig4-5), fig_results.py (fig0, 6-12, 14), fig_plan.py (fig13), vizstyle.py
-data/                       NYU shards (20/157 train + val), UIEB, 24 Sea-thru frames, preprocessed .npz
+src/prep_nyu_more.py        streams 30 more NYU shards → data/nyu_train_big.npz (7,428 frames; same 288 val frames last)
+src/eval_synth_big.py       original vs longer run on the synthetic test → results/synth_eval_big.json (synth_eval.json untouched)
+src/analyze_old_vs_new.py   paired verdict analysis (4 models) → results/old_vs_new_analysis.json + old_vs_new_verdict.png
+src/fig_loss_curves.py, fig_big.py, fig_uieb_compare.py, fig_seathru_compare.py   figures in figures/3_new_runs/
+results/beta_rgbd_big/      longer run (best = epoch 59); results/ft_big_nodive/ = ft_nodive recipe on it
+data/                       NYU shards (19/157 train + val), nyu_train_big.npz (49 shards), UIEB, Sea-thru frames, preprocessed .npz
 results/<run>/best.pt|log.json; results/logs/*.log; run_all.sh (training queue); finalize.sh (evals + figures)
 external/De-water/          friend's repo (read-only reference)
 ```
@@ -154,7 +201,24 @@ leftover `results/_smoke/` test run (delete `_smoke/` and `ft_pilot/` by hand; t
 2–4 threads (`OMP_NUM_THREADS`) on this laptop; unthrottled training took the CPU to 86 °C. Launching with
 `nohup … &` from Claude once stalled on a hidden permission prompt for 3 h; use the tool's background mode.
 
+Longer run (session 3):
+```bash
+$PY prep_nyu_more.py                                   # ~10 min download, +2.85 GB
+$PY train.py --model beta --name beta_rgbd_big --data train_big --nval 288 --epochs 60 --murky-keep 0.4   # ~45 min
+$PY eval_synth_big.py && $PY eval_real.py --ckpt beta_rgbd_big --tag _big
+$PY finetune.py --init beta_rgbd_big --name ft_big_nodive --steps 3000 --w-dive 0
+$PY eval_real.py --ckpt ft_big_nodive --tag _ft_big_nodive && $PY eval_finetune.py beta_rgbd beta_rgbd_big ft_nodive ft_big_nodive
+$PY analyze_old_vs_new.py && $PY fig_loss_curves.py && $PY fig_big.py && $PY fig_uieb_compare.py && $PY fig_seathru_compare.py
+```
+Session-3 gotchas: GPU training with 4 threads still reached 95 °C after ~30 min, and `thermal_guard.py` was not
+running. Use 2 threads plus a watchdog (pause above 85 °C, resume below 70 °C). Resuming from `best.pt` restarts the
+AdamW moments (it holds weights only). New figures get descriptive filenames, not numbers.
+
 ## 6. Next steps (fig13_plan.png; step 3 done in session 2)
+0. New base model = `beta_rgbd_big` (converged; better coefficients). First check why its dive separation dropped:
+   retrain with `--murky-keep 1.0`. Then fine-tune it with rebalanced losses (lower `--w-gray`, small `--w-teacher`).
+   Add better real metrics: colour consistency with distance (no reference needed) and more chart frames. Colour
+   (non-grey) patches can only be used with the camera's colour response, which we don't have.
 1. Realism: forward-scatter blur + marine snow (De-water `watering_engine.py`), outdoor/natural RGB-D.
 2. Range-dependent β_D(z) (Sea-thru 2-exponential form).
 3. ~~Self-supervised fine-tuning on real photos~~ done (§3b). Follow-ups: pick the teacher weight per use

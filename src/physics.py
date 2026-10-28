@@ -44,7 +44,10 @@ def linear_to_srgb(x):
     return torch.where(x <= 0.0031308, 12.92 * x, 1.055 * x.clamp_min(1e-8) ** (1 / 2.4) - 0.055)
 
 
-def sample_water(n, device="cpu", gen=None, water_type=None):
+MURKY_BETA = 0.8  # mean beta_D [1/m] above which even the true coefficients cannot restore the image (~Jerlov 9C)
+
+
+def sample_water(n, device="cpu", gen=None, water_type=None, murky_keep=1.0):
     """Sample n random, physically plausible waters.
 
     beta_D: pick a point on the oceanic or coastal Jerlov branch (continuous interpolation between
@@ -53,25 +56,39 @@ def sample_water(n, device="cpu", gen=None, water_type=None):
     B_inf : scattering albedo x colour of sunlight after d_v metres of descent through the same
             water, mixed with a little grey, scaled to a random brightness.
     If water_type is given (e.g. "3C"), use exactly that Jerlov type with no jitter.
+    murky_keep < 1 keeps only that fraction of waters with mean beta_D > MURKY_BETA (rejection
+    sampling), so near-hopeless water is seen less often but not never.
     Returns dict of (n, 3) tensors.
     """
     def U(lo, hi, *shape):
         return lo + (hi - lo) * torch.rand(*shape, generator=gen)
 
-    if water_type is not None:
-        bd = torch.tensor(JERLOV_BETA[water_type]).expand(n, 3).clone()
-        bb = bd.clone()
-    else:
-        branch = torch.rand(n, generator=gen) < 0.5
-        pos = U(0, 4, n)
+    def draw(m):
+        branch = torch.rand(m, generator=gen) < 0.5
+        pos = U(0, 4, m)
         lo, frac = pos.floor().long().clamp(max=3), pos - pos.floor().clamp(max=3)
         tabs = [torch.tensor([JERLOV_BETA[k] for k in names]) for names in (OCEANIC, COASTAL)]
         bd = torch.where(branch[:, None],
                          tabs[0][lo] * (1 - frac[:, None]) + tabs[0][lo + 1] * frac[:, None],
                          tabs[1][lo] * (1 - frac[:, None]) + tabs[1][lo + 1] * frac[:, None])
-        bd = bd * torch.exp(U(math.log(0.6), math.log(1.6), n, 1))      # overall turbidity
-        bd = bd * torch.exp(0.15 * torch.randn(n, 3, generator=gen))     # per-channel jitter
-        bb = bd * torch.exp(U(math.log(0.5), math.log(2.0), n, 3))
+        bd = bd * torch.exp(U(math.log(0.6), math.log(1.6), m, 1))      # overall turbidity
+        bd = bd * torch.exp(0.15 * torch.randn(m, 3, generator=gen))     # per-channel jitter
+        bb = bd * torch.exp(U(math.log(0.5), math.log(2.0), m, 3))
+        return bd, bb
+
+    if water_type is not None:
+        bd = torch.tensor(JERLOV_BETA[water_type]).expand(n, 3).clone()
+        bb = bd.clone()
+    elif murky_keep >= 1.0:
+        bd, bb = draw(n)
+    else:
+        bds, bbs, got = [], [], 0
+        while got < n:
+            bd, bb = draw(2 * n)
+            keep = (bd.mean(1) <= MURKY_BETA) | (torch.rand(2 * n, generator=gen) < murky_keep)
+            bds.append(bd[keep]), bbs.append(bb[keep])
+            got += int(keep.sum())
+        bd, bb = torch.cat(bds)[:n], torch.cat(bbs)[:n]
 
     # E: colour of the sunlight that reaches the scene after d_v metres of descent (normalised, max 1).
     # This is why a reef 1 m from the camera at 10 m depth is already blue-green.

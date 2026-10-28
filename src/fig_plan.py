@@ -36,7 +36,7 @@ def main():
     ax.set_xlabel("weeks after the intermediate review", color=INK2)
     fig.suptitle("Plan of action: done (dark) and next milestones (light)", x=0.01, ha="left", fontsize=14,
                  fontweight="bold", y=1.0)
-    fig.savefig(ROOT / "figures" / "fig13_plan.png")
+    fig.savefig(ROOT / "figures" / "1_original_runs" / "fig13_plan.png")
 
 
 if __name__ == "__main__":

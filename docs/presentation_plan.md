@@ -6,16 +6,23 @@ Rubric points and where each is covered:
 | Intro slide: topic + all names & roll numbers | 1 |
 | Importance; impact if not solved | 2 |
 | Method explained so a non-expert can follow | 4, 6, 7 |
-| Results with graphs | 8, 9, 11, 12, 12b |
-| Discussion of unique contributions | 9, 12, 12b, 14 |
-| Plan of action + milestones | 13 |
-| Uniqueness / failed experiments that guided design | 10 (v1→v2), 6 (depth scale), 12b (collapse) |
+| Results with graphs | 8, 9, 11, 12 (Part 1); 13, 14 (Part 2) |
+| Discussion of unique contributions | 9, 12, 13, 15 |
+| Plan of action + milestones | 14 |
+| Uniqueness / failed experiments that guided design | 10 (v1→v2), 6 (depth scale), 13 (collapse, no anchor, UIEB) |
 | Seamless hand-over | speaker split below |
 | Slides not text-heavy | ≤ 3 short lines per slide, figure-first |
 | Fielding questions | `docs/qa_prep.md` |
 
-Suggested split for 4 speakers: **A** slides 1–3, **B** 4–7, **C** 8–11, **D** 12–14 (≈ 3.5 min each).
+**Structure of the talk.** Part 1 (slides 1–12, ≈ 10 min) is the finished BetaNet, trained on synthetic water only
+(figures fig0–fig14): cover it properly. Part 2 (slides 13–14, ≈ 3 min) is what we tried *after* that to adapt it
+to real dives (fine-tuning, fig15–fig20): presented honestly as attempts, mostly failed, with one partial success.
+Then plan and takeaways. Figure numbers: **fig15 is the first fine-tuning figure**; everything below it is Part 1.
+
+Suggested split for 4 speakers: **A** slides 1–3, **B** 4–7, **C** 8–12, **D** 13–15 (≈ 3.5 min each).
 Hand-over line at the end of each block is given in *italics*.
+
+# PART 1: BetaNet before fine-tuning (synthetic training only)
 
 ---
 
@@ -79,24 +86,44 @@ Group 4 · names + roll numbers · OE5510 · 29 Oct 2026. Background: `fig0_hero
 - Honest trade-off → next step is a hybrid: physics first, then a small learned refiner.
 *"D: what else the coefficients give us, and what's next."*
 
-**12. The camera as a water sensor + speed** (D, 45 s). Figure: left panel of `fig18_ft_sites.png`
-- Same dive → similar β; the turbid site stands apart. No labels used.
+**12. The camera as a water sensor + speed** (C, 45 s). Figure: `fig11_site_consistency.png`
+- Same dive → similar β (5–20 % spread); the turbid dive D4 has the highest β_D (red 0.38 /m), clear D5 the lowest
+  (0.20 /m). No labels used.
 - 3.2 ms per image (laptop GPU) vs 0.38 s for classical Sea-thru at the same size (~120× faster).
+*"D: we then tried to adapt the network to real dives. Most of it failed, and the failures are instructive."*
 
-**12b. Adapting to real water without labels** (D, 1 min 15 s). Figures: `fig15_ft_real.png` (one row), `fig18_ft_sites.png`
-- 658 real dive frames with depth, no clean references → train on physics checks (darkest pixels = haze;
-  colour must not drift with distance; gray-world), keep the synthetic batch in every step.
-- Without gray-world, chart error halves (16–17° → ~10°): the network now finds the sunlight colour itself.
-- Failed experiment: adding "same dive → same water" collapsed every dive to one average water (middle panel).
-  Images still looked fine, so a per-dive check was the only thing that caught it.
+---
+
+# PART 2: After BetaNet: fine-tuning on real dives (all attempts, mostly failed)
+
+**13. Fine-tuning on real dives: what we tried and what failed** (D, 2 min). Figures: `fig15_ft_real.png` (one row), `fig18_ft_sites.png`
+- Setup: 552 real dive frames with depth, no clean references → label-free physics checks (darkest pixels = haze;
+  colour must not drift with distance; gray-world), with a synthetic batch in every step to keep the units.
+- **Attempt 1, all losses (v1):** chart error 12 / 11° → 10 / 9°, but a "same dive → same water" loss **collapsed**
+  every dive to one average water (dive spread 0.24 → 0.05). Images still looked fine; only the per-dive check caught it.
+- **Attempt 2, no synthetic anchor:** real-image losses just as good, but synthetic β_D error 19 % → 70 %: coefficients lost their units.
+- **Attempt 3, add UIEB:** UIEB got *worse* (18.0 → 16.0 dB): monocular depth has the wrong scale, so range losses are fed wrong distances.
+- **What worked (partly):** drop the dive loss (`ft_nodive`): chart error with the network's own E halves (16–17° → ~10°)
+  without hurting synthetic accuracy (PSNR 20.0 → 20.4). Caveat: only 2 chart frames; outputs are flatter in contrast.
 - Backup slide: `fig20_ft_tradeoff.png`. The teacher weight trades colour fixes against keeping the water
   read-out; 0.3 gives the best UIEB score of any model (18.3 dB, ahead of gray-world).
 
-**13. Plan of action** (D, 45 s). Figure: `fig13_plan.png` (step "self-supervised fine-tuning" is now done)
+**13b. Optional: training longer** (D, 45 s, or keep as backup). Figure: `3_new_runs/old_vs_new_verdict.png`
+(backups: `fig21_loss_curves.png`, `fig23_big_results.png`, `seathru_original_vs_longer.png`)
+- Same network, 2.6× more NYU rooms, 60 epochs: synthetic 20.0 → 21.2 dB (95 % CI +1.0 to +1.4), β_D / β_B error
+  20 / 23 % → 17 / 18 %. It has converged (validation flat over the last 10 epochs).
+- But real dives are told apart *less* well (separation 1.57 → 1.29; turbid D4 no longer stands out), and chart
+  colour is unchanged. Better synthetic scores ≠ better real-water read-out: the synthetic-to-real gap again.
+- Fine-tuning it fixes chart colour (16.9° → 8.6° with its own sunlight colour) but lowers separation further, so
+  the losses need rebalancing first.
+
+**14. Plan of action** (D, 45 s). Figure: `fig13_plan.png` (step "self-supervised fine-tuning" is now done)
 - More realistic synthetic water → range-dependent β_D(z) → hybrid physics + refiner →
   full chart evaluation (all Sea-thru + SQUID) → uncertainty; stretch: detection mAP.
+- Immediate: adopt the longer-trained model as the base; rebalance the fine-tuning losses (less gray-world,
+  small teacher weight); add a distance-consistency metric for real photos.
 
-**14. Takeaways** (D, 30 s)
+**15. Takeaways** (D, 30 s)
 - A small network can read the water's coefficients from one photo + depth, in milliseconds.
 - Physics in the loop gives interpretable, checkable outputs; failures are diagnosable (v1→v2, collapse).
-- It adapts to real dives without labels; the open gaps are metric depth scale and a richer chart test.
+- Label-free fine-tuning on real dives helps colour but is fragile; the open gaps are metric depth scale and a richer chart test.

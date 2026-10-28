@@ -97,3 +97,4 @@
 11:44:16 85 C: reduced -> paused (1 procs)
 11:44:20 74 C: paused -> reduced (1 procs)
 11:44:50 61 C: reduced -> full (0 procs)
+13:04:05 guard stopped: processes resumed, 6-CPU limit left in place

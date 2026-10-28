@@ -1,0 +1,120 @@
+/home/aarav-patel/oe5510/final_project/src/train.py:102: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  sched.step()
+beta_rgbd_big: 7140 train / 288 val scenes, 11.3M params
+20:56:25 85 C pause
+20:56:35 86 C pause
+20:56:45 86 C pause
+20:56:55 87 C pause
+20:57:05 88 C pause
+20:57:15 88 C pause
+20:57:25 87 C pause
+20:57:35 89 C pause
+{"epoch": 48, "train_loss": 0.5886689036181478, "time": 81.61207294464111, "val_coef": 0.5385278513034185, "val_img_l1": 0.05492146064837774, "val_psnr": 23.64905506703589}
+20:57:45 88 C pause
+20:57:55 87 C pause
+20:58:05 89 C pause
+20:58:15 89 C pause
+20:58:25 89 C pause
+20:58:35 89 C pause
+20:58:45 89 C pause
+20:58:55 89 C pause
+{"epoch": 49, "train_loss": 0.5770992907610807, "time": 81.1384289264679, "val_coef": 0.5466254452864329, "val_img_l1": 0.057160300513108574, "val_psnr": 23.499513707227177}
+20:59:05 86 C pause
+20:59:16 88 C pause
+20:59:26 88 C pause
+20:59:36 88 C pause
+20:59:46 87 C pause
+20:59:56 88 C pause
+21:00:06 86 C pause
+21:00:16 86 C pause
+{"epoch": 50, "train_loss": 0.5807641716517182, "time": 80.70006489753723, "val_coef": 0.5276496882239977, "val_img_l1": 0.05447728093713522, "val_psnr": 23.9616533683406}
+21:00:26 86 C pause
+21:00:36 89 C pause
+21:00:46 88 C pause
+21:00:56 88 C pause
+21:01:06 88 C pause
+21:01:16 88 C pause
+21:01:26 88 C pause
+21:01:36 89 C pause
+{"epoch": 51, "train_loss": 0.5748507605257259, "time": 80.26467490196228, "val_coef": 0.5258037721117338, "val_img_l1": 0.05591521908839544, "val_psnr": 23.712878952423733}
+21:01:46 88 C pause
+21:01:56 89 C pause
+21:02:07 89 C pause
+21:02:17 87 C pause
+21:02:27 86 C pause
+21:02:37 88 C pause
+21:02:47 88 C pause
+21:02:57 85 C pause
+{"epoch": 52, "train_loss": 0.5778273822683276, "time": 80.36632752418518, "val_coef": 0.524281325439612, "val_img_l1": 0.052879612892866135, "val_psnr": 24.053865298628807}
+21:03:07 88 C pause
+21:03:17 86 C pause
+21:03:27 85 C pause
+21:03:37 86 C pause
+21:03:47 86 C pause
+21:03:57 86 C pause
+21:04:07 86 C pause
+21:04:17 86 C pause
+{"epoch": 53, "train_loss": 0.5722341980998363, "time": 80.31981182098389, "val_coef": 0.5179230198264122, "val_img_l1": 0.05480798240751028, "val_psnr": 23.92917298277219}
+21:04:27 86 C pause
+21:04:37 86 C pause
+21:04:48 86 C pause
+21:04:58 86 C pause
+21:05:08 85 C pause
+21:05:18 88 C pause
+21:05:28 86 C pause
+21:05:38 87 C pause
+{"epoch": 54, "train_loss": 0.5680684653998224, "time": 80.3549268245697, "val_coef": 0.5212951824069023, "val_img_l1": 0.0544087216258049, "val_psnr": 23.821141098936398}
+21:05:48 86 C pause
+21:05:58 85 C pause
+21:06:08 87 C pause
+21:06:18 86 C pause
+21:06:28 86 C pause
+21:06:38 86 C pause
+21:06:48 86 C pause
+21:06:58 86 C pause
+{"epoch": 55, "train_loss": 0.5638979651309826, "time": 80.37387275695801, "val_coef": 0.5348491991559664, "val_img_l1": 0.053617583587765694, "val_psnr": 23.70089379615254}
+21:07:08 86 C pause
+21:07:18 88 C pause
+21:07:29 86 C pause
+21:07:39 86 C pause
+21:07:49 87 C pause
+21:07:59 87 C pause
+21:08:09 86 C pause
+21:08:19 86 C pause
+{"epoch": 56, "train_loss": 0.5582567504560104, "time": 80.35248160362244, "val_coef": 0.5276661242047945, "val_img_l1": 0.053719100231925644, "val_psnr": 23.88142959939109}
+21:08:29 86 C pause
+21:08:39 86 C pause
+21:08:49 86 C pause
+21:08:59 86 C pause
+21:09:09 86 C pause
+21:09:19 88 C pause
+21:09:29 86 C pause
+21:09:39 86 C pause
+{"epoch": 57, "train_loss": 0.5550060166855051, "time": 80.41382479667664, "val_coef": 0.523953951895237, "val_img_l1": 0.05362858188649019, "val_psnr": 23.83217995531029}
+21:09:49 87 C pause
+21:09:59 86 C pause
+21:10:10 87 C pause
+21:10:20 87 C pause
+21:10:30 86 C pause
+21:10:40 86 C pause
+21:10:50 86 C pause
+21:11:00 86 C pause
+{"epoch": 58, "train_loss": 0.5580679055817601, "time": 80.32184338569641, "val_coef": 0.5292325814565023, "val_img_l1": 0.0540274769688646, "val_psnr": 23.715360282195938}
+21:11:10 85 C pause
+21:11:20 85 C pause
+21:11:30 88 C pause
+21:11:40 87 C pause
+21:11:50 85 C pause
+21:12:00 86 C pause
+21:12:10 86 C pause
+21:12:20 86 C pause
+{"epoch": 59, "train_loss": 0.5590783417826951, "time": 80.36524963378906, "val_coef": 0.5185373748342196, "val_img_l1": 0.05190323727826277, "val_psnr": 24.208670592970318}
+21:12:30 86 C pause
+21:12:40 87 C pause
+21:12:51 85 C pause
+21:13:01 86 C pause
+21:13:11 85 C pause
+21:13:21 86 C pause
+21:13:31 86 C pause
+21:13:41 85 C pause
+{"epoch": 60, "train_loss": 0.5548036895215712, "time": 80.31913232803345, "val_coef": 0.534479541083177, "val_img_l1": 0.05286131426692009, "val_psnr": 23.86104030410449}

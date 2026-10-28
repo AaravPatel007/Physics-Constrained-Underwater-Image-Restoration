@@ -1,0 +1,62 @@
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 5310.28it/s]
+{
+ "D1/T_S03272": {
+  "raw": 29.449219637358016,
+  "gray-world": 8.869735841007985,
+  "Sea-thru (classical, SfM range)": 15.685087419009319,
+  "BetaNet [SfM range]": 15.96216696963318,
+  "BetaNet + gray-world [SfM range]": 11.708327136036944,
+  "BetaNet [DAv2 (no anchor)]": 10.878431165309019,
+  "BetaNet + gray-world [DAv2 (no anchor)]": 13.094469212174092,
+  "BetaNet [DAv2 + 1 range reading]": 16.455064823687366,
+  "BetaNet + gray-world [DAv2 + 1 range reading]": 12.173222897345264,
+  "UNet (black box, SfM range)": 2.58895660191178
+ },
+ "D1/T_S03425": {
+  "raw": 29.393426517408034,
+  "gray-world": 8.05449731130341,
+  "Sea-thru (classical, SfM range)": 16.637404809183845,
+  "BetaNet [SfM range]": 17.750263990940415,
+  "BetaNet + gray-world [SfM range]": 11.235603482684796,
+  "BetaNet [DAv2 (no anchor)]": 9.86384680806958,
+  "BetaNet + gray-world [DAv2 (no anchor)]": 10.377100317769633,
+  "BetaNet [DAv2 + 1 range reading]": 17.736479198732727,
+  "BetaNet + gray-world [DAv2 + 1 range reading]": 11.08469841954693,
+  "UNet (black box, SfM range)": 3.924229566737427
+ }
+}
+{
+ "raw": {
+  "psnr": 16.442222864728326,
+  "ssim": 0.7394956970165012,
+  "de2000": 17.512162227889625,
+  "uciqe": 0.3125072941184044
+ },
+ "gray-world": {
+  "psnr": 17.72124158624609,
+  "ssim": 0.7637449155745794,
+  "de2000": 13.787161839401895,
+  "uciqe": 0.25523736129204433
+ },
+ "BetaNet": {
+  "psnr": 17.882462630790542,
+  "ssim": 0.7814776302139264,
+  "de2000": 13.406737829066824,
+  "uciqe": 0.41412231392330595
+ },
+ "BetaNet + gray-world": {
+  "psnr": 18.478278019931174,
+  "ssim": 0.7827849213200064,
+  "de2000": 13.232182121873802,
+  "uciqe": 0.38724371790885925
+ },
+ "UNet (black box)": {
+  "psnr": 17.552066438329298,
+  "ssim": 0.8160583578203323,
+  "de2000": 15.692294591221275,
+  "uciqe": 0.38503779735830096
+ },
+ "reference": {
+  "uciqe": 0.3875365469712254
+ }
+}

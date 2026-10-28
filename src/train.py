@@ -28,7 +28,7 @@ def load_split(name):
     return torch.from_numpy(d["rgb"]), torch.from_numpy(d["depth"])
 
 
-def make_batch(rgb, depth, idx, gen, device, augment=True, water=None):
+def make_batch(rgb, depth, idx, gen, device, augment=True, water=None, murky_keep=1.0):
     J = srgb_to_linear(rgb[idx].to(device).permute(0, 3, 1, 2).float() / 255)
     z = depth[idx].to(device).float()[:, None]
     n = len(idx)
@@ -36,7 +36,7 @@ def make_batch(rgb, depth, idx, gen, device, augment=True, water=None):
         flip = torch.rand(n, generator=gen) < 0.5
         J[flip], z[flip] = J[flip].flip(-1), z[flip].flip(-1)
         z = z * torch.exp(torch.empty(n, 1, 1, 1).uniform_(math.log(0.7), math.log(2.0), generator=gen)).to(device)
-    w = water if water is not None else sample_water(n, device, gen)
+    w = water if water is not None else sample_water(n, device, gen, murky_keep=murky_keep)
     k = torch.empty(n, 1).uniform_(0.7, 1.3, generator=gen).to(device) if augment else torch.ones(n, 1, device=device)
     w = {**w, "B_inf": w["B_inf"] * k}
     J = J * k[:, :, None, None]
@@ -69,13 +69,19 @@ def main():
     ap.add_argument("--bs", type=int, default=24)
     ap.add_argument("--lr", type=float, default=5e-4)
     ap.add_argument("--name", required=True)
+    ap.add_argument("--data", default="train", help="data/nyu_<data>.npz (train_big = 49 shards, prep_nyu_more.py)")
+    ap.add_argument("--nval", type=int, default=0, help="validation frames at the end (0 = 10%%)")
+    ap.add_argument("--murky-keep", type=float, default=1.0, help="fraction of near-hopeless waters kept")
+    ap.add_argument("--resume-epoch", type=int, default=0,
+                    help="continue from results/<name>/best.pt saved at this epoch (LR schedule fast-forwarded; "
+                         "optimizer moments restart because best.pt holds weights only)")
     a = ap.parse_args()
 
     dev = "cuda"
     torch.manual_seed(0)
     gen = torch.Generator().manual_seed(0)
-    rgb, depth = load_split("train")
-    nval = max(64, len(rgb) // 10)          # last frames = last shard = rooms not in train
+    rgb, depth = load_split(a.data)
+    nval = a.nval or max(64, len(rgb) // 10)  # last frames = last shards = rooms not in train
     tr_idx, va_idx = torch.arange(len(rgb) - nval), torch.arange(len(rgb) - nval, len(rgb))
     vgen = torch.Generator().manual_seed(123)
     val_water = sample_water(nval, dev, vgen)
@@ -88,14 +94,20 @@ def main():
     out = ROOT / "results" / a.name
     out.mkdir(parents=True, exist_ok=True)
     log, best = [], float("inf")
+    if a.resume_epoch:
+        net.load_state_dict(torch.load(out / "best.pt", map_location=dev)["state"])
+        log = [r for r in json.load(open(out / "log.json")) if r["epoch"] <= a.resume_epoch]
+        best = min(r.get("val_coef", 0) + r["val_img_l1"] * 10 for r in log)
+        for _ in range(a.resume_epoch * (len(tr_idx) // a.bs)):
+            sched.step()
     print(f"{a.name}: {len(tr_idx)} train / {nval} val scenes, {sum(p.numel() for p in net.parameters())/1e6:.1f}M params", flush=True)
 
-    for ep in range(a.epochs):
+    for ep in range(a.resume_epoch, a.epochs):
         net.train()
         t0, tl = time.time(), []
         perm = tr_idx[torch.randperm(len(tr_idx), generator=gen)]
         for b in range(len(perm) // a.bs):
-            I, z, J, w = make_batch(rgb, depth, perm[b * a.bs:(b + 1) * a.bs], gen, dev)
+            I, z, J, w = make_batch(rgb, depth, perm[b * a.bs:(b + 1) * a.bs], gen, dev, murky_keep=a.murky_keep)
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 p = net(I, z)
             if a.model == "beta":

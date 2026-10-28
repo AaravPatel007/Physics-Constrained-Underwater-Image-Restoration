@@ -1,5 +1,9 @@
 # Likely questions at the review, and short answers
 
+Part 1 = questions about BetaNet before fine-tuning. Part 2 (at the end) = questions about the fine-tuning attempts (fig15–fig20).
+
+# PART 1: BetaNet (before fine-tuning)
+
 **Q: Why not just train an image-to-image network (like UWCNN / the friend's BridgeNet)?**
 We trained one (the UNet baseline). It wins on synthetic data (25.1 vs 20.0 dB) and on our two
 chart frames, because it learns the training distribution directly. But on real water it paints
@@ -40,37 +44,8 @@ sites must differ. (3) Synthetic test rooms never seen in training, where the tr
 **Q: Isn't NYU-v2 (indoor rooms) a strange training set for underwater?**
 Yes. It is the standard recipe (UWCNN) because it has real metric depth, but the scene content
 is indoors. The physics is the same whatever the scene, and that is what the network must learn,
-yet scene priors leak in. We have since fine-tuned on 552 real Sea-thru dive frames without labels
-(next questions). Still to do: outdoor/natural RGB-D and extra realism (forward-scatter blur, marine snow).
-
-**Q: How can you fine-tune on real photos when nobody knows their true coefficients?**
-We use physics checks instead of labels, the same cues classical Sea-thru uses. The darkest pixels at
-each distance must sit on the predicted haze curve. After removing the water, near and far parts of the
-scene must have the same average colour. The restored image should be grey on average. Every step also
-contains a synthetic batch with known coefficients, so the numbers keep their physical units. Without
-that anchor, synthetic β_D error went from 19 % to 70 % while the real-image losses looked just as good.
-
-**Q: Did it actually help on real photos?**
-On held-out frames, yes. Without the final gray-world step, the grey-patch error on the chart frames went
-from 16–17° to about 10°: the network now gets the sunlight colour right by itself. With gray-world it is
-9.4 / 8.2°, level with gray-world alone (8.9 / 8.1°). Colour drift with distance on the never-seen dive
-D3 nearly halved (0.47 → 0.27). The synthetic test did not get worse (PSNR 20.0 → 20.4 dB). Caveats: only
-2 chart frames, and the outputs are flatter in contrast than before.
-
-**Q: What went wrong during fine-tuning?**
-Our first version added a "frames from the same dive share the same water" loss. Every dive then got the
-same coefficients: one average water, so a turbid canyon and a clear reef read alike. The images still
-looked fine. Only the per-dive coefficient check caught it, which is the same lesson as the image-only
-ablation: good images do not imply right coefficients. Dropping that loss, or adding a small "teacher"
-term that keeps the coefficients near the original model's, fixed it (fig18, fig20). Fine-tuning on UIEB
-also made UIEB worse. UIEB has no depth, and the monocular depth has the wrong scale, which corrupts the
-distance-based losses.
-
-**Q: How did you choose the final model? Didn't you just pick the best chart number?**
-No. The rule was written before looking: synthetic accuracy must not drop, the dives must still be told
-apart, then pick the lowest physics losses on held-out frames. The chart frames and UIEB are only reported.
-We changed the rule once, openly: its first spread measure let the collapsed model pass, because the
-spread within each dive collapsed too. That change is documented in `src/select_ft.py`.
+yet scene priors leak in. We later tried fine-tuning on 552 real Sea-thru dive frames without labels
+(see Part 2 below). Still to do: outdoor/natural RGB-D and extra realism (forward-scatter blur, marine snow).
 
 **Q: How is this different from Sea-thru?**
 Sea-thru solves an optimisation per image, using the darkest pixels at each range and an
@@ -104,3 +79,74 @@ reports that it does not beat Sea-thru on real photos.
 No-reference "underwater quality" scores built from colourfulness, contrast and sharpness. They
 reward over-saturated images, so a method can score high while being physically wrong. We report
 them only as secondary numbers.
+
+**Q: The UNet wins on synthetic data. Is it just overtrained? Would fewer epochs help?**
+No. It scores just as well on NYU rooms it never saw, so it is not overfitting. It has learned what NYU
+rooms look like (a domain bias), and the synthetic test is NYU rooms too. Proof: in the murkiest water (9C)
+it reaches 19.4 dB, while even the true coefficients only reach 10.9 dB, so it is filling in colours from
+memory. Fewer epochs would make it worse everywhere; the fix is physics constraints or sea-like training scenes.
+
+**Q: Why only measure grey patches? Why not the red or green ones?**
+A grey patch reflects all colours equally, so any camera records it as R = G = B once white-balanced: we
+know the right answer without knowing the camera. The right RGB for a red patch depends on that camera's
+colour filters, which the dataset does not give us.
+
+**Q: Gray-world matches you on the chart frames. Where does it get its numbers?**
+It assumes the scene's average colour is grey (Buchsbaum 1980) and scales R, G, B by one number each. It
+gives no coefficients, ignores distance and cannot remove haze. The chart sits at one distance, so a single
+gain per colour is exactly right for it; the metric doesn't test anything else in the scene.
+
+**Q: Has training converged? Is the network big enough?**
+The original 40-epoch run had not (still improving when the learning rate reached zero). A longer run on
+2.6× more rooms and 60 epochs is flat over its last 10 epochs, with training ≈ validation loss. It gained
++1.2 dB (95 % CI 1.0–1.4) and cut β_D / β_B error from 20 / 23 % to 17 / 18 %. More epochs won't help now;
+more varied data would. Size: no overfitting and no early floor, so capacity isn't the limit; the bigger
+limit is that 12 numbers describe one water and one light for the whole image.
+
+**Q: Why does a restoration sometimes go cyan in far parts of a scene?**
+Far away, the photo is mostly haze (at 8 m in coastal water, > 90 % of the red light is haze). A haze
+estimate that is a few percent too high removes all the red, and leftover green haze is multiplied by the
+distance gain (≈ ×6). Small coefficient errors become large far away; that is why we plan a confidence output.
+
+**Q: Why not train on SQUID or Sea-thru, since they are real underwater data?**
+Supervised training needs real metric depth *and* the true answer. Real datasets have depth but nobody
+knows their coefficients or clean images; UIEB has neither depth nor true colours (its references are the
+result volunteers liked best out of 12 enhancement methods). They are for testing, or for label-free
+fine-tuning (Part 2).
+
+# PART 2: Fine-tuning on real dives (mostly failed attempts)
+
+**Q: How can you fine-tune on real photos when nobody knows their true coefficients?**
+We use physics checks instead of labels, the same cues classical Sea-thru uses. The darkest pixels at
+each distance must sit on the predicted haze curve. After removing the water, near and far parts of the
+scene must have the same average colour. The restored image should be grey on average. Every step also
+contains a synthetic batch with known coefficients, so the numbers keep their physical units. Without
+that anchor, synthetic β_D error went from 19 % to 70 % while the real-image losses looked just as good.
+
+**Q: Did it actually help on real photos?**
+On held-out frames, yes. Without the final gray-world step, the grey-patch error on the chart frames went
+from 16–17° to about 10°: the network now gets the sunlight colour right by itself. With gray-world it is
+9.4 / 8.2°, level with gray-world alone (8.9 / 8.1°). Colour drift with distance on the never-seen dive
+D3 nearly halved (0.47 → 0.27). The synthetic test did not get worse (PSNR 20.0 → 20.4 dB). Caveats: only
+2 chart frames, and the outputs are flatter in contrast than before.
+
+**Q: What went wrong during fine-tuning?**
+Our first version added a "frames from the same dive share the same water" loss. Every dive then got the
+same coefficients: one average water, so a turbid canyon and a clear reef read alike. The images still
+looked fine. Only the per-dive coefficient check caught it, which is the same lesson as the image-only
+ablation: good images do not imply right coefficients. Dropping that loss, or adding a small "teacher"
+term that keeps the coefficients near the original model's, fixed it (fig18, fig20). Fine-tuning on UIEB
+also made UIEB worse. UIEB has no depth, and the monocular depth has the wrong scale, which corrupts the
+distance-based losses.
+
+**Q: How did you choose the final model? Didn't you just pick the best chart number?**
+No. The rule was written before looking: synthetic accuracy must not drop, the dives must still be told
+apart, then pick the lowest physics losses on held-out frames. The chart frames and UIEB are only reported.
+We changed the rule once, openly: its first spread measure let the collapsed model pass, because the
+spread within each dive collapsed too. That change is documented in `src/select_ft.py`.
+
+**Q: Does fine-tuning still help on the longer-trained model?**
+Partly. With the same recipe (no same-dive loss), the chart error with the network's own sunlight colour goes
+16.9° → 8.6° and colour drift on the unseen dive drops by a third, with no loss of synthetic accuracy (21.2 →
+21.5 dB). But the dives are told apart even less well (separation 1.29 → 1.19), so the losses need rebalancing
+(less gray-world, a small teacher weight) before it becomes the final model.

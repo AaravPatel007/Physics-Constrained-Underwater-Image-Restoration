@@ -1,0 +1,33 @@
+new shards: [1, 6, 10, 14, 19, 23, 29, 33, 37, 42, 47, 53, 57, 62, 66, 70, 75, 80, 85, 89, 95, 99, 103, 108, 112, 117, 121, 125, 131, 136]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+train-00001-of-00157-dc0e3f55da889be5.parquet 152
+train-00006-of-00157-9a6f3d876cb1693d.parquet 150
+train-00010-of-00157-63fe0425319164e8.parquet 152
+train-00014-of-00157-5a41e4c7ba1d048c.parquet 152
+train-00019-of-00157-e3b3084512408e10.parquet 152
+train-00023-of-00157-b8c8bea261e56000.parquet 152
+train-00029-of-00157-0a7c266b09f8126e.parquet 152
+train-00033-of-00157-8262a69380262005.parquet 152
+train-00037-of-00157-ccb42be2fc4584e7.parquet 152
+train-00042-of-00157-d4d8316b2ef10533.parquet 152
+train-00047-of-00157-116130f2da510241.parquet 152
+train-00053-of-00157-e452709bbfcbe5ad.parquet 152
+train-00057-of-00157-11a7540bc973cdf8.parquet 152
+train-00062-of-00157-09608b87f45070d2.parquet 152
+train-00066-of-00157-7ef90a3e7e4b4a3e.parquet 152
+train-00070-of-00157-3db8fe0c63dda946.parquet 144
+train-00075-of-00157-72ecc79942b45916.parquet 149
+train-00080-of-00157-8028a5e1311c81d0.parquet 152
+train-00085-of-00157-79229999fe43063d.parquet 152
+train-00089-of-00157-333f85c965629855.parquet 152
+train-00095-of-00157-c54659b0a522e247.parquet 152
+train-00099-of-00157-ed6ded33e47fda7c.parquet 152
+train-00103-of-00157-d29986ecb6a11408.parquet 152
+train-00108-of-00157-f57a9aa42856b4f1.parquet 152
+train-00112-of-00157-9588fddb789879f7.parquet 152
+train-00117-of-00157-324768dda4885475.parquet 152
+train-00121-of-00157-86b82f79dfd7950f.parquet 152
+train-00125-of-00157-11adfc7c1bdec8cf.parquet 152
+train-00131-of-00157-03c9f3cf5ac5d3f8.parquet 152
+train-00136-of-00157-38bc2588ae060672.parquet 152
+train_big (7428, 240, 320, 3) 4547 new frames

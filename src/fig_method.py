@@ -9,7 +9,7 @@ from prep_seathru import to_display
 from vizstyle import AXIS, INK, INK2, MUTED, SERIES, SURFACE, no_axes, plt
 
 ROOT = Path(__file__).resolve().parents[1]
-FIG = ROOT / "figures"
+FIG = ROOT / "figures" / "1_original_runs"
 
 
 def box(ax, x, y, w, h, title, sub="", fc="#ffffff", ec=AXIS, tc=INK):

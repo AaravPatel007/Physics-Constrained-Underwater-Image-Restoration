@@ -8,7 +8,7 @@ from physics import JERLOV_BETA, JERLOV_N, add_water, linear_to_srgb, sample_wat
 from vizstyle import CH, CH_MARK, INK2, MUTED, SERIES, no_axes, plt
 
 ROOT = Path(__file__).resolve().parents[1]
-FIG = ROOT / "figures"
+FIG = ROOT / "figures" / "1_original_runs"
 d = np.load(ROOT / "data" / "nyu_test.npz")
 SCENE = 37
 
@@ -107,7 +107,7 @@ def attenuation_curves():
 
 
 if __name__ == "__main__":
-    FIG.mkdir(exist_ok=True)
+    FIG.mkdir(parents=True, exist_ok=True)
     decomposition()
     jerlov_grid()
     attenuation_curves()
