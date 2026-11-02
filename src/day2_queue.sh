@@ -4,6 +4,8 @@
 # Model names: docs/MODELS.md.
 # Run 1: ./day2_queue.sh day2a_added_murky_water        (trained with --murky-keep 1.0 from scratch, --epochs 60)
 # Run 2: ./day2_queue.sh day2b_added_deep_red_starved_water --init baseline_v1_60ep_bigdata --epochs 20 --lr 1.5e-4 --murky-keep 0.4 --low-red 0.4
+# Run 4 (combined, from scratch, overnight ~55 min train + ~35 min tests):
+#   THREADS=4 ./day2_queue.sh day2d_added_murky_deep_red_camera_60ep --epochs 60 --lr 5e-4 --murky-keep 1.0 --low-red 0.4 --camera 0.5
 # Run 3: THREADS=4 ./day2_queue.sh day2c_added_camera_flaws --init baseline_v1_60ep_bigdata --epochs 20 --lr 1.5e-4 --murky-keep 0.4 --camera 0.5
 # Outputs: results/review2_day2/<run name>/ (eval.json + uieb_outputs_<model>.npz from eval_day1.py,
 # real_eval_*.json, dive_separation.json). Logs: results/logs/<run name>.log (training), <run name>_eval.log.

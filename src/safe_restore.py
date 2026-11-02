@@ -21,6 +21,11 @@ import torch.nn.functional as F
 
 from physics import _bc, linear_to_srgb
 
+# The recipe in use from Day 1b on: safe_restore(I, z, wat, **CURRENT_RECIPE). White balance as tuned in Day 1;
+# 3 px smoothing patch (r=1) instead of 15 px, which removes the pink halo at object edges (eval_day1b.py).
+DAY1_RECIPE = dict(wb_cap=16.0, wb_p=4, eps=1e-4, r=7, margin=3.0)
+CURRENT_RECIPE = dict(DAY1_RECIPE, r=1)
+
 
 def box(x, r):
     """Mean over a (2r+1)^2 window, reflect padding."""
@@ -103,7 +108,7 @@ def robust_white_balance(x, w, cap=8.0, p=1, min_frac=0.05):
 
 
 def safe_restore(I, z, wat, max_gain=50.0, use_cap=True, use_smooth=True, wb="robust", wb_cap=8.0, wb_p=1,
-                 r=7, eps=1e-4):
+                 r=7, eps=1e-4, margin=3.0):
     """Remove water like physics.remove_water, with the Day 1 fixes switchable for ablation. wb: "robust",
     "gray" (plain gray-world) or "E" (divide by the predicted sunlight colour, as physics.restore does).
     With use_cap=use_smooth=False and wb="gray" this equals gray_world(remove_water(...).clamp(0, 1.5))."""
@@ -111,7 +116,7 @@ def safe_restore(I, z, wat, max_gain=50.0, use_cap=True, use_smooth=True, wb="ro
     diag = {"fog_over_signal": (I < B).float().mean((0, 2, 3)).tolist()}
     sigma = noise_floor(I)
     if use_cap:
-        B = fog_cap(I, z, B, sigma)
+        B = fog_cap(I, z, B, sigma, margin=margin)
     D = I - B
     diag["fog_over_signal_after"] = (D < 0).float().mean((0, 2, 3)).tolist()
     w = trust(D, I, sigma)

@@ -7,6 +7,7 @@
   python fig_day2.py day2a_added_murky_water 1_more_murky_water
   python fig_day2.py day2b_added_deep_red_starved_water 2_low_red_water
   python fig_day2.py day2c_added_camera_flaws 3_camera_flaws
+  python fig_day2.py day2d_added_murky_deep_red_camera_60ep 4_all_three_combined
 """
 import json
 import sys

@@ -4,6 +4,8 @@
 > - Method 1 model in use = `baseline_v1_60ep_bigdata` (60 epochs, big data) **+ Day 1 fixes** (applied at restore time, no retraining).
 > - Day 1 helped (UIEB 18.48 → 19.09 dB, ΔE 13.2 → 12.3, fins specks 10.8 → 4.4). Fins still blue-green.
 > - Day 2 = three retrains (`day2a_added_murky_water`, `day2b_added_deep_red_starved_water`, `day2c_added_camera_flaws`); none fixed the tint, all are side results. Conclusion: not a training-range problem.
+> - **Prepared, not run: Day 2 run d** (`day2d_added_murky_deep_red_camera_60ep`, all three changes together, from scratch, 60 epochs). Start it with the command in the Day 2 run d section below; ~90 min incl. tests; start `thermal_guard.py` first (the queue script does it).
+> - **Day 1b done (2 Nov, late):** the pink halo around objects (val #22) came from the red-from-green smoothing in 15 px patches. Tuned on the 200 UIEB train photos: **3 px patch, fog-cap margin unchanged at 3** (margin 3 is a true optimum: lower = hazier, higher = worse colour). Halo gone; 90 val photos ΔE 12.25 → 12.21 (55/90 better, small but significant). Trade-off: fins specks 4.4 → 5.8. Pink veil in #24 not fixed by any setting (fog cap; that photo's reference is itself purple-grey) = known limitation. See the Day 1b section below. **Day 1b is the recipe in use from now on**: `CURRENT_RECIPE` in `src/safe_restore.py` (Day 3 and later scripts must use it; the Day 1 / Day 2 figures stay as they were made).
 > - **Next: Day 3** (small touch-up network on the 800 UIEB train pairs, on top of the current model), then Day 4 (evaluation + slides). Review 2 is ~5–6 Nov.
 > - Machine notes: run `src/thermal_guard.py` while training, stop the user's `wec_rl` jobs, python = `/home/aarav-patel/wec_rl/.venv/bin/python`. `src/day2_queue.sh` trains + evaluates a run in one go (`THREADS=4` allowed).
 > - Pending idea (not run): "fog ≤ darkest pixels" hinge loss in `finetune.py`; gentler deep-water mix (~15 %).
@@ -124,6 +126,31 @@ Honest caveats for the talk:
   image or between methods, not as an absolute.
 - UIEB depth is estimated (Depth Anything V2), not measured.
 
+## Day 1b: fix the halo and check the haze (no retraining, done 2 Nov)
+Script `src/eval_day1b.py` → `results/review2_day1b_smaller_smoothing_patch/eval.json`, figures in `figures/7_review2_day1b_smaller_smoothing_patch/`.
+- **Problem:** the 25-photo gallery showed a pink outline around the statue (val #22) and pink veils/haze in
+  some photos (#24).
+- **Tried:** smoothing patch 3 / 7 / 15 px × fog-cap safety margin 0 / 1 / 2 / 3 / 4 / 6 noise levels
+  (18 settings). White balance kept at the Day 1 values.
+- **How it was chosen (rule fixed before running):** all 18 settings on the 200 UIEB *train* photos;
+  lowest mean ΔE wins; settings within 0.05 count as tied and the one with the lowest colour error next to
+  edges (where halos show) wins. The 90 val photos were used once, at the end.
+- **Chosen: 3 px patch, margin 3.** On train, ΔE 12.01 (Day 1) → 11.96. Margin 3 is the best margin for
+  every patch size: smaller margins leave fog in (hazier), larger ones remove too much (worse colour).
+  So the haze was not caused by too large a margin, as first guessed.
+- **90 val photos (test):**
+
+  | | PSNR | ΔE | ΔE next to edges | red specks | haze (ref 0.167) |
+  |---|---|---|---|---|---|
+  | No Day 1 fixes | 18.48 | 13.23 | 13.80 | 7.72 | 0.128 |
+  | Day 1 (15 px) | 19.09 | 12.25 | 12.60 | 6.50 | 0.175 |
+  | **Day 1b (3 px)** | **19.11** | **12.21** | **12.56** | 6.56 | 0.170 |
+
+  ΔE change −0.03 (95 % CI −0.05 to −0.01), better in 55/90. Fins photo: ΔE 18.7 → 18.6, specks 4.4 → 5.8
+  (the smaller patch smooths the fins' red noise less). Statue #22: ΔE 4.4 → 4.2, halo gone.
+- **Not fixed:** the pink veil in #24 (ΔE 18.1 either way, raw model 16.5). It comes from the fog cap, and no
+  setting changes it. Its UIEB reference is itself purple-grey. Present it as a limitation.
+
 ## Day 2: teach the model about extreme water (retrain, ~45 min per run)
 - **More realistic fake training images:**
   - water where red is almost completely gone, in both the sunlight and the fog;
@@ -208,6 +235,17 @@ colour.** With the Day 1 fixes on, the specks are already gone, so the end resul
 runs agree: the cyan tint is not a training-range problem. In the fins photo the red signal is essentially absent;
 the physics model cannot invent it, and the UIEB reference is a hand-picked enhancement. → Day 3 (learned touch-up
 on the 800 UIEB train pairs) is the remaining lever. Base stays `baseline_v1_60ep_bigdata`.
+
+### Day 2 run d: all three together, from scratch (prepared 2 Nov 2026, NOT run yet)
+Why: runs a–c each changed one thing, and b and c were only 20 extra epochs at one learning rate, so "nothing helps"
+was not proven. This run tests "does more of everything, trained properly, help?". Model `day2d_added_murky_deep_red_camera_60ep`: from scratch (no
+`--init`), 60 epochs, lr 5e-4 (same as baseline_v1), big data, ALL murky water (1.0), 40 % deep red-starved,
+half the photos with camera flaws. Same validation water as baseline_v1, so scores are comparable.
+Command (from `src/`):
+`THREADS=4 ./day2_queue.sh day2d_added_murky_deep_red_camera_60ep --epochs 60 --lr 5e-4 --murky-keep 1.0 --low-red 0.4 --camera 0.5 > ../results/logs/day2d_added_murky_deep_red_camera_60ep_eval.log 2>&1`
+(run in the background; ~52 s/epoch, then ~35 min of tests). Then: `python fig_day2.py day2d_added_murky_deep_red_camera_60ep 4_all_three_combined`,
+fill the table here, and compare with baseline_v1 on: fins, UIEB, red-starved 8, charts, dive separation.
+Decision rule: replaces baseline_v1 only if it is better on UIEB and the red-starved photos without losing on charts / separation.
 
 ### Does Day 1 still matter after Day 2? Yes.
 - Day 2 fixes the model's **estimates** (fog amount, water colour, sunlight colour).
