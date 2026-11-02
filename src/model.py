@@ -80,3 +80,34 @@ class UNetDirect(nn.Module):
             x = blk(torch.cat([x, skips.pop()], 1))
         # predict a residual on the gamma image, return linear
         return (self.out(x).float() + net_input(I, None)).clamp(0, 1.2) ** 2
+
+
+class RefineNet(nn.Module):
+    """Small residual corrector on top of a frozen BetaNet. Sees (BetaNet's restored image, the water photo, range) and
+    predicts a correction in gamma space, so it can only nudge the physics result, not replace it (~0.1M params vs
+    UNetDirect's 7.8M). The last conv is zero-initialised: at step 0 the output equals BetaNet's restoration exactly."""
+    def __init__(self, ch=(16, 32, 64)):
+        super().__init__()
+        self.downs, cin = nn.ModuleList(), 7
+        for c in ch:
+            self.downs.append(_block(cin, c))
+            cin = c
+        self.upconv, self.ups = nn.ModuleList(), nn.ModuleList()
+        for c in reversed(ch[:-1]):
+            self.upconv.append(nn.ConvTranspose2d(cin, c, 2, 2))
+            self.ups.append(_block(2 * c, c))
+            cin = c
+        self.out = nn.Conv2d(cin, 3, 1)
+        nn.init.zeros_(self.out.weight), nn.init.zeros_(self.out.bias)
+
+    def forward(self, Jhat, I, z):
+        g = Jhat.clamp(0, 1).sqrt()
+        x, skips = torch.cat([g, I.clamp(0, 1).sqrt(), z / 10.0], 1), []
+        for i, d in enumerate(self.downs):
+            x = d(x)
+            if i < len(self.downs) - 1:
+                skips.append(x)
+                x = nn.functional.max_pool2d(x, 2)
+        for up, blk in zip(self.upconv, self.ups):
+            x = blk(torch.cat([up(x), skips.pop()], 1))
+        return (self.out(x).float() + g).clamp(0, 1.2) ** 2
