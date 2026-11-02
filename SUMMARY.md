@@ -1,5 +1,14 @@
 # PROJECT SUMMARY: read this first when resuming
 
+> **Model names changed 2 Nov 2026:** see `docs/MODELS.md` (`beta_rgbd` = `baseline_v0_40ep`, `beta_rgbd_big` = `baseline_v1_60ep_bigdata`; old names still work as links). Review 2 status: `docs/review2_plan.md` (START HERE box at the top).
+
+> **Review 2 (~5–6 Nov 2026), current work:** two methods. Method 1 (Aarav) = keep improving BetaNet; Method 2
+> (friends) = sunlight from depth, E_c(d_s) = E0_c·exp(−K_d,c·d_s). Plan, Day 1 results and caveats:
+> `docs/review2_plan.md`. Day 1 (no retraining: fog cap, red smoothing, careful white balance) is **done**:
+> `src/safe_restore.py`, `src/eval_day1.py`, `src/fig_day1.py` → `results/review2_day1/`,
+> `figures/5_review2_day1_safe_restore/`. UIEB 18.48 → 19.09 dB, ΔE 13.2 → 12.3, fins specks 10.8 → 4.4,
+> fins still green (red is inside the noise; needs Day 2/3). Day 2 (three retrains: murky water, deep red-starved water, camera flaws) is **done and did not fix the tint**; next: Day 3 (touch-up network on UIEB pairs). Details: `docs/review2_plan.md`.
+
 OE5510 (ML for Ocean Engineering), Group 4. **Intermediate review on 29 Oct 2026** (15-min group talk;
 rubric mapping in `docs/presentation_plan.md`). Last updated: 28 Oct 2026, end of session 3 (longer base training
 and verdict, §3c). Presenter's plain-language guide: `docs/presentation_guide.md`.
@@ -199,7 +208,7 @@ image sides divisible by 8 (reflect-pad).
 Session-2 gotchas: `eval_synth.py` evaluates *every* `results/*/best.pt`, which now includes the ft_* runs and a
 leftover `results/_smoke/` test run (delete `_smoke/` and `ft_pilot/` by hand; they are throwaway). Keep torch at
 2–4 threads (`OMP_NUM_THREADS`) on this laptop; unthrottled training took the CPU to 86 °C. Launching with
-`nohup … &` from Claude once stalled on a hidden permission prompt for 3 h; use the tool's background mode.
+`nohup … &` once stalled on a hidden permission prompt for 3 h; use the shell's background mode instead.
 
 Longer run (session 3):
 ```bash

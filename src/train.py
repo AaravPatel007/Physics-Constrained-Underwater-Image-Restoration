@@ -18,7 +18,7 @@ import numpy as np
 import torch
 
 from model import BetaNet, UNetDirect
-from physics import add_water, restore, sample_water, srgb_to_linear
+from physics import add_water, camera_flaws, restore, sample_water, srgb_to_linear
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -28,7 +28,7 @@ def load_split(name):
     return torch.from_numpy(d["rgb"]), torch.from_numpy(d["depth"])
 
 
-def make_batch(rgb, depth, idx, gen, device, augment=True, water=None, murky_keep=1.0):
+def make_batch(rgb, depth, idx, gen, device, augment=True, water=None, murky_keep=1.0, low_red=0.0, camera=0.0):
     J = srgb_to_linear(rgb[idx].to(device).permute(0, 3, 1, 2).float() / 255)
     z = depth[idx].to(device).float()[:, None]
     n = len(idx)
@@ -36,13 +36,15 @@ def make_batch(rgb, depth, idx, gen, device, augment=True, water=None, murky_kee
         flip = torch.rand(n, generator=gen) < 0.5
         J[flip], z[flip] = J[flip].flip(-1), z[flip].flip(-1)
         z = z * torch.exp(torch.empty(n, 1, 1, 1).uniform_(math.log(0.7), math.log(2.0), generator=gen)).to(device)
-    w = water if water is not None else sample_water(n, device, gen, murky_keep=murky_keep)
+    w = water if water is not None else sample_water(n, device, gen, murky_keep=murky_keep, low_red=low_red)
     k = torch.empty(n, 1).uniform_(0.7, 1.3, generator=gen).to(device) if augment else torch.ones(n, 1, device=device)
     w = {**w, "B_inf": w["B_inf"] * k}
     J = J * k[:, :, None, None]
     I, _, _ = add_water(J, z, w)
     sigma = torch.empty(n, 1, 1, 1).uniform_(0.002, 0.01, generator=gen).to(device)
     I = (I + sigma * torch.randn(I.shape, generator=gen).to(device)).clamp(0, 1)
+    if camera > 0:
+        I = camera_flaws(I, gen, p=camera)
     return I, z, J, w
 
 
@@ -72,6 +74,11 @@ def main():
     ap.add_argument("--data", default="train", help="data/nyu_<data>.npz (train_big = 49 shards, prep_nyu_more.py)")
     ap.add_argument("--nval", type=int, default=0, help="validation frames at the end (0 = 10%%)")
     ap.add_argument("--murky-keep", type=float, default=1.0, help="fraction of near-hopeless waters kept")
+    ap.add_argument("--low-red", type=float, default=0.0,
+                    help="fraction of deep, red-starved waters (physics.sample_water); validation water is unchanged")
+    ap.add_argument("--camera", type=float, default=0.0,
+                    help="fraction of training images given camera flaws (shot noise, 8-bit, JPEG; physics.camera_flaws)")
+    ap.add_argument("--init", default="", help="start from the weights of results/<init>/best.pt (e.g. baseline_v1_60ep_bigdata)")
     ap.add_argument("--resume-epoch", type=int, default=0,
                     help="continue from results/<name>/best.pt saved at this epoch (LR schedule fast-forwarded; "
                          "optimizer moments restart because best.pt holds weights only)")
@@ -88,6 +95,8 @@ def main():
 
     use_depth = not a.no_depth
     net = (BetaNet(use_depth) if a.model == "beta" else UNetDirect(use_depth)).to(dev)
+    if a.init:
+        net.load_state_dict(torch.load(ROOT / "results" / a.init / "best.pt", map_location=dev)["state"])
     opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=1e-4)
     steps = a.epochs * (len(tr_idx) // a.bs)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, a.lr, total_steps=steps, pct_start=0.05)
@@ -107,7 +116,8 @@ def main():
         t0, tl = time.time(), []
         perm = tr_idx[torch.randperm(len(tr_idx), generator=gen)]
         for b in range(len(perm) // a.bs):
-            I, z, J, w = make_batch(rgb, depth, perm[b * a.bs:(b + 1) * a.bs], gen, dev, murky_keep=a.murky_keep)
+            I, z, J, w = make_batch(rgb, depth, perm[b * a.bs:(b + 1) * a.bs], gen, dev, murky_keep=a.murky_keep, low_red=a.low_red,
+                                    camera=a.camera)
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 p = net(I, z)
             if a.model == "beta":

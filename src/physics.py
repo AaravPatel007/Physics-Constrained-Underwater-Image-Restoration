@@ -44,10 +44,32 @@ def linear_to_srgb(x):
     return torch.where(x <= 0.0031308, 12.92 * x, 1.055 * x.clamp_min(1e-8) ** (1 / 2.4) - 0.055)
 
 
+def camera_flaws(I, gen, p=0.5, q=(50, 95)):
+    """What a real camera does to the linear image, on a fraction p of the batch: signal-dependent shot noise
+    (variance a*I, a log-uniform 1e-4..3e-3), sRGB tone curve, 8-bit rounding and JPEG (quality q, 4:2:0 chroma
+    subsampling, which smears weak red), then back to linear. I (B,3,H,W) in [0, 1]."""
+    import cv2
+    import numpy as np
+    hit = torch.nonzero(torch.rand(I.shape[0], generator=gen) < p).flatten().tolist()
+    if not hit:
+        return I
+    I = I.clone()
+    for i in hit:
+        a = math.exp(torch.empty(1).uniform_(math.log(1e-4), math.log(3e-3), generator=gen).item())
+        x = I[i] + torch.sqrt(a * I[i]) * torch.randn(I[i].shape, generator=gen).to(I.device)
+        s = (linear_to_srgb(x) * 255).round().byte().permute(1, 2, 0).cpu().numpy()
+        qual = int(torch.randint(q[0], q[1] + 1, (1,), generator=gen))
+        ok, buf = cv2.imencode(".jpg", np.ascontiguousarray(s[..., ::-1]), [
+            cv2.IMWRITE_JPEG_QUALITY, qual, cv2.IMWRITE_JPEG_SAMPLING_FACTOR, cv2.IMWRITE_JPEG_SAMPLING_FACTOR_420])
+        s = cv2.imdecode(buf, cv2.IMREAD_COLOR)[..., ::-1].copy()
+        I[i] = srgb_to_linear(torch.from_numpy(s).to(I.device).permute(2, 0, 1).float() / 255)
+    return I
+
+
 MURKY_BETA = 0.8  # mean beta_D [1/m] above which even the true coefficients cannot restore the image (~Jerlov 9C)
 
 
-def sample_water(n, device="cpu", gen=None, water_type=None, murky_keep=1.0):
+def sample_water(n, device="cpu", gen=None, water_type=None, murky_keep=1.0, low_red=0.0):
     """Sample n random, physically plausible waters.
 
     beta_D: pick a point on the oceanic or coastal Jerlov branch (continuous interpolation between
@@ -58,6 +80,10 @@ def sample_water(n, device="cpu", gen=None, water_type=None, murky_keep=1.0):
     If water_type is given (e.g. "3C"), use exactly that Jerlov type with no jitter.
     murky_keep < 1 keeps only that fraction of waters with mean beta_D > MURKY_BETA (rejection
     sampling), so near-hopeless water is seen less often but not never.
+    low_red > 0 (review 2, day 2) makes that fraction of waters "deep and red-starved", like the UIEB fins photo:
+    sunlight from 12-30 m down (red ~0.1-3 % of the strongest colour, floor 0.002 instead of 0.03) and a grey
+    share in B_inf drawn log-uniformly from 0.2-10 % instead of always 10 %. low_red = 0 gives the original sampler
+    (same random draws), so old models and tests reproduce.
     Returns dict of (n, 3) tensors.
     """
     def U(lo, hi, *shape):
@@ -93,13 +119,21 @@ def sample_water(n, device="cpu", gen=None, water_type=None, murky_keep=1.0):
     # E: colour of the sunlight that reaches the scene after d_v metres of descent (normalised, max 1).
     # This is why a reef 1 m from the camera at 10 m depth is already blue-green.
     d_v = U(0.5, 12.0, n, 1)
+    deep = torch.zeros(n, 1, dtype=torch.bool)
+    if low_red > 0:
+        deep = torch.rand(n, 1, generator=gen) < low_red
+        d_v = torch.where(deep, U(12.0, 30.0, n, 1), d_v)
     E = torch.exp(-bd * d_v * U(0.6, 1.0, n, 1))
-    E = (E / E.amax(1, keepdim=True)).clamp_min(0.03)
+    E = E / E.amax(1, keepdim=True)
+    E = torch.where(deep, E.clamp_min(0.002), E.clamp_min(0.03))
     # B_inf ~ (b/c) * E: scattering albedo b/c is low where absorption dominates (red in ocean
     # water), approximated as (min beta / beta)^0.5.
     albedo = (bd.amin(1, keepdim=True) / bd) ** 0.5
     col = albedo * E * U(0.85, 1.15, n, 3)
-    col = 0.9 * col / col.amax(1, keepdim=True) + 0.1
+    grey = torch.full((n, 1), 0.1)
+    if low_red > 0:
+        grey = torch.where(deep, torch.exp(U(math.log(0.002), math.log(0.1), n, 1)), grey)
+    col = (1 - grey) * col / col.amax(1, keepdim=True) + grey
     binf = col / col.amax(1, keepdim=True) * U(0.15, 0.65, n, 1)
     return {"beta_D": bd.to(device), "beta_B": bb.to(device), "B_inf": binf.to(device), "E": E.to(device)}
 

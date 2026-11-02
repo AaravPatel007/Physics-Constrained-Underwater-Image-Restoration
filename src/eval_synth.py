@@ -82,7 +82,7 @@ def run(rgb, depth, water, nets, use_dav2, bs=16, seed=7):
 
 def main():
     rgb, depth = load_split("test")
-    names = [p.parent.name for p in sorted((ROOT / "results").glob("*/best.pt"))]
+    names = [p.parent.name for p in sorted((ROOT / "results").glob("*/best.pt")) if not p.parent.is_symlink()]  # skip old-name links
     nets = {n: load(n) for n in names}
     print("models:", names)
 
