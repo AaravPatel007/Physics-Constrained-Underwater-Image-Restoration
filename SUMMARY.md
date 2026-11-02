@@ -156,6 +156,22 @@ also `ft_big_nodive` = the ft_nodive recipe on the new base):
 - Decision: the new base model going forward. For the 29 Oct talk, keep the original for the main slides and add one
   "training longer" slide. Rebalance the fine-tuning losses (less gray, small teacher weight) before fine-tuning the new base. Figures: `figures/3_new_runs/` (loss curves, examples, results).
 
+## 3d. Session 4 (3 Nov 2026): RefineNet, a small residual refiner (branch `RefineNet`, next step 4 done)
+- Idea: BetaNet is ~4 dB under the oracle on synthetic water; close that gap with a *small* black box, not a UNet/BridgeNet.
+- `RefineNet` (`model.py`, 0.12M params): input = BetaNet restoration + photo + range, output = BetaNet result + gamma-space
+  residual. Last conv zero-init, so step 0 equals BetaNet. BetaNet frozen, coefficients unchanged.
+- Stage 1, synthetic only (`refine.py`, 20 ep, ~48 s/ep unthrottled): 654 test rooms 21.21 → **23.86 dB**, SSIM .659 → .728,
+  ΔE 13.48 → 10.06. But on 160 held-out real UIEB photos: 17.68 → **16.54** (worse; darkens/purples real water).
+- Stage 2, real fine-tune (`finetune_refine.py`, 12 ep, init stage 1): each step = 1 UIEB pair (L1 to reference) + 12-frame
+  synthetic batch (original loss) + 0.3 × L1 anchor to BetaNet's output. Held-out real **20.20 dB** (+2.52 vs BetaNet,
+  ΔE 13.24 → 11.51); synthetic test **23.43 dB** (+2.22). Better than BetaNet on both domains.
+- Split: the 800 `uieb_train` photos shuffled with seed 0, last 160 held out (never trained on). UIEB references are
+  enhanced photos, not ground truth.
+- Files: `results/refine_v1/` (stage 1), `results/refine_ft/` (stage 2; `ft_eval.json`, `test_eval.json`, `log.json`),
+  `figures/8_refinenet/` (synthetic, UIEB, and the 5-column before/after gallery). Logs: `results/logs/refine_*.log`.
+- Gotchas: the weights were not in git (`*.pt` ignored); this session ran in `~/Downloads/Garment/piper_x/.venv_vla`
+  (added lpips, python-pptx, lxml). The validation noise generator advances per epoch, so val BetaNet PSNR wobbles ~0.1 dB.
+
 ## 4. Files
 ```
 SUMMARY.md                  ← this file
@@ -234,7 +250,7 @@ AdamW moments (it holds weights only). New figures get descriptive filenames, no
    (colour vs water read-out); mark more chart frames at full resolution (D2/D5 charts are ~20 px at 1/4 res);
    UIEB only with a metric-depth fix (DAv2 scale) or reference-free losses that don't use range.
    Cheap display fixes: cap the amplification for no-depth pixels (open water washes out), contrast stretch.
-4. Hybrid: BetaNet physics output + small residual refiner (friend's BridgeNet/NAFNet) → black-box quality, kept interpretable.
+4. ~~Hybrid: BetaNet physics output + small residual refiner~~ done (§3d, branch `RefineNet`).
 5. Full real evaluation: mark all Sea-thru chart frames at full res (D3/D4 charts are rotated and small) + SQUID.
 6. Uncertainty head; Jerlov read-out. Stretch: YOLO mAP on restored images (original proposal).
 7. Open: the slide deck is not built yet; offered to build it (.pptx) in the old proposal's style.

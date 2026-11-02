@@ -335,6 +335,14 @@ model (every Part 1 figure is built on it), with one optional "training longer" 
 3. **Range-dependent β_D(z)** (predict the 4 Sea-thru parameters) and a **spatially varying illuminant**.
 4. **Hybrid:** BetaNet physics output + a small residual refiner (the friend's 7-channel NAFNet design),
    aiming for black-box image quality while keeping the coefficients.
+   - **Done (3 Nov 2026, branch `RefineNet`):** `RefineNet`, 0.12M params on frozen `baseline_v1_60ep_bigdata`
+     (input: BetaNet restoration + photo + range; zero-init gamma-space residual). Trained on synthetic only
+     (`refine.py`) it lifts the 654 test rooms 21.21 → 23.86 dB (68 % of the gap to the oracle's 25.11) but
+     *loses* 1.1 dB on 160 held-out real UIEB photos (17.68 → 16.54), the friend's BridgeNet failure again.
+     Fine-tuned on 640 UIEB pairs with a synthetic batch every step and an L1 anchor to BetaNet's output
+     (`finetune_refine.py`, the guards from §10): **real 20.20 dB (+2.52 vs BetaNet), synthetic 23.43 dB
+     (+2.22)**, better on both. Coefficients unchanged. UIEB scores are against references, not ground truth.
+     Figures: `figures/8_refinenet/`; numbers: `results/refine_{v1,ft}/*.json`.
 5. **Full real evaluation:** mark every Sea-thru chart frame at full resolution, add SQUID (stereo depth +
    charts).
 6. Uncertainty per coefficient; Jerlov water-type read-out. Stretch: YOLO mAP on restored images.
