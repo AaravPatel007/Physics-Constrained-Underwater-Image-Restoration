@@ -17,6 +17,8 @@
 | `6_review2_day2/1_more_murky_water/` | `fins_compare.png`, `uieb_examples.png`, `summary.png` | Review 2, Day 2 run 1 (`day2a_added_murky_water`: all murky water kept, trained from scratch) vs the base model: fins photo, 6 UIEB images, and the water read per dive / dive separation + headline scores | `fig_day2.py` (data: `day2_queue.sh` → `results/review2_day2/<run>/`) |
 | `6_review2_day2/2_low_red_water/` | same three | Day 2 run 2 (`day2b_added_deep_red_starved_water`: continued from the base model with deep, red-starved water added) | `fig_day2.py` |
 | `6_review2_day2/3_camera_flaws/` | same three | Day 2 run 3 (`day2c_added_camera_flaws`: continued from the base model with camera flaws: noise, 8-bit, JPEG) | `fig_day2.py` |
+| `6_review2_day2/5_more_epochs_true_depth/` | same three | `day2f_added_more_epochs_true_depth`: v1 continued with early stopping (best at epoch 6) on stored waters, true depth | `fig_day2.py` (data: `dav2_queue.sh`) |
+| `6_review2_day2/6_dav2_depth_input/` | same three | `day2e_added_dav2_depth`: the same, but the network is given DAv2's depth guess from the fake underwater image | `fig_day2.py` |
 | `6_review2_day2/4_all_three_combined/` | same three | Day 2 run d (`day2d_added_murky_deep_red_camera_60ep`: murky + deep red-starved + camera flaws together, trained from scratch, 60 epochs); **not run yet** | `fig_day2.py` |
 
 `<model>` = `original` (= `baseline_v0_40ep`, old name `beta_rgbd`) or `longer_run` (= `baseline_v1_60ep_bigdata`, old name `beta_rgbd_big`, the model in use). See `docs/MODELS.md`.

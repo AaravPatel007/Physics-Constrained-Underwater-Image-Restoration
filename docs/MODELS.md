@@ -12,8 +12,8 @@ Last updated 2 Nov 2026 (end of Day 2). Folder = `results/<name>/best.pt`.
 | `day2b_added_deep_red_starved_water` | v1 plus 20 more epochs where 40 % of fake water is deep with almost no red (fins-like). | Side result, not used. |
 | `day2c_added_camera_flaws` | v1 plus 20 more epochs where half the fake photos get camera noise, 8-bit rounding and JPEG. | Side result, not used. |
 | `day2d_added_murky_deep_red_camera_60ep` | Prepared, **not run yet**. From scratch like v1 (60 epochs, lr 5e-4) with all three changes together: all murky water, 40 % deep red-starved water, half the photos with camera flaws. | If it beats v1 on the real photos it replaces it; else side result. |
-| `day2e_added_dav2_depth_input` | Planned, **not built**. v1 plus 20 more epochs where the network gets DAv2's depth estimate (run on the fake underwater image) instead of the true depth, as on real photos. | Compare against day2f, not v1. |
-| `day2f_control_20ep_more_true_depth` | Planned, **not built**. Control: v1 plus 20 more epochs, true depth, nothing else changed. | Tells whether day2e's gain is DAv2 or just more epochs. |
+| `day2e_added_dav2_depth` | v1 continued (early stopping, best at epoch 6) on 3 stored waters per room, given DAv2's depth guess from the fake underwater image. | Side result: charts ~1° better, UIEB and dive separation worse. |
+| `day2f_added_more_epochs_true_depth` | v1 continued (early stopping, best at epoch 6) on the same stored waters, true depth. "More epochs" test + control for day2e. | Side result: level with v1 (v1 was already at its minimum). |
 
 Old names (`beta_rgbd`, `beta_rgbd_big`) are links to the new folders, so old scripts, `finetune_eval.json` keys
 and old figures keep working. New work should use the new names.

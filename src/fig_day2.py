@@ -8,6 +8,8 @@
   python fig_day2.py day2b_added_deep_red_starved_water 2_low_red_water
   python fig_day2.py day2c_added_camera_flaws 3_camera_flaws
   python fig_day2.py day2d_added_murky_deep_red_camera_60ep 4_all_three_combined
+  python fig_day2.py day2f_added_more_epochs_true_depth 5_more_epochs_true_depth
+  python fig_day2.py day2e_added_dav2_depth 6_dav2_depth_input
 """
 import json
 import sys

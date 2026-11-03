@@ -9,7 +9,7 @@
 > - **Day 3 done (3 Nov):** touch-up network on top of physics + Day 1b (`day3a_touchup_global`, chosen on held-out train photos). 90 val: ΔE 12.22 → 9.66, PSNR 19.11 → 21.68, 73/90 better; fins turn yellow (ΔE 18.6 → 12.6); grey charts 10.3°/10.6° → 5.1°/4.8°, while the no-physics control stays ~10°. See "Day 3 results".
 > - **Next: Day 4** (evaluation + slides). Review 2 is ~5–6 Nov.
 > - Machine notes: run `src/thermal_guard.py` while training, stop the user's `wec_rl` jobs, python = `/home/aarav-patel/wec_rl/.venv/bin/python`. `src/day2_queue.sh` trains + evaluates a run in one go (`THREADS=4` allowed).
-> - **Planned for later (not built):** train with DAv2 depth as input (`day2e_added_dav2_depth_input`) plus a control run (`day2f_control_20ep_more_true_depth`); see "Later: train with the depth we test with".
+> - **More epochs + DAv2 depth: done (3 Nov), neither replaces v1.** See section "Done: more epochs and DAv2 depth" below. v1 + Day 1b + `day3a_touchup_global` stays the method.
 > - Pending idea (not run): "fog ≤ darkest pixels" hinge loss in `finetune.py`; gentler deep-water mix (~15 %).
 
 Written 2 Nov 2026. Review 2 is ~5–6 Nov 2026.
@@ -257,7 +257,30 @@ Decision rule: replaces baseline_v1 only if it is better on UIEB and the red-sta
 - Also: Day 1 is a result in hand if Day 2 runs late, and "Day 2 with vs without Day 1" shows how much
   each fix contributes.
 
-## Later (planned 3 Nov, not built): train with the depth we test with (DAv2)
+## Done: more epochs and DAv2 depth (3 Nov)
+`src/dav2_queue.sh` → `prep_dav2_train.py` (3 stored fake waters per room, DAv2 run on each underwater image,
+`data/nyu_train_big_dav2.npz`, 0.9 GB) → two runs that both continue v1 on those stored waters with **early
+stopping** (`train.py --patience 8`: constant LR 1.5e-4, halved after 3 epochs without a better validation score,
+stop after 8; max 100). Only difference: the depth given to the network. Tests = the Day 2 pipeline
+(`day2_queue.sh`, Day 1 recipe), results in `results/review2_day2/<name>/`, figures in
+`figures/6_review2_day2/5_more_epochs_true_depth/` and `6_dav2_depth_input/`.
+- Both stopped at epoch 14, best at **epoch 6**. More-epochs run: best fake-water validation 23.79 dB vs v1's
+  23.86 at its end → **v1 was already at its minimum**; more training does not improve it.
+
+  | (all Day 1 fixes) | UIEB PSNR | UIEB ΔE | fins ΔE | red-starved ΔE | charts SfM | charts DAv2+1 | fake test | dive separation |
+  |---|---|---|---|---|---|---|---|---|
+  | v1 | **19.09** | **12.25** | 18.7 | **16.7** | 10.3° / 10.3° | 10.8° / 10.2° | **21.9** | 1.29 |
+  | `day2f_added_more_epochs_true_depth` | 18.97 | 12.48 | **18.3** | 16.8 | 9.8° / 9.8° | 10.4° / 9.7° | 21.8 | **1.30** |
+  | `day2e_added_dav2_depth` | 18.97 | 12.69 | 18.5 | 17.7 | **9.3° / 8.9°** | **9.6° / 8.8°** | 20.8* | 0.77 |
+
+  *fake test and dive separation give the network true depth, which the DAv2 run was not trained on.
+- **Reading:** more epochs = level (UIEB slightly worse, charts ~0.5° better, within noise). DAv2 depth = better on
+  the 2 chart frames (~1°) but worse on UIEB photos, which use exactly DAv2 depth, and on red-starved photos;
+  dive separation collapses (dives read alike). Likely cause: DAv2 (indoor model) makes different mistakes on
+  NYU rooms than on real underwater scenes, so the network learned DAv2's *room* errors. Neither replaces v1, so
+  the touch-up is not retrained.
+
+## Later (planned 3 Nov, superseded by the section above): train with the depth we test with (DAv2)
 - **Gap:** in training the network gets the *true* NYU depth; on real photos (UIEB, the depth-only chart test) it
   gets Depth Anything V2's *estimate* (wrong scale, blurred edges, fooled by fog). It never learned what DAv2
   depth looks like.

@@ -3,11 +3,11 @@
 Every few seconds it finds every process whose working directory or command line is inside the
 project, pins all of its threads to a set of logical CPUs, and reacts to the CPU temperature
 (k10temp Tctl):
-  normal                 -> 6 CPUs
+  normal                 -> 8 CPUs
   >= HOT for a reading   -> 3 CPUs
   still >= HOT after STOP_AFTER s on 3 CPUs, or >= CRIT -> pause (SIGSTOP) until <= RESUME, then 3 CPUs
   <= COOL for RAMP_AFTER s on 3 CPUs -> back to 6
-On exit (Ctrl-C / kill) it resumes everything and restores the 6-CPU limit.
+On exit (Ctrl-C / kill) it resumes everything and restores the 8-CPU limit.
 GPU work is not throttled directly; it only slows when its process is paused or starved of CPU.
 
   python src/thermal_guard.py            # foreground
@@ -20,7 +20,7 @@ import time
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[1])
-FULL, REDUCED = set(range(6)), set(range(3))
+FULL, REDUCED = set(range(8)), set(range(3))
 HOT, CRIT, RESUME, COOL = 85.0, 92.0, 75.0, 78.0
 STOP_AFTER, RAMP_AFTER, PERIOD = 20, 30, 2
 ME = os.getpid()
@@ -76,7 +76,7 @@ def main():
         pids = targets()
         send(pids, signal.SIGCONT)
         pin(pids, FULL)
-        log("guard stopped: processes resumed, 6-CPU limit left in place")
+        log("guard stopped: processes resumed, 8-CPU limit left in place")
         sys.exit(0)
 
     signal.signal(signal.SIGTERM, shutdown)
