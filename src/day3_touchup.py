@@ -44,7 +44,13 @@ BASE = "baseline_v1_60ep_bigdata"
 DEV = "cuda"
 VARIANTS = {"day3a_touchup_global": ("d1b", False),
             "day3b_touchup_global_plus_local": ("d1b", True),
-            "day3c_control_touchup_on_raw": ("raw", None)}  # control uses the winner's size
+            "day3c_control_touchup_on_raw": ("raw", None),  # control uses the winner's size
+            "day3d_touchup_global_plus_lsui": ("d1b", False),
+            "day3e_touchup_global_plus_local_plus_lsui": ("d1b", True),
+            "day3f_touchup_global_lsui_then_uieb": ("d1b", False)}
+WITH_LSUI = {"day3d_touchup_global_plus_lsui": 60, "day3e_touchup_global_plus_local_plus_lsui": 60}  # -> epochs
+FINETUNE = {"day3f_touchup_global_lsui_then_uieb": ("day3d_touchup_global_plus_lsui", 40, 3e-4)}  # start, epochs, lr
+LSUI = ROOT / "data" / "lsui" / "lsui_day1b.npz"  # prep_lsui.py; UIEB duplicates already dropped
 K, THUMB, CROP = 16, 128, 176
 
 
@@ -155,16 +161,29 @@ def train(name, local, epochs=120, bs=8, lr=1e-3):
     inp = [c[f"tr_{src}_{i}"] for i in range(int(c["n_tr"]))]
     raw = [c[f"tr_raw_{i}"] for i in range(int(c["n_tr"]))]
     ref = [c[f"tr_ref_{i}"] for i in range(int(c["n_tr"]))]
-    th = [thumb_of(a, b) for a, b in zip(inp, raw)]
+    if name in WITH_LSUI:  # LSUI pairs join the 680 UIEB train photos; the 120 held-out UIEB photos stay the judge
+        ls = np.load(LSUI)
+        n0 = len(inp)
+        for i in range(int(ls["n"])):
+            inp.append(ls[f"d1b_{i}"]), raw.append(ls[f"raw_{i}"]), ref.append(ls[f"ref_{i}"])
+        tr = np.concatenate([tr, np.arange(n0, len(inp))])
+        epochs = WITH_LSUI[name]
+    if name in FINETUNE:  # start from the LSUI-trained touch-up, then UIEB only, gentler learning rate
+        _, epochs, lr = FINETUNE[name]
+    tr = np.array([i for i in tr if min(inp[i].shape[:2]) >= CROP])
+    th = [(thumb_of(a, b) * 255).round().to(torch.uint8) for a, b in zip(inp, raw)]  # uint8 keeps RAM low
     torch.manual_seed(0)
     rng = np.random.default_rng(0)
     model = TouchUp(local).to(DEV)
+    if name in FINETUNE:
+        model.load_state_dict(torch.load(OUT / FINETUNE[name][0] / "best.pt", map_location=DEV)["state"])
     opt = torch.optim.Adam(model.parameters(), lr=lr)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, epochs)
     d = OUT / name
     d.mkdir(parents=True, exist_ok=True)
     start = held_out_de(model, c, ho, src)
-    log = {"held_out_de2000_epoch0": start, "epochs": [], "args": dict(local=local, src=src, epochs=epochs, bs=bs, lr=lr)}
+    log = {"held_out_de2000_epoch0": start, "epochs": [], "n_train_photos": int(len(tr)),
+           "args": dict(local=local, src=src, epochs=epochs, bs=bs, lr=lr)}
     best = start
     print(name, "params", sum(p.numel() for p in model.parameters()), "held-out ΔE at start", round(start, 3), flush=True)
     t0 = time.time()
@@ -179,7 +198,7 @@ def train(name, local, epochs=120, bs=8, lr=1e-3):
                 a, b = tens(inp[i][y0:y0 + CROP, x0:x0 + CROP]), tens(ref[i][y0:y0 + CROP, x0:x0 + CROP])
                 if rng.random() < 0.5:
                     a, b = a.flip(-1), b.flip(-1)
-                xs.append(a), ys.append(b), ts.append(th[i])
+                xs.append(a), ys.append(b), ts.append(th[i].float() / 255)
             x, y, tt = torch.stack(xs).to(DEV), torch.stack(ys).to(DEV), torch.stack(ts).to(DEV)
             loss = (model(x, tt) - y).abs().mean()
             opt.zero_grad()
@@ -287,7 +306,10 @@ def gallery(keep, c, res, models, per=5, n=25):
     title = {"raw": "Raw photo", "Day 1b": "Physics (v1 + Day 1b)", "reference": "UIEB reference",
              "day3a_touchup_global": "Day 1b + touch-up (global)",
              "day3b_touchup_global_plus_local": "Day 1b + touch-up (global + local)",
-             "day3c_control_touchup_on_raw": "Control: touch-up on RAW (no physics)"}
+             "day3c_control_touchup_on_raw": "Control: touch-up on RAW (no physics)",
+             "day3d_touchup_global_plus_lsui": "Touch-up (global) + LSUI",
+             "day3e_touchup_global_plus_local_plus_lsui": "Touch-up (global + local) + LSUI",
+             "day3f_touchup_global_lsui_then_uieb": "Touch-up (global): LSUI, then UIEB"}
     for pg in range(n // per):
         fig, axs = plt.subplots(per, len(cols), figsize=(3.6 * len(cols), 2.75 * per))
         for k in range(per):

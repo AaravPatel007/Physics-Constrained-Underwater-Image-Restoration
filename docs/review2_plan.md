@@ -327,6 +327,24 @@ Script `src/day3_touchup.py` (cache → train → eval); results `results/review
   real dive charts only physics + touch-up gets closer to true grey. Only 2 frames from one dive: indicative.
 - **Weak spots:** some photos get darker / more saturated than the reference (#20 ΔE 9.5 → 13.5, #22 4.2 →
   6.6, #86 +5.5). The pink veil of #24 is reduced (18.2 → 15.0) but not gone; the control does better there.
+- **More training data: LSUI (done 3 Nov).** 4279 underwater photos + chosen references (Peng et al., U-shape
+  Transformer). `src/prep_lsui.py` reads `data/lsui/LSUI.zip` (470 MB, kept; the 3.1 GB prepared file was
+  deleted after use, rebuild ~20 min). Duplicate check (48 px grey-thumbnail correlation, checked by eye): 2 LSUI
+  photos = UIEB train photos, dropped; closest to any UIEB val photo 0.90 (not a duplicate) → test set clean.
+  Same held-out rule as before.
+
+  | Touch-up | held-out ΔE | val PSNR | val ΔE | fins ΔE | charts SfM | charts DAv2 |
+  |---|---|---|---|---|---|---|
+  | `day3a_touchup_global` (UIEB only, **still chosen**) | **9.36** | 21.68 | **9.66** | 12.6 | 5.1° / 4.8° | 5.7° / 4.7° |
+  | `day3d_touchup_global_plus_lsui` (UIEB + LSUI mixed) | 10.79 | 20.56 | 11.11 | 13.8 | 6.0° / 8.8° | 7.1° / 8.5° |
+  | `day3e_touchup_global_plus_local_plus_lsui` | 10.58 | 20.87 | 10.90 | 13.3 | 7.3° / 7.3° | 7.4° / 7.2° |
+  | `day3f_touchup_global_lsui_then_uieb` (LSUI, then 40 epochs UIEB only, lr 3e-4) | 9.54 | 21.59 | 9.96 | 10.3 | 4.5° / 4.3° | 5.2° / 4.0° |
+
+  Reading: mixing LSUI in is clearly worse everywhere (val ΔE +1.5 vs day3a, CI +0.8 to +2.1), including the
+  charts. Its references follow a different editing style, so the touch-up learns an in-between style.
+  LSUI-then-UIEB is level with day3a on UIEB (ΔE +0.3, CI −0.2 to +0.8, i.e. no real difference), slightly
+  better on the 2 chart frames and the fins, but the pre-set rule (held-out ΔE) keeps day3a. More data of a
+  different "preferred style" does not help; the limit is the references, not the number of photos.
 - **For the talk:** physics removes the water and keeps the model interpretable (water readings per photo);
   the touch-up corrects the colour that physics cannot recover; the control shows the touch-up alone is
   not enough on real dive charts. The fins' yellow is an educated guess learned from UIEB, not recorded light.

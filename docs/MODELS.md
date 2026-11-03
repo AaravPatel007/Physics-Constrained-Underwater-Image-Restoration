@@ -59,5 +59,8 @@ recorded. Day 2 is still useful for the talk: three explanations tested and rule
 | `day3a_touchup_global` | One colour matrix + tone curve per photo, from a thumbnail (0.1 M params) | **Chosen** (best on held-out train photos). Full method = v1 + Day 1b + this |
 | `day3b_touchup_global_plus_local` | The same + small per-pixel correction (0.2 M) | Side result, level with day3a |
 | `day3c_control_touchup_on_raw` | day3a's network trained on raw photos, no physics | Control: close on UIEB, but no gain on the dive charts |
+| `day3d_touchup_global_plus_lsui` | day3a + 4277 LSUI photos mixed into training | Side result: worse on UIEB and charts |
+| `day3e_touchup_global_plus_local_plus_lsui` | day3b + LSUI mixed in | Side result: worse on UIEB and charts |
+| `day3f_touchup_global_lsui_then_uieb` | day3d, then fine-tuned on UIEB only | Side result: level with day3a on UIEB, slightly better on 2 charts + fins; not chosen (pre-set rule) |
 
 Results in `docs/review2_plan.md`, section "Day 3 results".
