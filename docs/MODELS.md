@@ -12,6 +12,8 @@ Last updated 2 Nov 2026 (end of Day 2). Folder = `results/<name>/best.pt`.
 | `day2b_added_deep_red_starved_water` | v1 plus 20 more epochs where 40 % of fake water is deep with almost no red (fins-like). | Side result, not used. |
 | `day2c_added_camera_flaws` | v1 plus 20 more epochs where half the fake photos get camera noise, 8-bit rounding and JPEG. | Side result, not used. |
 | `day2d_added_murky_deep_red_camera_60ep` | Prepared, **not run yet**. From scratch like v1 (60 epochs, lr 5e-4) with all three changes together: all murky water, 40 % deep red-starved water, half the photos with camera flaws. | If it beats v1 on the real photos it replaces it; else side result. |
+| `day2e_added_dav2_depth_input` | Planned, **not built**. v1 plus 20 more epochs where the network gets DAv2's depth estimate (run on the fake underwater image) instead of the true depth, as on real photos. | Compare against day2f, not v1. |
+| `day2f_control_20ep_more_true_depth` | Planned, **not built**. Control: v1 plus 20 more epochs, true depth, nothing else changed. | Tells whether day2e's gain is DAv2 or just more epochs. |
 
 Old names (`beta_rgbd`, `beta_rgbd_big`) are links to the new folders, so old scripts, `finetune_eval.json` keys
 and old figures keep working. New work should use the new names.
@@ -49,5 +51,13 @@ None fixed the tint. Reading: the problem is not the range of fake water. In the
 essentially gone, and a model that only estimates water effects cannot bring back what the camera never
 recorded. Day 2 is still useful for the talk: three explanations tested and ruled out.
 
-**What next (Day 3):** a small learned "touch-up" network on top of the restored image, trained on the 800 UIEB
-train photo/reference pairs, on `baseline_v1_60ep_bigdata` + Day 1 fixes. Not started.
+**Day 3 (done 3 Nov):** a small learned "touch-up" network on top of the restored image (v1 + Day 1b), trained on
+680 of the 800 UIEB train photo/reference pairs (`src/day3_touchup.py`, folders in `results/review2_day3_touchup/`):
+
+| Name | What it is | Status |
+|---|---|---|
+| `day3a_touchup_global` | One colour matrix + tone curve per photo, from a thumbnail (0.1 M params) | **Chosen** (best on held-out train photos). Full method = v1 + Day 1b + this |
+| `day3b_touchup_global_plus_local` | The same + small per-pixel correction (0.2 M) | Side result, level with day3a |
+| `day3c_control_touchup_on_raw` | day3a's network trained on raw photos, no physics | Control: close on UIEB, but no gain on the dive charts |
+
+Results in `docs/review2_plan.md`, section "Day 3 results".

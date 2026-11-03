@@ -6,8 +6,10 @@
 > - Day 2 = three retrains (`day2a_added_murky_water`, `day2b_added_deep_red_starved_water`, `day2c_added_camera_flaws`); none fixed the tint, all are side results. Conclusion: not a training-range problem.
 > - **Prepared, not run: Day 2 run d** (`day2d_added_murky_deep_red_camera_60ep`, all three changes together, from scratch, 60 epochs). Start it with the command in the Day 2 run d section below; ~90 min incl. tests; start `thermal_guard.py` first (the queue script does it).
 > - **Day 1b done (2 Nov, late):** the pink halo around objects (val #22) came from the red-from-green smoothing in 15 px patches. Tuned on the 200 UIEB train photos: **3 px patch, fog-cap margin unchanged at 3** (margin 3 is a true optimum: lower = hazier, higher = worse colour). Halo gone; 90 val photos ΔE 12.25 → 12.21 (55/90 better, small but significant). Trade-off: fins specks 4.4 → 5.8. Pink veil in #24 not fixed by any setting (fog cap; that photo's reference is itself purple-grey) = known limitation. See the Day 1b section below. **Day 1b is the recipe in use from now on**: `CURRENT_RECIPE` in `src/safe_restore.py` (Day 3 and later scripts must use it; the Day 1 / Day 2 figures stay as they were made).
-> - **Next: Day 3** (small touch-up network on the 800 UIEB train pairs, on top of the current model), then Day 4 (evaluation + slides). Review 2 is ~5–6 Nov.
+> - **Day 3 done (3 Nov):** touch-up network on top of physics + Day 1b (`day3a_touchup_global`, chosen on held-out train photos). 90 val: ΔE 12.22 → 9.66, PSNR 19.11 → 21.68, 73/90 better; fins turn yellow (ΔE 18.6 → 12.6); grey charts 10.3°/10.6° → 5.1°/4.8°, while the no-physics control stays ~10°. See "Day 3 results".
+> - **Next: Day 4** (evaluation + slides). Review 2 is ~5–6 Nov.
 > - Machine notes: run `src/thermal_guard.py` while training, stop the user's `wec_rl` jobs, python = `/home/aarav-patel/wec_rl/.venv/bin/python`. `src/day2_queue.sh` trains + evaluates a run in one go (`THREADS=4` allowed).
+> - **Planned for later (not built):** train with DAv2 depth as input (`day2e_added_dav2_depth_input`) plus a control run (`day2f_control_20ep_more_true_depth`); see "Later: train with the depth we test with".
 > - Pending idea (not run): "fog ≤ darkest pixels" hinge loss in `finetune.py`; gentler deep-water mix (~15 %).
 
 Written 2 Nov 2026. Review 2 is ~5–6 Nov 2026.
@@ -255,12 +257,79 @@ Decision rule: replaces baseline_v1 only if it is better on UIEB and the red-sta
 - Also: Day 1 is a result in hand if Day 2 runs late, and "Day 2 with vs without Day 1" shows how much
   each fix contributes.
 
+## Later (planned 3 Nov, not built): train with the depth we test with (DAv2)
+- **Gap:** in training the network gets the *true* NYU depth; on real photos (UIEB, the depth-only chart test) it
+  gets Depth Anything V2's *estimate* (wrong scale, blurred edges, fooled by fog). It never learned what DAv2
+  depth looks like.
+- **No new ground truth needed:** the network predicts the water, not depth. We make the fake water ourselves,
+  so its settings are known exactly.
+- **Recipe:**
+  1. NYU room + true depth → render fake water with the **true** depth (physically right image).
+  2. Run DAv2 on that **underwater-looking** image (as on UIEB), so the estimate is fooled by fog the same way.
+  3. Network input = image + **DAv2** depth; loss = the known water settings / clean room, as now.
+  4. It learns how DAv2 depth relates to real distance and uses that on real photos.
+- **Cost fix:** water is redrawn every batch and DAv2 per batch is too slow. Precompute DAv2 on 2–3 water versions
+  per training room (~20 000 depth maps, ~15 min on GPU) and sample from those.
+  Cheaper fallback (no DAv2): distort true depth at random (scale, offset, blur); only imitates DAv2's errors.
+- **Continue, not from scratch:** continue `baseline_v1_60ep_bigdata` for 20 epochs (same as Day 2 b/c, ~20 min).
+  The model already knows the water physics; only the depth input changes.
+- **Control run is required:** also continue v1 for 20 epochs with true depth and nothing else changed.
+  Otherwise a gain could just be "20 more epochs". DAv2 run beats control → DAv2 helped; level → it did not.
+- **Runs:**
+
+  | Step | Model name | Time |
+  |---|---|---|
+  | Precompute DAv2 depth on train rooms (2–3 water versions each) | – | ~15 min |
+  | Continue 20 epochs, DAv2 depth input | `day2e_added_dav2_depth_input` | ~20 min |
+  | Control: continue 20 epochs, true depth | `day2f_control_20ep_more_true_depth` | ~20 min |
+  | Test both with Day 1b: 90 UIEB val, colour charts, fins | – | ~10 min |
+
+- **Only if day2e clearly beats day2f:** a from-scratch DAv2 version overnight (~1.5 h) to confirm.
+- **Expect:** the fins tint will not change (its red is gone). Possible gains: fog amount and distance handling on
+  ordinary photos (charts, UIEB ΔE). If it helps: "we closed the gap between training and testing".
+- **Code still to write:** DAv2 precompute script (`depth.py` `predict(..., "metric-indoor")` already exists),
+  a depth-source option in `train.py`, the control run. Stop `wec_rl` jobs and run `thermal_guard.py` first.
+
 ## Day 3: small "touch-up" network on top
 - Physics restores the colours the photo still has. A second small network, trained on real examples,
   fills in colour that was destroyed completely (e.g. the yellow fins).
 - Training data: the 800 UIEB photos with their corrected versions, which we already have.
 - The main model still reports the water measurements, so we stay interpretable (not a black box).
 - Framing: physics restores what the camera recorded; the touch-up's colours are educated guesses.
+
+### Day 3 results (done 3 Nov)
+Script `src/day3_touchup.py` (cache → train → eval); results `results/review2_day3_touchup/`, figures
+`figures/8_review2_day3_touchup/gallery/` (first 25 val: raw | physics | 3 touch-ups | reference).
+- **Networks (start as "do nothing", trained 120 epochs, best checkpoint kept):**
+  - `day3a_touchup_global` (0.1 M params): from a 128 px thumbnail, one colour matrix + one tone curve per
+    channel for the whole photo. Cannot paint detail or halos.
+  - `day3b_touchup_global_plus_local` (0.2 M): the same + a small per-pixel correction network.
+  - `day3c_control_touchup_on_raw`: the global touch-up trained on the **raw** photo (no physics). Shows what
+    physics adds.
+- **Split:** UIEB train 800 → 680 train / 120 held out (fixed seed), used to pick the epoch and global vs local.
+  Rule fixed before running: lowest held-out ΔE wins. Held out: global 9.36, local 9.51, control 9.84
+  (start 11.51; raw start 14.00) → **global chosen**. Both overfit after ~60 epochs (held-out ΔE rises again);
+  best epochs 50 / 60 / 70.
+- **90 UIEB val photos (used once):**
+
+  | | PSNR | ΔE | ΔE edges | specks | better than Day 1b (ΔE) |
+  |---|---|---|---|---|---|
+  | Physics (v1 + Day 1b) | 19.11 | 12.22 | 12.56 | 6.57 | – |
+  | **+ touch-up global (chosen)** | **21.68** | **9.66** | 9.95 | 6.57 | 73/90 |
+  | + touch-up global + local | 21.86 | 9.53 | 9.86 | 6.77 | 74/90 |
+  | Control: touch-up on raw | 22.63 | 10.24 | 10.79 | 6.30 | 59/90 |
+
+  Chosen vs physics: ΔE −2.56 (95 % CI −3.34 to −1.83), PSNR +2.57 dB (CI +1.9 to +3.2).
+- **Fins photo (val #2):** ΔE 18.6 → 12.6, the fins turn **yellow** (control 9.5, also yellow).
+- **Grey charts (2 Sea-thru frames, never seen in training):** physics 10.3° / 10.6° → global touch-up
+  5.1° / 4.8° (local 4.9° / 2.8°); **control on raw stays at 10.6° / 10.0°.** Same with DAv2 depth.
+  Reading: on UIEB the control is close (better PSNR, worse ΔE), because it learns UIEB's editing style. On
+  real dive charts only physics + touch-up gets closer to true grey. Only 2 frames from one dive: indicative.
+- **Weak spots:** some photos get darker / more saturated than the reference (#20 ΔE 9.5 → 13.5, #22 4.2 →
+  6.6, #86 +5.5). The pink veil of #24 is reduced (18.2 → 15.0) but not gone; the control does better there.
+- **For the talk:** physics removes the water and keeps the model interpretable (water readings per photo);
+  the touch-up corrects the colour that physics cannot recover; the control shows the touch-up alone is
+  not enough on real dive charts. The fins' yellow is an educated guess learned from UIEB, not recorded light.
 
 ## Day 4: evaluation and slides
 - New measures: a **speck score** (fine-grained noise in the red channel) and the **share of pixels where

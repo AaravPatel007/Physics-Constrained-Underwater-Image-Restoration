@@ -488,3 +488,5 @@
 21:41:02 71 C: paused -> reduced (1 procs)
 21:41:36 78 C: reduced -> full (1 procs)
 22:00:16 guard stopped: processes resumed, 6-CPU limit left in place
+12:19:44 guard started: root=/home/aarav-patel/oe5510/final_project hot=85.0 resume=75.0
+12:49:09 guard stopped: processes resumed, 6-CPU limit left in place
