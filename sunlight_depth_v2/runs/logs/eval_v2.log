@@ -1,0 +1,93 @@
+models: {'baseline': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_depth_v2/runs/baseline_v2data', 'sun_v1': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_depth_v2/runs/sun_v1_v2data', 'sun_v2': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_depth_v2/runs/sun_v2', 'ref: baseline (old water)': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_phy/runs/baseline_v1_repro', 'ref: sun_v1 (old water)': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_phy/runs/sun_v1'}
+I {'psnr|raw': 16.03, 'psnr|oracle (true coefs)': 27.25, 'psnr|baseline': 24.68, 'psnr|sun_v1': 23.57, 'psnr|sun_v2': 24.42}
+IA {'psnr|raw': 15.9, 'psnr|oracle (true coefs)': 27.4, 'psnr|baseline': 24.77, 'psnr|sun_v1': 23.64, 'psnr|sun_v2': 24.46}
+IB {'psnr|raw': 16.49, 'psnr|oracle (true coefs)': 29.17, 'psnr|baseline': 25.97, 'psnr|sun_v1': 24.51, 'psnr|sun_v2': 25.75}
+II {'psnr|raw': 15.36, 'psnr|oracle (true coefs)': 28.21, 'psnr|baseline': 24.82, 'psnr|sun_v1': 23.65, 'psnr|sun_v2': 24.47}
+III {'psnr|raw': 13.99, 'psnr|oracle (true coefs)': 26.46, 'psnr|baseline': 22.98, 'psnr|sun_v1': 22.13, 'psnr|sun_v2': 22.53}
+1C {'psnr|raw': 13.93, 'psnr|oracle (true coefs)': 26.53, 'psnr|baseline': 22.93, 'psnr|sun_v1': 21.98, 'psnr|sun_v2': 22.54}
+3C {'psnr|raw': 13.06, 'psnr|oracle (true coefs)': 25.94, 'psnr|baseline': 21.69, 'psnr|sun_v1': 21.01, 'psnr|sun_v2': 21.38}
+5C {'psnr|raw': 12.39, 'psnr|oracle (true coefs)': 24.09, 'psnr|baseline': 19.71, 'psnr|sun_v1': 19.2, 'psnr|sun_v2': 19.4}
+7C {'psnr|raw': 11.4, 'psnr|oracle (true coefs)': 16.72, 'psnr|baseline': 14.36, 'psnr|sun_v1': 14.54, 'psnr|sun_v2': 14.17}
+9C {'psnr|raw': 10.8, 'psnr|oracle (true coefs)': 9.97, 'psnr|baseline': 9.98, 'psnr|sun_v1': 10.15, 'psnr|sun_v2': 10.07}
+{
+ "raw": {
+  "psnr": 14.032,
+  "ssim": 0.599,
+  "de2000": 25.966
+ },
+ "oracle (true coefs)": {
+  "psnr": 23.693,
+  "ssim": 0.653,
+  "de2000": 10.554
+ },
+ "gray-world": {
+  "psnr": 15.169,
+  "ssim": 0.603,
+  "de2000": 17.904
+ },
+ "true coefs | v1 sunlight (K_d = 0.8 beta_D, E0 white)": {
+  "psnr": 20.478,
+  "ssim": 0.651,
+  "de2000": 15.281
+ },
+ "baseline": {
+  "psnr": 20.415,
+  "ssim": 0.627,
+  "de2000": 13.764
+ },
+ "baseline | true E": {
+  "psnr": 20.704,
+  "ssim": 0.628,
+  "de2000": 13.291
+ },
+ "sun_v1": {
+  "psnr": 19.887,
+  "ssim": 0.629,
+  "de2000": 15.154
+ },
+ "sun_v1 | true E": {
+  "psnr": 20.534,
+  "ssim": 0.626,
+  "de2000": 13.458
+ },
+ "sun_v1 | true d_s": {
+  "psnr": 19.298,
+  "ssim": 0.628,
+  "de2000": 15.83
+ },
+ "sun_v2": {
+  "psnr": 20.162,
+  "ssim": 0.621,
+  "de2000": 13.975
+ },
+ "sun_v2 | true E": {
+  "psnr": 20.418,
+  "ssim": 0.621,
+  "de2000": 13.532
+ },
+ "sun_v2 | true E0": {
+  "psnr": 20.009,
+  "ssim": 0.62,
+  "de2000": 14.258
+ },
+ "sun_v2 | true K_d": {
+  "psnr": 19.446,
+  "ssim": 0.617,
+  "de2000": 15.019
+ },
+ "sun_v2 | true d_s": {
+  "psnr": 19.43,
+  "ssim": 0.618,
+  "de2000": 14.866
+ },
+ "ref: baseline (old water)": {
+  "psnr": 20.235,
+  "ssim": 0.628,
+  "de2000": 14.545
+ },
+ "ref: sun_v1 (old water)": {
+  "psnr": 19.87,
+  "ssim": 0.628,
+  "de2000": 15.052
+ }
+}

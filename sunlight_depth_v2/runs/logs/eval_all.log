@@ -1,0 +1,248 @@
+== evaluate: synthetic
+models: {'baseline': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_depth_v2/runs/baseline_v2data', 'sun_v1': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_depth_v2/runs/sun_v1_v2data', 'sun_v2': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_depth_v2/runs/sun_v2', 'ref: baseline (old water)': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_phy/runs/baseline_v1_repro', 'ref: sun_v1 (old water)': '/home/krvptk737/Desktop/MAV_LAB/MLOE---Group-4/sunlight_phy/runs/sun_v1'}
+I {'psnr|raw': 16.03, 'psnr|oracle (true coefs)': 27.25, 'psnr|baseline': 24.68, 'psnr|sun_v1': 23.57, 'psnr|sun_v2': 24.42}
+IA {'psnr|raw': 15.9, 'psnr|oracle (true coefs)': 27.4, 'psnr|baseline': 24.77, 'psnr|sun_v1': 23.64, 'psnr|sun_v2': 24.46}
+IB {'psnr|raw': 16.49, 'psnr|oracle (true coefs)': 29.17, 'psnr|baseline': 25.97, 'psnr|sun_v1': 24.51, 'psnr|sun_v2': 25.75}
+II {'psnr|raw': 15.36, 'psnr|oracle (true coefs)': 28.21, 'psnr|baseline': 24.82, 'psnr|sun_v1': 23.65, 'psnr|sun_v2': 24.47}
+III {'psnr|raw': 13.99, 'psnr|oracle (true coefs)': 26.46, 'psnr|baseline': 22.98, 'psnr|sun_v1': 22.13, 'psnr|sun_v2': 22.53}
+1C {'psnr|raw': 13.93, 'psnr|oracle (true coefs)': 26.53, 'psnr|baseline': 22.93, 'psnr|sun_v1': 21.98, 'psnr|sun_v2': 22.54}
+3C {'psnr|raw': 13.06, 'psnr|oracle (true coefs)': 25.94, 'psnr|baseline': 21.69, 'psnr|sun_v1': 21.01, 'psnr|sun_v2': 21.38}
+5C {'psnr|raw': 12.39, 'psnr|oracle (true coefs)': 24.09, 'psnr|baseline': 19.71, 'psnr|sun_v1': 19.2, 'psnr|sun_v2': 19.4}
+7C {'psnr|raw': 11.4, 'psnr|oracle (true coefs)': 16.72, 'psnr|baseline': 14.36, 'psnr|sun_v1': 14.54, 'psnr|sun_v2': 14.17}
+9C {'psnr|raw': 10.8, 'psnr|oracle (true coefs)': 9.97, 'psnr|baseline': 9.98, 'psnr|sun_v1': 10.15, 'psnr|sun_v2': 10.07}
+{
+ "raw": {
+  "psnr": 14.032,
+  "ssim": 0.599,
+  "de2000": 25.966
+ },
+ "oracle (true coefs)": {
+  "psnr": 23.693,
+  "ssim": 0.653,
+  "de2000": 10.554
+ },
+ "gray-world": {
+  "psnr": 15.169,
+  "ssim": 0.603,
+  "de2000": 17.904
+ },
+ "true coefs | v1 sunlight (K_d = 0.8 beta_D, E0 white)": {
+  "psnr": 20.478,
+  "ssim": 0.651,
+  "de2000": 15.281
+ },
+ "baseline": {
+  "psnr": 20.415,
+  "ssim": 0.627,
+  "de2000": 13.764
+ },
+ "baseline | true E": {
+  "psnr": 20.704,
+  "ssim": 0.628,
+  "de2000": 13.291
+ },
+ "sun_v1": {
+  "psnr": 19.887,
+  "ssim": 0.629,
+  "de2000": 15.154
+ },
+ "sun_v1 | true E": {
+  "psnr": 20.534,
+  "ssim": 0.626,
+  "de2000": 13.458
+ },
+ "sun_v1 | true d_s": {
+  "psnr": 19.298,
+  "ssim": 0.628,
+  "de2000": 15.83
+ },
+ "sun_v2": {
+  "psnr": 20.162,
+  "ssim": 0.621,
+  "de2000": 13.975
+ },
+ "sun_v2 | true E": {
+  "psnr": 20.418,
+  "ssim": 0.621,
+  "de2000": 13.532
+ },
+ "sun_v2 | true E0": {
+  "psnr": 20.009,
+  "ssim": 0.62,
+  "de2000": 14.258
+ },
+ "sun_v2 | true K_d": {
+  "psnr": 19.446,
+  "ssim": 0.617,
+  "de2000": 15.019
+ },
+ "sun_v2 | true d_s": {
+  "psnr": 19.43,
+  "ssim": 0.618,
+  "de2000": 14.866
+ },
+ "ref: baseline (old water)": {
+  "psnr": 20.235,
+  "ssim": 0.628,
+  "de2000": 14.545
+ },
+ "ref: sun_v1 (old water)": {
+  "psnr": 19.87,
+  "ssim": 0.628,
+  "de2000": 15.052
+ }
+}
+== evaluate: real photos
+models: ['baseline', 'sun_v1', 'sun_v2', 'ref: baseline (old water)', 'ref: sun_v1 (old water)']
+{
+ "D1/T_S03272": {
+  "raw": 29.449219642388375,
+  "gray-world": 8.869733624015366,
+  "baseline": 18.40723955227347,
+  "baseline + gray-world": 11.449651827791227,
+  "sun_v1": 18.562204236918216,
+  "sun_v1 + gray-world": 10.858508228472644,
+  "sun_v2": 15.535083258252607,
+  "sun_v2 + gray-world": 11.43222795402326,
+  "ref: baseline (old water)": 13.40270656691938,
+  "ref: baseline (old water) + gray-world": 11.00899127841793,
+  "ref: sun_v1 (old water)": 20.380777782038802,
+  "ref: sun_v1 (old water) + gray-world": 12.193691366128705
+ }
+}
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 6991.93it/s]
+{
+ "raw": {
+  "psnr": 16.442,
+  "ssim": 0.739,
+  "de2000": 17.512,
+  "uciqe": 0.313
+ },
+ "gray-world": {
+  "psnr": 17.721,
+  "ssim": 0.764,
+  "de2000": 13.787,
+  "uciqe": 0.255
+ },
+ "baseline": {
+  "psnr": 17.843,
+  "ssim": 0.781,
+  "de2000": 14.019,
+  "uciqe": 0.418
+ },
+ "baseline + gray-world": {
+  "psnr": 18.324,
+  "ssim": 0.78,
+  "de2000": 13.798,
+  "uciqe": 0.39
+ },
+ "baseline + Day 1b": {
+  "psnr": 18.881,
+  "ssim": 0.824,
+  "de2000": 12.671,
+  "uciqe": 0.375
+ },
+ "sun_v1": {
+  "psnr": 17.076,
+  "ssim": 0.775,
+  "de2000": 15.704,
+  "uciqe": 0.426
+ },
+ "sun_v1 + gray-world": {
+  "psnr": 17.972,
+  "ssim": 0.783,
+  "de2000": 14.529,
+  "uciqe": 0.393
+ },
+ "sun_v1 + Day 1b": {
+  "psnr": 18.547,
+  "ssim": 0.823,
+  "de2000": 13.056,
+  "uciqe": 0.375
+ },
+ "sun_v2": {
+  "psnr": 17.642,
+  "ssim": 0.768,
+  "de2000": 14.911,
+  "uciqe": 0.422
+ },
+ "sun_v2 + gray-world": {
+  "psnr": 17.916,
+  "ssim": 0.768,
+  "de2000": 14.431,
+  "uciqe": 0.396
+ },
+ "sun_v2 + Day 1b": {
+  "psnr": 18.815,
+  "ssim": 0.822,
+  "de2000": 12.951,
+  "uciqe": 0.375
+ },
+ "ref: baseline (old water)": {
+  "psnr": 18.001,
+  "ssim": 0.795,
+  "de2000": 13.703,
+  "uciqe": 0.403
+ },
+ "ref: baseline (old water) + gray-world": {
+  "psnr": 18.613,
+  "ssim": 0.795,
+  "de2000": 13.295,
+  "uciqe": 0.379
+ },
+ "ref: baseline (old water) + Day 1b": {
+  "psnr": 18.98,
+  "ssim": 0.828,
+  "de2000": 12.493,
+  "uciqe": 0.369
+ },
+ "ref: sun_v1 (old water)": {
+  "psnr": 17.605,
+  "ssim": 0.783,
+  "de2000": 14.514,
+  "uciqe": 0.419
+ },
+ "ref: sun_v1 (old water) + gray-world": {
+  "psnr": 18.44,
+  "ssim": 0.787,
+  "de2000": 13.483,
+  "uciqe": 0.39
+ },
+ "ref: sun_v1 (old water) + Day 1b": {
+  "psnr": 18.827,
+  "ssim": 0.825,
+  "de2000": 12.626,
+  "uciqe": 0.377
+ }
+}
+== figures, tables, galleries
+wrote three_model_comparisons/3m_image_quality
+wrote three_model_comparisons/3m_physical_parameters
+wrote three_model_comparisons/3m_jerlov
+wrote three_model_comparisons/3m_depth_bins
+wrote three_model_comparisons/3m_attribution
+wrote baseline_vs_16_comparisons/b16_image_quality
+wrote baseline_vs_16_comparisons/b16_paired
+wrote baseline_vs_16_comparisons/b16_by_condition
+wrote results_16_output/v2_training_curves
+wrote results_16_output/v2_kd_scatter
+wrote results_16_output/v2_e0
+wrote results_16_output/v2_depth
+wrote results_16_output/v2_sunlight
+wrote results_16_output/v2_error_vs_image
+wrote figures/individual_parameter_scatter
+wrote figures/depth_meaning
+wrote three_model_comparisons/3m_real
+wrote baseline_vs_16_comparisons/b16_real
+wrote figures/real_unvalidated_predictions
+wrote figures/real_generalisation_training_water
+wrote three_model_comparisons/three_model_table.md
+wrote baseline_vs_16_comparisons/baseline_vs_16_table.md
+wrote qualitative_images/gallery_3m_depth_turbidity
+wrote qualitative_images/gallery_b16
+wrote qualitative_images/gallery_3m_jerlov_types
+wrote qualitative_images/gallery_uieb_3m
+wrote qualitative_images/gallery_uieb_b16
+== architecture diagrams
+wrote diagram1_betanet_vs_v1
+wrote diagram2_betanet_vs_v2

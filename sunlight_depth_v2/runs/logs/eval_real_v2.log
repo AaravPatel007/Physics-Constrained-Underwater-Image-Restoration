@@ -1,0 +1,122 @@
+models: ['baseline', 'sun_v1', 'sun_v2', 'ref: baseline (old water)', 'ref: sun_v1 (old water)']
+{
+ "D1/T_S03272": {
+  "raw": 29.449219642388375,
+  "gray-world": 8.869733624015366,
+  "baseline": 18.40723955227347,
+  "baseline + gray-world": 11.449651827791227,
+  "sun_v1": 18.562204236918216,
+  "sun_v1 + gray-world": 10.858508228472644,
+  "sun_v2": 15.535083258252607,
+  "sun_v2 + gray-world": 11.43222795402326,
+  "ref: baseline (old water)": 13.40270656691938,
+  "ref: baseline (old water) + gray-world": 11.00899127841793,
+  "ref: sun_v1 (old water)": 20.380777782038802,
+  "ref: sun_v1 (old water) + gray-world": 12.193691366128705
+ }
+}
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 6991.93it/s]
+{
+ "raw": {
+  "psnr": 16.442,
+  "ssim": 0.739,
+  "de2000": 17.512,
+  "uciqe": 0.313
+ },
+ "gray-world": {
+  "psnr": 17.721,
+  "ssim": 0.764,
+  "de2000": 13.787,
+  "uciqe": 0.255
+ },
+ "baseline": {
+  "psnr": 17.843,
+  "ssim": 0.781,
+  "de2000": 14.019,
+  "uciqe": 0.418
+ },
+ "baseline + gray-world": {
+  "psnr": 18.324,
+  "ssim": 0.78,
+  "de2000": 13.798,
+  "uciqe": 0.39
+ },
+ "baseline + Day 1b": {
+  "psnr": 18.881,
+  "ssim": 0.824,
+  "de2000": 12.671,
+  "uciqe": 0.375
+ },
+ "sun_v1": {
+  "psnr": 17.076,
+  "ssim": 0.775,
+  "de2000": 15.704,
+  "uciqe": 0.426
+ },
+ "sun_v1 + gray-world": {
+  "psnr": 17.972,
+  "ssim": 0.783,
+  "de2000": 14.529,
+  "uciqe": 0.393
+ },
+ "sun_v1 + Day 1b": {
+  "psnr": 18.547,
+  "ssim": 0.823,
+  "de2000": 13.056,
+  "uciqe": 0.375
+ },
+ "sun_v2": {
+  "psnr": 17.642,
+  "ssim": 0.768,
+  "de2000": 14.911,
+  "uciqe": 0.422
+ },
+ "sun_v2 + gray-world": {
+  "psnr": 17.916,
+  "ssim": 0.768,
+  "de2000": 14.431,
+  "uciqe": 0.396
+ },
+ "sun_v2 + Day 1b": {
+  "psnr": 18.815,
+  "ssim": 0.822,
+  "de2000": 12.951,
+  "uciqe": 0.375
+ },
+ "ref: baseline (old water)": {
+  "psnr": 18.001,
+  "ssim": 0.795,
+  "de2000": 13.703,
+  "uciqe": 0.403
+ },
+ "ref: baseline (old water) + gray-world": {
+  "psnr": 18.613,
+  "ssim": 0.795,
+  "de2000": 13.295,
+  "uciqe": 0.379
+ },
+ "ref: baseline (old water) + Day 1b": {
+  "psnr": 18.98,
+  "ssim": 0.828,
+  "de2000": 12.493,
+  "uciqe": 0.369
+ },
+ "ref: sun_v1 (old water)": {
+  "psnr": 17.605,
+  "ssim": 0.783,
+  "de2000": 14.514,
+  "uciqe": 0.419
+ },
+ "ref: sun_v1 (old water) + gray-world": {
+  "psnr": 18.44,
+  "ssim": 0.787,
+  "de2000": 13.483,
+  "uciqe": 0.39
+ },
+ "ref: sun_v1 (old water) + Day 1b": {
+  "psnr": 18.827,
+  "ssim": 0.825,
+  "de2000": 12.626,
+  "uciqe": 0.377
+ }
+}

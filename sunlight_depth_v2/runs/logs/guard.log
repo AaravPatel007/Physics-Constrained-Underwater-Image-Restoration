@@ -1,0 +1,28 @@
+16:47:04 guarding 10760
+16:48:19 10760 finished, guard exits
+16:51:52 guarding 11060
+16:54:47 paused 11067 at 97 C
+16:55:32 resumed at 71 C
+16:57:07 guarding 10763
+16:59:27 paused 10767 at 96 C
+16:59:27 paused 11067 at 96 C
+16:59:32 resumed at 69 C
+16:59:32 resumed at 69 C
+17:04:52 paused 10767 at 96 C
+17:04:52 paused 11067 at 96 C
+17:04:57 resumed at 69 C
+17:04:57 resumed at 69 C
+17:08:02 paused 10767 at 96 C
+17:08:02 paused 11067 at 96 C
+17:08:07 resumed at 70 C
+17:08:08 resumed at 70 C
+17:16:07 paused 10767 at 96 C
+17:16:08 paused 11067 at 96 C
+17:16:12 resumed at 70 C
+17:16:13 resumed at 70 C
+17:19:17 10763 finished, guard exits
+17:21:38 paused 11067 at 95 C
+17:21:43 resumed at 68 C
+17:27:23 paused 14179 at 95 C
+17:27:28 resumed at 67 C
+17:44:49 11060 finished, guard exits
