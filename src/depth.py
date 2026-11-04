@@ -8,6 +8,7 @@ import numpy as np
 import torch
 from PIL import Image
 from transformers import AutoImageProcessor, AutoModelForDepthEstimation
+from device import DEV
 
 CKPT = {"metric-indoor": "depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf",
         "metric-outdoor": "depth-anything/Depth-Anything-V2-Metric-Outdoor-Small-hf",
@@ -24,7 +25,7 @@ def _load(variant, device):
 
 
 @torch.no_grad()
-def predict(images_uint8, variant="metric-indoor", device="cuda", bs=2):
+def predict(images_uint8, variant="metric-indoor", device=DEV, bs=2):
     """images_uint8: list/array of (H, W, 3) sRGB uint8. Returns list of (H, W) float32 maps."""
     proc, model = _load(variant, device)
     out = []

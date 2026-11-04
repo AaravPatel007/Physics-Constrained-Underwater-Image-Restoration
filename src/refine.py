@@ -20,6 +20,7 @@ from metrics import full_reference
 from model import RefineNet
 from physics import add_water, restore, sample_water, srgb_to_linear
 from train import ROOT, load_split, make_batch
+from device import DEV, autocast
 
 
 def psnr_t(a, b):
@@ -27,24 +28,24 @@ def psnr_t(a, b):
 
 
 def stage1(base, I, z):
-    with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
+    with torch.no_grad(), autocast():
         return restore(I, z, base(I, z))
 
 
 def test(base, ref, out):
     """Same protocol as eval_synth.py 'random': 654 test scenes, one water each (seed 2026), noise 0.005."""
     rgb, depth = load_split("test")
-    water = sample_water(len(rgb), "cuda", torch.Generator().manual_seed(2026))
+    water = sample_water(len(rgb), DEV, torch.Generator().manual_seed(2026))
     gen, res = torch.Generator().manual_seed(7), {}
     with torch.no_grad():
         for b in range(0, len(rgb), 16):
             sl = slice(b, b + 16)
-            J = srgb_to_linear(rgb[sl].cuda().permute(0, 3, 1, 2).float() / 255)
-            z = depth[sl].cuda().float()[:, None]
+            J = srgb_to_linear(rgb[sl].to(DEV).permute(0, 3, 1, 2).float() / 255)
+            z = depth[sl].to(DEV).float()[:, None]
             w = {k: v[sl] for k, v in water.items()}
-            I = (add_water(J, z, w)[0] + 0.005 * torch.randn(J.shape, generator=gen).cuda()).clamp(0, 1)
+            I = (add_water(J, z, w)[0] + 0.005 * torch.randn(J.shape, generator=gen).to(DEV)).clamp(0, 1)
             Jb = stage1(base, I, z)
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with autocast():
                 Jr = ref(Jb.clamp(0, 1.5), I, z)
             outs = {"oracle (true coefs)": restore(I, z, w), "BetaNet": Jb, "BetaNet + RefineNet": Jr}
             for name, Jh in outs.items():
@@ -72,9 +73,9 @@ def main():
     base = load(a.base)[0].requires_grad_(False)
     out = ROOT / "results" / a.name
     out.mkdir(parents=True, exist_ok=True)
-    ref = RefineNet().cuda()
+    ref = RefineNet().to(DEV)
     if a.test:
-        ref.load_state_dict(torch.load(out / "best.pt", map_location="cuda")["state"])
+        ref.load_state_dict(torch.load(out / "best.pt", map_location=DEV)["state"])
         return test(base, ref.eval(), out)
 
     torch.manual_seed(0)
@@ -83,7 +84,7 @@ def main():
     nval = a.nval or max(64, len(rgb) // 10)  # must equal the base's --nval, else val frames are rooms BetaNet trained on
     tr, va = torch.arange(len(rgb) - nval), torch.arange(len(rgb) - nval, len(rgb))
     vgen = torch.Generator().manual_seed(123)
-    val_water = sample_water(nval, "cuda", vgen)
+    val_water = sample_water(nval, DEV, vgen)
     opt = torch.optim.AdamW(ref.parameters(), lr=a.lr, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, a.lr, total_steps=a.epochs * (len(tr) // a.bs), pct_start=0.05)
     print(f"{a.name}: RefineNet {sum(p.numel() for p in ref.parameters())/1e6:.2f}M params, {len(tr)} train / {nval} val", flush=True)
@@ -93,9 +94,9 @@ def main():
         t0, tl = time.time(), []
         perm = tr[torch.randperm(len(tr), generator=gen)]
         for b in range(len(perm) // a.bs):
-            I, z, J, _ = make_batch(rgb, depth, perm[b * a.bs:(b + 1) * a.bs], gen, "cuda")
+            I, z, J, _ = make_batch(rgb, depth, perm[b * a.bs:(b + 1) * a.bs], gen, DEV)
             Jb = stage1(base, I, z)
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with autocast():
                 Jr = ref(Jb.clamp(0, 1.5), I, z)
             loss = (Jr - J).abs().mean()
             opt.zero_grad(set_to_none=True)
@@ -108,9 +109,9 @@ def main():
         with torch.no_grad():
             for b in range(0, nval, a.bs):
                 sl = slice(b, b + a.bs)
-                I, z, J, _ = make_batch(rgb, depth, va[sl], vgen, "cuda", augment=False, water={k: v[sl] for k, v in val_water.items()})
+                I, z, J, _ = make_batch(rgb, depth, va[sl], vgen, DEV, augment=False, water={k: v[sl] for k, v in val_water.items()})
                 Jb = stage1(base, I, z)
-                with torch.autocast("cuda", dtype=torch.bfloat16):
+                with autocast():
                     Jr = ref(Jb.clamp(0, 1.5), I, z)
                 pb += psnr_t(Jb, J)
                 pr += psnr_t(Jr, J)

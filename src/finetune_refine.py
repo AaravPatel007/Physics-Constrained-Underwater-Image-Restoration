@@ -17,6 +17,10 @@ and the synthetic-only model is scored on the SAME 160 for a fair before/after.
 
   python src/finetune_refine.py --base baseline_v1_60ep_bigdata --init refine_v1 --name refine_ft
   python src/finetune_refine.py --base baseline_v1_60ep_bigdata --name refine_ft --test   # eval both domains
+
+--mix adds more real pairs (prep_extra_pairs.py) at the SAME number of steps per epoch: each step draws its real
+photo from a source picked with the given weights, e.g. --mix uieb:0.4,lsui:0.4,euvp:0.2. Selection is still on
+the 160 held-out UIEB photos, so runs with and without --mix are chosen the same way.
 """
 import argparse
 import json
@@ -31,8 +35,8 @@ from metrics import full_reference
 from model import RefineNet
 from physics import add_water, restore, sample_water, srgb_to_linear
 from train import ROOT, load_split, make_batch
+from device import DEV, autocast
 
-DEV = "cuda"
 N_VAL_REAL = 160  # held-out real photos (never trained on); rest of the 800 are train
 
 
@@ -43,6 +47,14 @@ def real_split():
     return d, idx[:-N_VAL_REAL], idx[-N_VAL_REAL:]
 
 
+def extra_split(name):
+    """data/<name>_pairs.npz is stored in random order; the last TEST_SPLIT[name] are held out."""
+    from prep_extra_pairs import TEST_SPLIT
+    d = np.load(ROOT / "data" / f"{name}_pairs.npz")
+    n = int(d["n"])
+    return d, np.arange(n - TEST_SPLIT[name]), np.arange(n - TEST_SPLIT[name], n)
+
+
 def load_real(d, i):
     I = srgb_to_linear(torch.from_numpy(d[f"raw_{i}"] / 255.0).permute(2, 0, 1)[None].float().to(DEV))
     z = torch.from_numpy(np.clip(d[f"z_{i}"].astype(np.float32), 0.1, 30)[None, None]).to(DEV)
@@ -51,7 +63,7 @@ def load_real(d, i):
 
 
 def betanet_restore(base, I, z):
-    with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
+    with torch.no_grad(), autocast():
         return restore(I, z, base(I, z)).clamp(0, 1.5)
 
 
@@ -61,7 +73,7 @@ def eval_real(base, ref_net, d, val_idx):
     for i in val_idx:
         I, z, refimg = load_real(d, int(i))
         Jb = betanet_restore(base, I, z)
-        with torch.autocast("cuda", dtype=torch.bfloat16):
+        with autocast():
             Jr = ref_net(Jb, I, z)
         tgt = refimg[0].permute(1, 2, 0).cpu().numpy()  # reference is already sRGB [0,1]; to_np(J) is too
         for name, J in [("BetaNet", Jb), ("RefineNet", Jr)]:
@@ -81,7 +93,7 @@ def eval_synth(base, ref_net, rgb, depth, nval=288):
         sl = slice(b, b + 24)
         I, z, J, _ = make_batch(rgb, depth, va[sl], vgen, DEV, augment=False, water={k: v[sl] for k, v in water.items()})
         Jb = restore(I, z, base(I, z)).clamp(0, 1.5)
-        with torch.autocast("cuda", dtype=torch.bfloat16):
+        with autocast():
             Jr = ref_net(Jb, I, z)
         for out, acc in [(Jb, pb), (Jr, pr)]:
             acc += (-10 * torch.log10(((out.clamp(0, 1) - J) ** 2).mean((1, 2, 3)) + 1e-10)).tolist()
@@ -99,11 +111,12 @@ def main():
     ap.add_argument("--w-synth", type=float, default=1.0)    # keep the synthetic gain
     ap.add_argument("--w-real", type=float, default=1.0)     # match the UIEB reference
     ap.add_argument("--w-anchor", type=float, default=0.3)   # stay near BetaNet on real (no drift/collapse)
+    ap.add_argument("--mix", default="uieb:1", help="real sources and weights, e.g. uieb:0.4,lsui:0.4,euvp:0.2")
     ap.add_argument("--test", action="store_true")
     a = ap.parse_args()
 
     base = load(a.base)[0].requires_grad_(False).eval()
-    ref_net = RefineNet().cuda()
+    ref_net = RefineNet().to(DEV)
     out = ROOT / "results" / a.name
     out.mkdir(parents=True, exist_ok=True)
     d, tr_real, val_real = real_split()
@@ -125,7 +138,10 @@ def main():
     gen = torch.Generator().manual_seed(0)
     opt = torch.optim.AdamW(ref_net.parameters(), lr=a.lr, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, a.lr, total_steps=a.epochs * len(tr_real), pct_start=0.1)
-    print(f"{a.name}: fine-tune RefineNet on {len(tr_real)} real / {len(val_real)} val, init {a.init}", flush=True)
+    mix = {k: float(v) for k, v in (s.split(":") for s in a.mix.split(","))}
+    pools = {k: (d, tr_real) if k == "uieb" else extra_split(k)[:2] for k in mix}
+    print(f"{a.name}: fine-tune RefineNet on {len(tr_real)} steps/epoch, real pools "
+          f"{ {k: len(p[1]) for k, p in pools.items()} } mix {mix}, {len(val_real)} UIEB val, init {a.init}", flush=True)
 
     log = [{"epoch": 0, "uieb": eval_real(base, ref_net.eval(), d, val_real),
             "synth": eval_synth(base, ref_net, rgb, depth)}]
@@ -134,12 +150,19 @@ def main():
     for ep in range(a.epochs):
         ref_net.train()
         t0, tl = time.time(), []
-        for i in tr_real[torch.randperm(len(tr_real), generator=gen)]:
-            I_r, z_r, ref_r = load_real(d, int(i))
+        if len(mix) == 1:  # the original recipe: one pass over the UIEB train photos
+            order = [(d, i) for i in tr_real[torch.randperm(len(tr_real), generator=gen)]]
+        else:
+            names = list(mix)
+            src = torch.multinomial(torch.tensor([mix[k] for k in names]), len(tr_real), replacement=True, generator=gen)
+            order = [(pools[names[s]][0], pools[names[s]][1][torch.randint(len(pools[names[s]][1]), (1,), generator=gen).item()])
+                     for s in src.tolist()]
+        for dd, i in order:
+            I_r, z_r, ref_r = load_real(dd, int(i))
             Jb_r = betanet_restore(base, I_r, z_r)
             I_s, z_s, J_s, _ = make_batch(rgb, depth, tr_idx[torch.randint(len(tr_idx), (a.bs_synth,), generator=gen)], gen, DEV)
             Jb_s = restore(I_s, z_s, base(I_s, z_s)).clamp(0, 1.5)
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with autocast():
                 Jr_r = ref_net(Jb_r, I_r, z_r)
                 Jr_s = ref_net(Jb_s, I_s, z_s)
             L_real = (Jr_r - srgb_to_linear(ref_r)).abs().mean()

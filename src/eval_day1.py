@@ -27,10 +27,10 @@ from metrics import full_reference
 from physics import add_water, linear_to_srgb, sample_water, srgb_to_linear
 from safe_restore import safe_restore, speck_score
 from train import load_split
+from device import DEV
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "review2_day1"
-DEV = "cuda"
 MODELS = ["beta_rgbd", "beta_rgbd_big"]
 VARIANTS = {  # name -> (fog cap, smoothing, white balance)
     "current (gray-world)": (False, False, "gray"),

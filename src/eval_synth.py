@@ -19,9 +19,9 @@ from metrics import full_reference
 from model import BetaNet, UNetDirect
 from physics import JERLOV_N, add_water, gray_world, linear_to_srgb, restore, sample_water, srgb_to_linear
 from train import load_split
+from device import DEV, autocast
 
 ROOT = Path(__file__).resolve().parents[1]
-DEV = "cuda"
 
 
 def load(name):
@@ -55,7 +55,7 @@ def run(rgb, depth, water, nets, use_dav2, bs=16, seed=7):
         Jt = to_np(J)
         outs = {"raw": I, "gray-world": gray_world(I), "oracle (true coefs)": restore(I, z, w)}
         for name, (net, kind) in nets.items():
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with autocast():
                 p = net(I, z)
             if kind == "beta":
                 coefs[name].append({k: v.cpu() for k, v in p.items()})
@@ -66,7 +66,7 @@ def run(rgb, depth, water, nets, use_dav2, bs=16, seed=7):
             Is = (to_np(I) * 255).round().astype(np.uint8)
             zd = torch.from_numpy(np.stack(dav2.predict(list(Is), "metric-indoor"))).to(DEV)[:, None].clamp(0.1, 20)
             net = nets["beta_rgbd"][0]
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with autocast():
                 p = net(I, zd)
             coefs["dav2"].append({k: v.cpu() for k, v in p.items()})
             outs["beta_rgbd + DAv2 depth"] = restore(I, zd, p)
@@ -96,7 +96,7 @@ def main():
         torch.cuda.synchronize()
         t = time.time()
         for _ in range(50):
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with autocast():
                 net(I, z)
         torch.cuda.synchronize()
         timing[n] = (time.time() - t) / 50 * 1000

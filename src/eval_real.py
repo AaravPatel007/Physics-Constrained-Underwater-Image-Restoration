@@ -21,9 +21,9 @@ import depth as dav2
 from eval_synth import load
 from metrics import angular_error_deg, full_reference, uciqe
 from physics import gray_world, linear_to_srgb, remove_water, restore, srgb_to_linear
+from device import DEV
 
 ROOT = Path(__file__).resolve().parents[1]
-DEV = "cuda"
 # grey-patch centres (x, y) at 1/4 resolution, marked by hand on the zoomed charts (6 patches each)
 CHARTS = {"D1/T_S03272": [(462, 305), (485, 305), (508, 305), (532, 305), (557, 305), (581, 305)],
           "D1/T_S03425": [(307, 33), (327, 30), (347, 27), (367, 24), (387, 21), (407, 18)]}

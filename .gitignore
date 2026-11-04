@@ -15,3 +15,5 @@ __pycache__/
 .vscode/
 graphify-out/
 !results/refine_*/best.pt
+# Mac venv (src/mac_setup.sh)
+.venv/

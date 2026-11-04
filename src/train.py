@@ -19,6 +19,7 @@ import torch
 
 from model import BetaNet, UNetDirect
 from physics import add_water, camera_flaws, restore, sample_water, srgb_to_linear
+from device import DEV, autocast
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -84,7 +85,7 @@ def main():
                          "optimizer moments restart because best.pt holds weights only)")
     a = ap.parse_args()
 
-    dev = "cuda"
+    dev = DEV
     torch.manual_seed(0)
     gen = torch.Generator().manual_seed(0)
     rgb, depth = load_split(a.data)
@@ -118,7 +119,7 @@ def main():
         for b in range(len(perm) // a.bs):
             I, z, J, w = make_batch(rgb, depth, perm[b * a.bs:(b + 1) * a.bs], gen, dev, murky_keep=a.murky_keep, low_red=a.low_red,
                                     camera=a.camera)
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with autocast():
                 p = net(I, z)
             if a.model == "beta":
                 Jhat = restore(I, z, p)
@@ -140,7 +141,7 @@ def main():
                 sl = slice(b, b + a.bs)
                 wv = {k: v[sl] for k, v in val_water.items()}
                 I, z, J, w = make_batch(rgb, depth, va_idx[sl], vgen, dev, augment=False, water=wv)
-                with torch.autocast("cuda", dtype=torch.bfloat16):
+                with autocast():
                     p = net(I, z)
                 Jhat = restore(I, z, p) if a.model == "beta" else p
                 if a.model == "beta":

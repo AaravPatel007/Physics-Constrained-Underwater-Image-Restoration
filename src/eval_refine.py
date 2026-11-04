@@ -22,12 +22,13 @@ from metrics import full_reference
 from model import RefineNet
 from physics import add_water, restore, sample_water, srgb_to_linear
 from train import ROOT, load_split, make_batch
+from device import DEV, autocast
 
 FIG = ROOT / "figures" / "8_refinenet"
 
 
 def refined(ref, Jb, I, z):
-    with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
+    with torch.no_grad(), autocast():
         return to_np(ref(Jb.clamp(0, 1.5), I, z))
 
 
@@ -51,14 +52,14 @@ def gallery(rows, titles, path, dpi=110):
 @torch.no_grad()
 def synthetic(base, ref, n=8):
     rgb, depth = load_split("test")
-    water = sample_water(len(rgb), "cuda", torch.Generator().manual_seed(2026))
+    water = sample_water(len(rgb), DEV, torch.Generator().manual_seed(2026))
     gen = torch.Generator().manual_seed(7)
     rows = []
     for i in range(n):
-        J = srgb_to_linear(rgb[i:i + 1].cuda().permute(0, 3, 1, 2).float() / 255)
-        z = depth[i:i + 1].cuda().float()[:, None]
+        J = srgb_to_linear(rgb[i:i + 1].to(DEV).permute(0, 3, 1, 2).float() / 255)
+        z = depth[i:i + 1].to(DEV).float()[:, None]
         w = {k: v[i:i + 1] for k, v in water.items()}
-        I = (add_water(J, z, w)[0] + 0.005 * torch.randn(J.shape, generator=gen).cuda()).clamp(0, 1)
+        I = (add_water(J, z, w)[0] + 0.005 * torch.randn(J.shape, generator=gen).to(DEV)).clamp(0, 1)
         Jb = restore(I, z, base(I, z))
         rows.append([to_np(I)[0], to_np(Jb)[0], refined(ref, Jb, I, z)[0], to_np(J)[0]])
     gallery(rows, ["raw (underwater)", "BetaNet", "BetaNet + RefineNet", "ground truth"], FIG / "synthetic_gallery.png")
@@ -96,8 +97,8 @@ def main():
     ap.add_argument("--name", required=True)
     a = ap.parse_args()
     base = load(a.base)[0].requires_grad_(False).eval()
-    ref = RefineNet().cuda().eval()
-    ref.load_state_dict(torch.load(ROOT / "results" / a.name / "best.pt", map_location="cuda")["state"])
+    ref = RefineNet().to(DEV).eval()
+    ref.load_state_dict(torch.load(ROOT / "results" / a.name / "best.pt", map_location=DEV)["state"])
 
     synthetic(base, ref)
     u = uieb(base, ref)
