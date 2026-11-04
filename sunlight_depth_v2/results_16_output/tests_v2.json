@@ -1,0 +1,86 @@
+{
+ "generator: beta_D, beta_B, d_s identical to the old generator (n=654, seed=2026, {})": {
+  "ok": true,
+  "info": ""
+ },
+ "generator: beta_D, beta_B, d_s identical to the old generator (n=288, seed=123, {})": {
+  "ok": true,
+  "info": ""
+ },
+ "generator: beta_D, beta_B, d_s identical to the old generator (n=200, seed=1, {'water_type': '5C'})": {
+  "ok": true,
+  "info": ""
+ },
+ "generator: beta_D, beta_B, d_s identical to the old generator (n=24, seed=0, {'murky_keep': 0.4})": {
+  "ok": true,
+  "info": ""
+ },
+ "generator: labels reproduce E exactly (E = E0 exp(-K_d d_s), max 1, floor 0.03)": {
+  "ok": true,
+  "info": ""
+ },
+ "generator: E finite, in [0.03, 1], brightest channel = 1": {
+  "ok": true,
+  "info": ""
+ },
+ "generator: K_d is not a fixed multiple of beta_D (std of log ratio per channel > 0.1)": {
+  "ok": true,
+  "info": "std [0.22100000083446503, 0.23000000417232513, 0.2280000001192093]"
+ },
+ "daylight: 6504 K -> white [1, 1, 1]": {
+  "ok": true,
+  "info": ""
+ },
+ "daylight: red/blue ratio falls with colour temperature": {
+  "ok": true,
+  "info": "R/B [2.799, 1.631, 1.0, 0.747, 0.587]"
+ },
+ "model: head has 16 outputs": {
+  "ok": true,
+  "info": ""
+ },
+ "model: output shapes": {
+  "ok": true,
+  "info": "{'beta_D': (4, 3), 'beta_B': (4, 3), 'B_inf': (4, 3), 'E0': (4, 3), 'K_d': (4, 3), 'd_s': (4, 1), 'E': (4, 3)}"
+ },
+ "model: E = E0 exp(-K_d d_s) (normalised, floored), finite, in [0.03, 1]": {
+  "ok": true,
+  "info": ""
+ },
+ "model: E stays finite at extreme K_d and d_s (no underflow)": {
+  "ok": true,
+  "info": "[[0.029999999329447746, 0.029999999329447746, 1.0], [0.9427162408828735, 0.9427162408828735, 1.0]]"
+ },
+ "model: bounds (K_d in (0.001, 6) /m, d_s in (0, 15) m)": {
+  "ok": true,
+  "info": ""
+ },
+ "model: override replaces d_s inside E only": {
+  "ok": true,
+  "info": ""
+ },
+ "model: the E term trains the E0, K_d and d_s rows, not the water rows": {
+  "ok": true,
+  "info": ""
+ },
+ "data: make_batch with the v2 water gives finite images in [0, 1] and all label keys": {
+  "ok": true,
+  "info": ""
+ },
+ "loss: all six terms finite": {
+  "ok": true,
+  "info": "{'optical': 2.232, 'E0': 0.176, 'Kd': 1.506, 'ds': 0.575, 'E': 0.731}"
+ },
+ "loss: E0 term is scale-free (chromaticity only)": {
+  "ok": true,
+  "info": ""
+ },
+ "existing model runs on v2 batches: BetaNet (12)": {
+  "ok": true,
+  "info": ""
+ },
+ "existing model runs on v2 batches: SunDepthBetaNet v1 (10)": {
+  "ok": true,
+  "info": ""
+ }
+}
