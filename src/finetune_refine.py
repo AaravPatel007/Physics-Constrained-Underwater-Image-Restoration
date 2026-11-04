@@ -150,7 +150,7 @@ def main():
     for ep in range(a.epochs):
         ref_net.train()
         t0, tl = time.time(), []
-        if len(mix) == 1:  # the original recipe: one pass over the UIEB train photos
+        if list(mix) == ["uieb"]:  # the original recipe: one pass over the UIEB train photos
             order = [(d, i) for i in tr_real[torch.randperm(len(tr_real), generator=gen)]]
         else:
             names = list(mix)

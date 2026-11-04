@@ -108,18 +108,32 @@ The user runs the git commands for the code push themselves. No `Co-Authored-By`
 
 ### Handoff: bigger run on the RTX 3060 laptop (120 GB free, 6 GB VRAM)
 `refine_mix` and the stress test are done on the Mac (see Findings), do not repeat them. Not tested on this laptop yet.
-1. Pull branch `RefineNet`; copy the BetaNet weights to `results/baseline_v1_60ep_bigdata/best.pt`. `src/mac_setup.sh`
-   is Mac-only: install a CUDA torch and follow its data steps by hand if `data/` is missing.
-2. Check the base: `refine_ft` on the 160 UIEB photos must give about 20.20 dB / ΔE 11.51.
-3. Get LSUI and EUVP (`docs/external_datasets.md`) into the paths `src/prep_extra_pairs.py` reads and set `N_KEEP` to
-   all pairs (4279 / 5550). This changes the test split, so scores are not comparable with the subset runs.
-4. Remove duplicates first: 21/400 LSUI and 3/500 EUVP test photos had a copy in training (see the log below; main's
-   `src/prep_lsui.py` has the thumbnail check). Also check against UIEB.
-5. Train with `finetune_refine.py --mix`. Steps per epoch are fixed at 640, so raise `--epochs` to really cover the
-   data (12 epochs is about 2 passes over the LSUI subset, under 1 over EUVP).
-6. Also try LSUI first, then UIEB only (`--mix lsui:1`, then `--init` that run with the default mix): it was level
-   with UIEB-only for main's touch-up, while mixing made it worse.
-7. If VRAM runs out, lower the batch size: `--bs-synth` in `finetune_refine.py`, `--bs` in `refine.py` and `train.py`.
+Rules: `git pull` before you push, leave `main` unmerged, keep `*.pt` BetaNet weights out of git.
+1. Pull branch `RefineNet`; copy the BetaNet weights to `results/baseline_v1_60ep_bigdata/best.pt`.
+2. If `data/` is missing: `src/mac_setup.sh` is Mac-only, so install CUDA torch plus the packages it lists, then from
+   `src/` run `download_data.py nyu uieb seathru`, `prep_nyu.py`, `prep_nyu_more.py`, `prep_seathru.py`, `prep_uieb.py`.
+   `prep_seathru.py` overwrites `results/depth_eval.json`; restore it with `git checkout`.
+3. Check the base, from `src/`: `python finetune_refine.py --base baseline_v1_60ep_bigdata --name refine_ft --test`. It must
+   give about 20.20 dB / ΔE 11.51 on UIEB, then `git checkout results/refine_ft/ft_eval.json` (keep session 4's file).
+4. Get LSUI and EUVP Dark (sources in `docs/external_datasets.md`) into `data/external/lsui/LSUI/{input,GT}/` and
+   `data/external/euvp_dark/train.parquet`. Set `N_KEEP` in `src/prep_extra_pairs.py` to 4279 / 5550, then run
+   `prep_extra_pairs.py lsui euvp`. This changes the test split, so scores are not comparable with the subset runs.
+5. Remove duplicates before training: 21/400 LSUI and 3/500 EUVP test photos had a copy in training, because LSUI repeats
+   scenes. `src/stress_clean.py` has the check; move any test photo with a training copy out of the test split, or
+   run it afterwards to re-score without them.
+6. Train all-data mix, from `src/`: `python finetune_refine.py --base baseline_v1_60ep_bigdata --init refine_v1 --name
+   refine_mix_full --mix uieb:0.4,lsui:0.4,euvp:0.2 --epochs 40`, then the same with `--test`. Steps per epoch are
+   fixed at 640, so `--epochs` sets how much data it sees (12 epochs is about 2 passes over the LSUI subset).
+7. Train LSUI first, then UIEB: `--init refine_v1 --name refine_lsui --mix lsui:1`, then `--init refine_lsui --name
+   refine_lsui_uieb` with no `--mix`. It was level with UIEB-only for main's touch-up, while mixing made it worse.
+8. Stress-test the winners: `python stress_test.py --base baseline_v1_60ep_bigdata --refiners refine_ft,<new names>`, then
+   `stress_clean.py` (it names `refine_ft` and `refine_mix` in its CI pairs, so edit those). The test sets in
+   `data/external/` (TUB, RUIE, U45, TankImage-I) are not in git: fetch them or use `--only` for the rest.
+9. RefineNet on Day 1b output is the most promising idea but needs new code: `betanet_restore` in `finetune_refine.py`
+   and `systems` in `stress_test.py` must feed `safe_restore(...)` output, and the stage-1 weights expect raw BetaNet
+   output, so start with `refine_ft` as `--init`.
+10. If VRAM runs out, lower the batch size: `--bs-synth` in `finetune_refine.py`, `--bs` in `refine.py` and `train.py`.
+Log results here, newest at the top of a new session entry. `--epochs 40` is a guess at the right length, check the curve.
 
 ### Status checklist (kept current)
 - [x] Clone branch `RefineNet` → `~/Desktop/MLOE-RefineNet`; graphify graph built (`graphify-out/`, code + docs, figures skipped)
@@ -188,3 +202,5 @@ The user runs the git commands for the code push themselves. No `Co-Authored-By`
   main also has a `results/logs/prep_lsui.log`. Findings at the top of this entry.
 - (15:3x) Graphify updated with `graphify update .` (576 nodes, 1,704 edges, 39 communities; code only). The 5 edited docs
   were not re-extracted and figures stay excluded; run `/graphify --update` for docs. `graphify-out/` is not in git.
+- (16:xx) Bug fixed in `finetune_refine.py`: a single-source `--mix lsui:1` silently trained on UIEB (it took the original
+  path whenever the mix had one source). `refine_ft` and `refine_mix` not affected. Handoff steps rewritten with commands.
