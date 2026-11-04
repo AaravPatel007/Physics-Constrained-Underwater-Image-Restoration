@@ -1,0 +1,450 @@
+[
+ {
+  "group": "synthetic test (654)",
+  "what": "raw psnr",
+  "original_v1": 14.454298579401154,
+  "retrained_here": 14.454298582869972,
+  "diff": 3.4688181216324665e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "synthetic test (654)",
+  "what": "true-coefficient oracle psnr",
+  "original_v1": 25.1103509594125,
+  "retrained_here": 25.110350956513738,
+  "diff": -2.898762119230014e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "synthetic test (654)",
+  "what": "BetaNet psnr",
+  "original_v1": 21.213018677949158,
+  "retrained_here": 21.395215558844445,
+  "diff": 0.18219688089528674,
+  "kind": "model"
+ },
+ {
+  "group": "synthetic test (654)",
+  "what": "raw ssim",
+  "original_v1": 0.6163886785507202,
+  "retrained_here": 0.6163886189460754,
+  "diff": -5.960464477539063e-08,
+  "kind": "data check"
+ },
+ {
+  "group": "synthetic test (654)",
+  "what": "true-coefficient oracle ssim",
+  "original_v1": 0.6843627691268921,
+  "retrained_here": 0.6843627691268921,
+  "diff": 0.0,
+  "kind": "data check"
+ },
+ {
+  "group": "synthetic test (654)",
+  "what": "BetaNet ssim",
+  "original_v1": 0.6587045788764954,
+  "retrained_here": 0.6569041609764099,
+  "diff": -0.0018004179000854492,
+  "kind": "model"
+ },
+ {
+  "group": "synthetic test (654)",
+  "what": "raw de2000",
+  "original_v1": 24.326592732642403,
+  "retrained_here": 24.32659284419605,
+  "diff": 1.1155364632031706e-07,
+  "kind": "data check"
+ },
+ {
+  "group": "synthetic test (654)",
+  "what": "true-coefficient oracle de2000",
+  "original_v1": 9.280931467492282,
+  "retrained_here": 9.280931538762667,
+  "diff": 7.127038514909145e-08,
+  "kind": "data check"
+ },
+ {
+  "group": "synthetic test (654)",
+  "what": "BetaNet de2000",
+  "original_v1": 13.478276703335823,
+  "retrained_here": 13.38075141476564,
+  "diff": -0.09752528857018206,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "beta_D R",
+  "original_v1": 11.5,
+  "retrained_here": 11.819999694824219,
+  "diff": 0.31999969482421875,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "beta_D G",
+  "original_v1": 16.200000762939453,
+  "retrained_here": 15.829999923706055,
+  "diff": -0.37000083923339844,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "beta_D B",
+  "original_v1": 20.200000762939453,
+  "retrained_here": 20.139999389648438,
+  "diff": -0.060001373291015625,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "beta_B R",
+  "original_v1": 16.899999618530273,
+  "retrained_here": 16.329999923706055,
+  "diff": -0.5699996948242188,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "beta_B G",
+  "original_v1": 16.899999618530273,
+  "retrained_here": 16.860000610351562,
+  "diff": -0.03999900817871094,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "beta_B B",
+  "original_v1": 19.700000762939453,
+  "retrained_here": 19.219999313354492,
+  "diff": -0.48000144958496094,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "B_inf R",
+  "original_v1": 10.600000381469727,
+  "retrained_here": 10.199999809265137,
+  "diff": -0.40000057220458984,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "B_inf G",
+  "original_v1": 12.199999809265137,
+  "retrained_here": 12.069999694824219,
+  "diff": -0.13000011444091797,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "B_inf B",
+  "original_v1": 14.199999809265137,
+  "retrained_here": 13.739999771118164,
+  "diff": -0.46000003814697266,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "E R",
+  "original_v1": 7.900000095367432,
+  "retrained_here": 7.110000133514404,
+  "diff": -0.7899999618530273,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "E G",
+  "original_v1": 1.7000000476837158,
+  "retrained_here": 1.690000057220459,
+  "diff": -0.009999990463256836,
+  "kind": "model"
+ },
+ {
+  "group": "coefficient median rel. error [%]",
+  "what": "E B",
+  "original_v1": 1.600000023841858,
+  "retrained_here": 1.25,
+  "diff": -0.3500000238418579,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "I BetaNet",
+  "original_v1": 26.103232709935263,
+  "retrained_here": 26.38780698594491,
+  "diff": 0.28457427600964635,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "I raw",
+  "original_v1": 16.799908081557692,
+  "retrained_here": 16.799908052499,
+  "diff": -2.9058693229444543e-08,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "IA BetaNet",
+  "original_v1": 26.09396878693086,
+  "retrained_here": 26.397042902114226,
+  "diff": 0.30307411518336735,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "IA raw",
+  "original_v1": 16.636132224809103,
+  "retrained_here": 16.6361322188288,
+  "diff": -5.980304251806956e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "IB BetaNet",
+  "original_v1": 26.994973163006584,
+  "retrained_here": 27.227017532232605,
+  "diff": 0.23204436922602056,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "IB raw",
+  "original_v1": 17.20680373343249,
+  "retrained_here": 17.20680376387978,
+  "diff": 3.044728913437211e-08,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "II BetaNet",
+  "original_v1": 25.72831222521583,
+  "retrained_here": 25.96062268172842,
+  "diff": 0.23231045651258952,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "II raw",
+  "original_v1": 15.922053058444638,
+  "retrained_here": 15.922053113107273,
+  "diff": 5.466263530706783e-08,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "III BetaNet",
+  "original_v1": 24.00727391085239,
+  "retrained_here": 24.067571292432532,
+  "diff": 0.06029738158014197,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "III raw",
+  "original_v1": 14.390231421007625,
+  "retrained_here": 14.390231423090814,
+  "diff": 2.083188732626695e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "1C BetaNet",
+  "original_v1": 23.832830336033325,
+  "retrained_here": 23.970509364633976,
+  "diff": 0.13767902860065107,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "1C raw",
+  "original_v1": 14.32894409123598,
+  "retrained_here": 14.328944127116465,
+  "diff": 3.588048436142799e-08,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "3C BetaNet",
+  "original_v1": 22.234635965857798,
+  "retrained_here": 22.198854433441756,
+  "diff": -0.03578153241604198,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "3C raw",
+  "original_v1": 13.291026434133164,
+  "retrained_here": 13.291026436235006,
+  "diff": 2.101842255797237e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "5C BetaNet",
+  "original_v1": 19.96067334990686,
+  "retrained_here": 19.79744156894329,
+  "diff": -0.16323178096356727,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "5C raw",
+  "original_v1": 12.528997875901455,
+  "retrained_here": 12.528997878243118,
+  "diff": 2.3416628636141468e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "7C BetaNet",
+  "original_v1": 15.766627306394533,
+  "retrained_here": 15.730762998207329,
+  "diff": -0.035864308187203875,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "7C raw",
+  "original_v1": 11.536620926152294,
+  "retrained_here": 11.536620928886109,
+  "diff": 2.733814952193825e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "9C BetaNet",
+  "original_v1": 10.847757116862704,
+  "retrained_here": 10.989088295267646,
+  "diff": 0.14133117840494158,
+  "kind": "model"
+ },
+ {
+  "group": "Jerlov PSNR (200 rooms)",
+  "what": "9C raw",
+  "original_v1": 10.955349485219624,
+  "retrained_here": 10.955349489516463,
+  "diff": 4.296838440609463e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "validation (best epoch)",
+  "what": "val_psnr",
+  "original_v1": 24.208670592970318,
+  "retrained_here": 24.08746532930268,
+  "diff": -0.12120526366763684,
+  "kind": "model"
+ },
+ {
+  "group": "validation (best epoch)",
+  "what": "val_coef",
+  "original_v1": 0.5185373748342196,
+  "retrained_here": 0.5340026418368021,
+  "diff": 0.01546526700258255,
+  "kind": "model"
+ },
+ {
+  "group": "validation (best epoch)",
+  "what": "val_img_l1",
+  "original_v1": 0.05190323727826277,
+  "retrained_here": 0.052059117083748184,
+  "diff": 0.00015587980548541214,
+  "kind": "model"
+ },
+ {
+  "group": "validation (best epoch)",
+  "what": "best epoch",
+  "original_v1": 59,
+  "retrained_here": 59,
+  "diff": 0,
+  "kind": "model"
+ },
+ {
+  "group": "UIEB val (90)",
+  "what": "raw psnr",
+  "original_v1": 16.442222864728326,
+  "retrained_here": 16.442222864728326,
+  "diff": 0.0,
+  "kind": "data check"
+ },
+ {
+  "group": "UIEB val (90)",
+  "what": "BetaNet psnr",
+  "original_v1": 17.882462630790542,
+  "retrained_here": 18.001439416109378,
+  "diff": 0.11897678531883571,
+  "kind": "model"
+ },
+ {
+  "group": "UIEB val (90)",
+  "what": "BetaNet + gray-world psnr",
+  "original_v1": 18.478278019931174,
+  "retrained_here": 18.613266231440694,
+  "diff": 0.13498821150951912,
+  "kind": "model"
+ },
+ {
+  "group": "UIEB val (90)",
+  "what": "BetaNet + Day 1b psnr",
+  "original_v1": 19.10910580006032,
+  "retrained_here": 18.980118469096126,
+  "diff": -0.12898733096419335,
+  "kind": "model"
+ },
+ {
+  "group": "UIEB val (90)",
+  "what": "raw de2000",
+  "original_v1": 17.512162227889625,
+  "retrained_here": 17.512162227889625,
+  "diff": 0.0,
+  "kind": "data check"
+ },
+ {
+  "group": "UIEB val (90)",
+  "what": "BetaNet de2000",
+  "original_v1": 13.406737829066824,
+  "retrained_here": 13.703192743593263,
+  "diff": 0.29645491452643924,
+  "kind": "model"
+ },
+ {
+  "group": "UIEB val (90)",
+  "what": "BetaNet + gray-world de2000",
+  "original_v1": 13.232182121873802,
+  "retrained_here": 13.294843807291178,
+  "diff": 0.06266168541737649,
+  "kind": "model"
+ },
+ {
+  "group": "UIEB val (90)",
+  "what": "BetaNet + Day 1b de2000",
+  "original_v1": 12.213839815238721,
+  "retrained_here": 12.493372936855375,
+  "diff": 0.27953312161665345,
+  "kind": "model"
+ },
+ {
+  "group": "Sea-thru chart [deg]",
+  "what": "D1/T_S03272 raw",
+  "original_v1": 29.449219637358016,
+  "retrained_here": 29.449219642388375,
+  "diff": 5.030358352087205e-09,
+  "kind": "data check"
+ },
+ {
+  "group": "Sea-thru chart [deg]",
+  "what": "D1/T_S03272 BetaNet own E",
+  "original_v1": 15.96216696963318,
+  "retrained_here": 13.40270656691938,
+  "diff": -2.5594604027138015,
+  "kind": "model"
+ },
+ {
+  "group": "Sea-thru chart [deg]",
+  "what": "D1/T_S03272 BetaNet + gray-world",
+  "original_v1": 11.708327136036944,
+  "retrained_here": 11.00899127841793,
+  "diff": -0.6993358576190136,
+  "kind": "model"
+ }
+]

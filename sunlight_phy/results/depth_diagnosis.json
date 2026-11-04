@@ -1,0 +1,45 @@
+{
+ "reference depths": {
+  "true d_s": {
+   "MAE_m": 1.7498670816421509,
+   "median_abs_m": 1.348883867263794,
+   "spearman": 0.7273210533752477
+  },
+  "E-equivalent depth (true beta_D)": {
+   "MAE_m": 1.710808515548706,
+   "median_abs_m": 1.3463084697723389,
+   "spearman": 0.7548309367381365
+  },
+  "self-consistent depth (network's own beta_D)": {
+   "MAE_m": 1.0327845811843872,
+   "median_abs_m": 0.7905559539794922,
+   "spearman": 0.8904196563087127
+  }
+ },
+ "by kappa": {
+  "0.6-0.7": {
+   "n": 156,
+   "depth_bias_m": -0.8674252033233643,
+   "psnr_change_with_true_d_s_dB": -0.44709561408114123,
+   "psnr_cost_of_K_d_0.8_beta_D_with_true_coefs_dB": 1.2773081316481967
+  },
+  "0.7-0.8": {
+   "n": 188,
+   "depth_bias_m": -0.7832306623458862,
+   "psnr_change_with_true_d_s_dB": -0.6645543875495614,
+   "psnr_cost_of_K_d_0.8_beta_D_with_true_coefs_dB": 0.27869892687304315
+  },
+  "0.8-0.9": {
+   "n": 146,
+   "depth_bias_m": -0.11785520613193512,
+   "psnr_change_with_true_d_s_dB": -0.3546283640003494,
+   "psnr_cost_of_K_d_0.8_beta_D_with_true_coefs_dB": 0.06678266990620206
+  },
+  "0.9-1.0": {
+   "n": 164,
+   "depth_bias_m": 0.39344754815101624,
+   "psnr_change_with_true_d_s_dB": -0.47809973367688535,
+   "psnr_cost_of_K_d_0.8_beta_D_with_true_coefs_dB": 0.28912953077613485
+  }
+ }
+}

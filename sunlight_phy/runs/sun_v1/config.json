@@ -1,0 +1,21 @@
+{
+ "lambda_img": 1.0,
+ "lambda_coef": 1.0,
+ "lambda_depth": 1.0,
+ "kappa0": 0.8,
+ "no_detach_kd": false,
+ "epochs": 60,
+ "bs": 24,
+ "lr": 0.0005,
+ "name": "sun_v1",
+ "data": "train_big",
+ "nval": 288,
+ "murky_keep": 0.4,
+ "model": "sun",
+ "no_depth": false,
+ "train_frames": 7140,
+ "val_frames": 288,
+ "params_M": 11.313546,
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU"
+}

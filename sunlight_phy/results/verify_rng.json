@@ -1,0 +1,20 @@
+{
+ "sample_water identical: val (288, seed 123)": true,
+ "sample_water identical: test (654, seed 2026)": true,
+ "sample_water identical: jerlov 3C (200, seed 1)": true,
+ "sample_water identical: jerlov 9C (200, seed 1)": true,
+ "sample_water identical: train murky_keep 0.4 (24, seed 0)": true,
+ "sample_water identical: low_red 0.4 (64, seed 5)": true,
+ "make_batch identical (4 training batches, murky_keep 0.4)": true,
+ "labels reproduce E exactly (test set)": true,
+ "sunlight_from_depth(true K_d, true d_s) max |dE|": 4.76837158203125e-07,
+ "test d_s range [m]": [
+  0.513919472694397,
+  11.973228454589844
+ ],
+ "test kappa range": [
+  0.6003153324127197,
+  0.998997688293457
+ ],
+ "test share of images with E_R at the 0.03 floor": 0.0015290520386770368
+}
