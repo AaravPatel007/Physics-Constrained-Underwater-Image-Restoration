@@ -1,0 +1,166 @@
+torch 2.15.0 mps True
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/train-00000-of-00157-5cc7c41b0cc9e4f4.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/train-00026-of-00157-15b6fd5bc61d2527.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/train-00052-of-00157-20296c4097ad25e9.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/train-00078-of-00157-4449e7ba9e76f0fd.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/train-00104-of-00157-8983be932ccac8fc.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/train-00130-of-00157-f894a3a6bd4f90b9.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/validation-00000-of-00003-0c667cfcd871aca4.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/validation-00001-of-00003-5f08f98440587ee9.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/nyu/data/validation-00002-of-00003-2d5e2542eae4a0c6.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/uieb/data/train-00000-of-00003-400f34c28a61ba94.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/uieb/data/train-00001-of-00003-5e4553c4feca8b3e.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/uieb/data/train-00002-of-00003-8399d261352e3b11.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/uieb/data/val-00000-of-00001-ee22087fd151f704.parquet
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/linearPNG/T_S02951.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/depth/depthT_S02951.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/linearPNG/T_S03109.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/depth/depthT_S03109.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/linearPNG/T_S03267.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/depth/depthT_S03267.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/linearPNG/T_S03272.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/depth/depthT_S03272.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/linearPNG/T_S03425.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D1/D1/depth/depthT_S03425.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/linearPNG/T_S03585.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/depth/depthT_S03585.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/linearPNG/T_S03647.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/depth/depthT_S03647.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/linearPNG/T_S03664.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/depth/depthT_S03664.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/linearPNG/T_S03743.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/depth/depthT_S03743.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/linearPNG/T_S03822.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D2/D2/depth/depthT_S03822.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/linearPNG/T_S04856.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/depth/depthT_S04856.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/linearPNG/T_S04873.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/depth/depthT_S04873.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/linearPNG/T_S04890.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/depth/depthT_S04890.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/linearPNG/T_S04907.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/depth/depthT_S04907.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/linearPNG/T_S04910.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D3/D3/depth/depthT_S04910.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/linearPNG/RGT_0153.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/depth_resized/depthRGT_0153.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/linearPNG/RGT_0191.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/depth_resized/depthRGT_0191.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/linearPNG/RGT_0209.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/depth_resized/depthRGT_0209.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/linearPNG/RGT_0229.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/depth_resized/depthRGT_0229.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/linearPNG/RGT_0267.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D4/D4/depth_resized/depthRGT_0267.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D5/D5/linearPNG/LFT_3374.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D5/D5/depth/depthLFT_3374.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D5/D5/linearPNG/LFT_3384.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D5/D5/depth/depthLFT_3384.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D5/D5/linearPNG/LFT_3394.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D5/D5/depth/depthLFT_3394.tif
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D5/D5/linearPNG/LFT_3404.png
+ok /Users/sameerksujish/Desktop/MLOE-RefineNet/data/seathru/D5/D5/depth/depthLFT_3404.tif
+train-00000-of-00157-5cc7c41b0cc9e4f4.parquet 152
+train-00026-of-00157-15b6fd5bc61d2527.parquet 304
+train-00052-of-00157-20296c4097ad25e9.parquet 456
+train-00078-of-00157-4449e7ba9e76f0fd.parquet 608
+train-00104-of-00157-8983be932ccac8fc.parquet 760
+train-00130-of-00157-f894a3a6bd4f90b9.parquet 912
+train (912, 240, 320, 3) 0.1048583984375 10.0
+validation-00000-of-00003-0c667cfcd871aca4.parquet 218
+validation-00001-of-00003-5f08f98440587ee9.parquet 436
+validation-00002-of-00003-2d5e2542eae4a0c6.parquet 654
+test (654, 240, 320, 3) 0.71337890625 9.984375
+new shards: [1, 5, 9, 14, 18, 23, 28, 33, 37, 42, 46, 51, 56, 61, 65, 70, 74, 80, 84, 89, 93, 98, 102, 108, 112, 117, 121, 126, 131, 136]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+train-00001-of-00157-dc0e3f55da889be5.parquet 152
+train-00005-of-00157-8f875e345c09107e.parquet 146
+train-00009-of-00157-eba6d22fda3bb872.parquet 134
+train-00014-of-00157-5a41e4c7ba1d048c.parquet 152
+train-00018-of-00157-ab8b9bc31e1fd6d3.parquet 152
+train-00023-of-00157-b8c8bea261e56000.parquet 152
+train-00028-of-00157-56892bddbff13ee1.parquet 148
+train-00033-of-00157-8262a69380262005.parquet 152
+train-00037-of-00157-ccb42be2fc4584e7.parquet 152
+train-00042-of-00157-d4d8316b2ef10533.parquet 152
+train-00046-of-00157-49b09a86935f4f66.parquet 152
+train-00051-of-00157-64940094416627ef.parquet 152
+train-00056-of-00157-1fd0a20c969ad0c3.parquet 152
+train-00061-of-00157-89c6ec4c196906bd.parquet 152
+train-00065-of-00157-4881714dfa50967e.parquet 152
+train-00070-of-00157-3db8fe0c63dda946.parquet 144
+train-00074-of-00157-6ed351bd74f421c1.parquet 147
+train-00080-of-00157-8028a5e1311c81d0.parquet 152
+train-00084-of-00157-420749d4038b41c3.parquet 152
+train-00089-of-00157-333f85c965629855.parquet 152
+train-00093-of-00157-7279430715f14b95.parquet 152
+train-00098-of-00157-f2f8642ea1a33533.parquet 152
+train-00102-of-00157-4dad5d02a6520f36.parquet 152
+train-00108-of-00157-f57a9aa42856b4f1.parquet 152
+train-00112-of-00157-9588fddb789879f7.parquet 152
+train-00117-of-00157-324768dda4885475.parquet 152
+train-00121-of-00157-86b82f79dfd7950f.parquet 152
+train-00126-of-00157-7501008904459b8a.parquet 152
+train-00131-of-00157-03c9f3cf5ac5d3f8.parquet 152
+train-00136-of-00157-38bc2588ae060672.parquet 152
+train_big (5431, 240, 320, 3) 4519 new frames
+W1104 02:42:02.440000 92590 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+D1/T_S02951 (399, 600, 3) range 0.9-1.9 m, valid 1.00
+D1/T_S03109 (399, 600, 3) range 0.0-2.3 m, valid 1.00
+D1/T_S03267 (399, 600, 3) range 0.0-1.6 m, valid 1.00
+D1/T_S03272 (399, 600, 3) range 0.0-1.5 m, valid 1.00
+D1/T_S03425 (399, 600, 3) range 0.7-1.0 m, valid 1.00
+D2/T_S03585 (399, 600, 3) range 0.0-4.9 m, valid 0.98
+D2/T_S03647 (399, 600, 3) range 2.9-5.4 m, valid 1.00
+D2/T_S03664 (399, 600, 3) range 2.7-4.8 m, valid 1.00
+D2/T_S03743 (399, 600, 3) range 3.8-7.7 m, valid 1.00
+D2/T_S03822 (399, 600, 3) range 3.4-6.7 m, valid 1.00
+D3/T_S04856 (399, 600, 3) range 0.0-15.1 m, valid 0.97
+D3/T_S04873 (399, 600, 3) range 0.0-22.2 m, valid 0.73
+D3/T_S04890 (399, 600, 3) range 0.0-14.2 m, valid 0.97
+D3/T_S04907 (399, 600, 3) range 0.0-15.0 m, valid 0.99
+D3/T_S04910 (399, 600, 3) range 1.0-8.3 m, valid 1.00
+D4/RGT_0153 (369, 553, 3) range 0.0-2.9 m, valid 0.75
+D4/RGT_0191 (369, 553, 3) range 1.2-3.5 m, valid 1.00
+D4/RGT_0209 (369, 553, 3) range 1.4-2.2 m, valid 1.00
+D4/RGT_0229 (369, 553, 3) range 0.0-3.4 m, valid 0.99
+D4/RGT_0267 (369, 553, 3) range 0.0-4.8 m, valid 0.94
+D5/LFT_3374 (369, 553, 3) range 0.0-19.0 m, valid 0.80
+D5/LFT_3384 (369, 553, 3) range 0.0-15.7 m, valid 0.63
+D5/LFT_3394 (369, 553, 3) range 0.0-19.3 m, valid 0.74
+D5/LFT_3404 (369, 553, 3) range 0.0-19.8 m, valid 0.77
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 8019.86it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 18311.56it/s]
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 18876.37it/s]
+{
+ "metric-indoor (median-scaled)": {
+  "absrel": 0.11696967728186876,
+  "rmse": 0.775383322727674,
+  "delta1": 0.8596363908984738
+ },
+ "metric-indoor": {
+  "absrel": 0.7592720722976614,
+  "rmse": 1.6532986879391445,
+  "delta1": 0.24553978049718692
+ },
+ "metric-outdoor (median-scaled)": {
+  "absrel": 0.12294630706928344,
+  "rmse": 0.7682661659493054,
+  "delta1": 0.8625645293910903
+ },
+ "metric-outdoor": {
+  "absrel": 2.5925649899857532,
+  "rmse": 5.285609786341239,
+  "delta1": 0.08197482294733911
+ },
+ "relative": {
+  "absrel": 0.07188276620245147,
+  "rmse": 0.6726897266368169,
+  "delta1": 0.9671473716571911
+ }
+}
+MAC_SETUP_DONE
+8.7G	../data
+/dev/disk4s5   191Gi   151Gi   3.2Gi    98%    1.7M   34M    5%   /System/Volumes/Data

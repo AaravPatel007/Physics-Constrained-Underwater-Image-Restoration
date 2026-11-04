@@ -1,0 +1,5 @@
+W1104 02:07:24.741000 91595 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+euvp: 5550 pairs found, 2500 kept
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 15620.94it/s]
+saved 2500 /Users/sameerksujish/Desktop/MLOE-RefineNet/data/euvp_pairs.npz

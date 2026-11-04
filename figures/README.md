@@ -16,6 +16,7 @@
 | `6_review2_day2/2_low_red_water/` | same three | Day 2 run 2 (`day2b_added_deep_red_starved_water`: continued from the base model with deep, red-starved water added) | `fig_day2.py` |
 | `6_review2_day2/3_camera_flaws/` | same three | Day 2 run 3 (`day2c_added_camera_flaws`: continued from the base model with camera flaws: noise, 8-bit, JPEG) | `fig_day2.py` |
 | `6_review2_day2/4_all_three_combined/` | same three | Day 2 run d (`day2d_added_murky_deep_red_camera_60ep`: murky + deep red-starved + camera flaws together, trained from scratch, 60 epochs); **not run yet** | `fig_day2.py` |
+| `9_stress_test/` | `full_reference_bars.png`, `no_reference_bars.png`, `tub_turbidity_curves.png`, `gallery_<set>.png` | Session 5 stress test: every system on every test set | `stress_test.py` |
 
 `<model>` = `original` (= `baseline_v0_40ep`, old name `beta_rgbd`) or `longer_run` (= `baseline_v1_60ep_bigdata`, old name `beta_rgbd_big`, the model in use). See `docs/MODELS.md`.
 In the Day 2 figures "current baseline" = `baseline_v1_60ep_bigdata`.

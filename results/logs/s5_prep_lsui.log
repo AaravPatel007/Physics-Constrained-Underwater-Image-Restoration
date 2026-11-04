@@ -1,0 +1,4 @@
+W1104 02:15:26.878000 92172 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+lsui: 4279 pairs found, 2000 kept
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 7847.95it/s]
+saved 2000 /Users/sameerksujish/Desktop/MLOE-RefineNet/data/lsui_pairs.npz

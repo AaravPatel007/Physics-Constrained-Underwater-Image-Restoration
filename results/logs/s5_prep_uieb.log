@@ -1,0 +1,6 @@
+W1104 02:43:19.271000 92677 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+train-00000-of-00003-400f34c28a61ba94.parquet 267
+train-00001-of-00003-5e4553c4feca8b3e.parquet 534
+train-00002-of-00003-8399d261352e3b11.parquet 800
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 7442.18it/s]
+saved 800 /Users/sameerksujish/Desktop/MLOE-RefineNet/data/uieb_train.npz

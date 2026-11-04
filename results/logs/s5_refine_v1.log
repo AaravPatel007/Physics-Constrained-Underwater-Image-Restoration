@@ -1,0 +1,18 @@
+W1104 04:31:14.058000 93792 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+refine_v1_mac: RefineNet 0.12M params, 5143 train / 288 val
+{"epoch": 1, "train_l1": 0.056196852474012106, "val_psnr_betanet": 25.338301099008984, "val_psnr_refined": 25.705750428968006, "time": 195.386137008667}
+{"epoch": 2, "train_l1": 0.05176893302248182, "val_psnr_betanet": 25.361923346916836, "val_psnr_refined": 25.9620008137491, "time": 211.1627278327942}
+{"epoch": 3, "train_l1": 0.049553595544230715, "val_psnr_betanet": 25.504579063918854, "val_psnr_refined": 26.19595609770881, "time": 205.46113681793213}
+{"epoch": 4, "train_l1": 0.04837193702147386, "val_psnr_betanet": 25.334151102436913, "val_psnr_refined": 26.347589125235874, "time": 209.61691403388977}
+{"epoch": 5, "train_l1": 0.046282173212722086, "val_psnr_betanet": 25.51237040426996, "val_psnr_refined": 27.011989851792652, "time": 212.29465889930725}
+{"epoch": 6, "train_l1": 0.04558541391601908, "val_psnr_betanet": 25.404250936375725, "val_psnr_refined": 26.963311344385147, "time": 210.8955488204956}
+{"epoch": 7, "train_l1": 0.044986295809743004, "val_psnr_betanet": 25.254432880216175, "val_psnr_refined": 27.368819276491802, "time": 207.9819839000702}
+{"epoch": 8, "train_l1": 0.04224044545858263, "val_psnr_betanet": 25.406482173336876, "val_psnr_refined": 27.545162118143505, "time": 199.57351398468018}
+{"epoch": 9, "train_l1": 0.04417714221559674, "val_psnr_betanet": 25.41291755106714, "val_psnr_refined": 27.841405898332596, "time": 167.94409918785095}
+{"epoch": 10, "train_l1": 0.04393141420784397, "val_psnr_betanet": 25.423378967576557, "val_psnr_refined": 27.528018441465164, "time": 167.41317892074585}
+{"epoch": 11, "train_l1": 0.042769097705658905, "val_psnr_betanet": 25.36762348148558, "val_psnr_refined": 27.435932295189964, "time": 167.12704825401306}
+{"epoch": 12, "train_l1": 0.04351560378917188, "val_psnr_betanet": 25.478970279296238, "val_psnr_refined": 27.483616408374573, "time": 171.56089401245117}
+W1104 05:10:10.526000 94417 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+oracle (true coefs)    PSNR 25.11  SSIM 0.684  dE00 9.28
+BetaNet                PSNR 21.00  SSIM 0.652  dE00 13.29
+BetaNet + RefineNet    PSNR 23.47  SSIM 0.719  dE00 10.43

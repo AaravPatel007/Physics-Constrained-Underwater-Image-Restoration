@@ -172,6 +172,22 @@ also `ft_big_nodive` = the ft_nodive recipe on the new base):
 - Gotchas: the weights were not in git (`*.pt` ignored); this session ran in `~/Downloads/Garment/piper_x/.venv_vla`
   (added lpips, python-pptx, lxml). The validation noise generator advances per epoch, so val BetaNet PSNR wobbles ~0.1 dB.
 
+## 3e. Session 5 (4 Nov 2026): more data for RefineNet, and a stress test (branch `RefineNet`)
+`refine_mix` = `refine_ft`'s recipe with real pairs drawn from UIEB + LSUI + EUVP at the same number of steps. New
+`src/stress_test.py` scores every system on 13 test sets, results in `results/stress_test/`, figures in
+`figures/9_stress_test/`. Full tables and reading: `agent_logs.md`, "Findings".
+
+| PSNR / ΔE, test photos with a copy in training removed | BetaNet | + Day 1b | `refine_ft` | `refine_mix` |
+|---|---|---|---|---|
+| UIEB held out (158) | 17.70 / 13.22 | 19.02 / 11.81 | **20.21 / 11.50** | 19.97 / 11.73 |
+| UIEB val (89) | 17.66 / 13.72 | 19.21 / 12.19 | 19.67 / 12.02 | 19.64 / 12.16 |
+| LSUI held out (379) | 18.35 / 13.97 | 20.10 / 12.61 | 20.37 / 12.27 | **21.30 / 11.43** |
+| EUVP held out (497) | 15.98 / 20.32 | 18.07 / 17.22 | 16.92 / 19.00 | **19.17 / 16.02** |
+
+`refine_ft` stays the RefineNet to use: `refine_mix` wins only on the styles it trained on and is level on unseen sets.
+Scripts now run on CUDA or Apple MPS (`src/device.py`). The original BetaNet weights are not in git; copy
+`results/baseline_v1_60ep_bigdata/best.pt` by hand.
+
 ## 4. Files
 ```
 SUMMARY.md                  ← this file

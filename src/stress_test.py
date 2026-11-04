@@ -20,7 +20,7 @@ Real photos have no true clean image: UIEB/LSUI/EUVP references are human-prefer
 numbers measure agreement with a preferred look, not physical correctness. Real-photo depth = DAv2 metric-indoor
 (cached in data/stress_cache/), as in training.
 
-  python src/stress_test.py --base baseline_v1_mac --refiners refine_ft_mac,refine_mix_mac
+  python src/stress_test.py --base baseline_v1_60ep_bigdata --refiners refine_v1,refine_ft,refine_mix
   python src/stress_test.py --figures-only
 """
 import argparse
@@ -80,9 +80,11 @@ def systems(base, refs, I, z):
     Jb = restore(I, z, p).clamp(0, 1.5)
     outs = {"raw": I, "gray-world": gray_world(I), "BetaNet": Jb,
             "BetaNet + Day 1b": safe_restore(I, z, p, **CURRENT_RECIPE)[0]}
+    h, w = I.shape[-2:]
+    pad = lambda x: torch.nn.functional.pad(x, (0, -w % 8, 0, -h % 8), mode="replicate")  # U-Net needs sides divisible by 8
     for name, r in refs.items():
         with autocast():
-            outs[f"RefineNet [{name}]"] = r(Jb, I, z).float()
+            outs[f"RefineNet [{name}]"] = r(pad(Jb), pad(I), pad(z)).float()[..., :h, :w]
     return p, outs
 
 
@@ -328,8 +330,8 @@ def figures():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="baseline_v1_mac")
-    ap.add_argument("--refiners", default="refine_ft_mac,refine_mix_mac")
+    ap.add_argument("--base", default="baseline_v1_60ep_bigdata")
+    ap.add_argument("--refiners", default="refine_v1,refine_ft,refine_mix")
     ap.add_argument("--only", default="", help="comma list of sets (default: all)")
     ap.add_argument("--figures-only", action="store_true")
     a = ap.parse_args()

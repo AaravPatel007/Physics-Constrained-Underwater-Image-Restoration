@@ -1,0 +1,10 @@
+[02:43:14] prep_uieb
+[02:44:45] train baseline_v1_mac
+[04:31:08] refine stage 1
+[05:11:10] stage 2 (two runs in parallel)
+[11:20:48] stage 2: UIEB only
+[12:58:54] stage 2: UIEB + LSUI + EUVP
+[13:25:21] stage 2: UIEB + LSUI + EUVP
+[14:38:01] stress test
+[14:57:19] stress test
+[15:15:24] S5_PIPELINE_DONE

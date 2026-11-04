@@ -51,3 +51,13 @@ recorded. Day 2 is still useful for the talk: three explanations tested and rule
 
 **What next (Day 3):** a small learned "touch-up" network on top of the restored image, trained on the 800 UIEB
 train photo/reference pairs, on `baseline_v1_60ep_bigdata` + Day 1 fixes. Not started.
+
+## RefineNet (branch `RefineNet`)
+All on the frozen `baseline_v1_60ep_bigdata`, except the `_mac` check runs.
+
+| Name | What it is | Status |
+|---|---|---|
+| `refine_v1` | Residual corrector trained on synthetic water only | Stage 1. Regresses on real photos |
+| `refine_ft` | `refine_v1` fine-tuned on UIEB pairs | **The RefineNet to use** |
+| `refine_mix` | `refine_v1` fine-tuned on UIEB + LSUI + EUVP (0.4 / 0.4 / 0.2), same steps | Better on LSUI and EUVP, slightly worse on UIEB |
+| `baseline_v1_mac`, `refine_v1_mac`, `refine_ft_mac` | The same recipes rerun on a Mac | Check only; weights not in git. This BetaNet is 2.5 dB worse on synthetic |

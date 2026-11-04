@@ -12,6 +12,56 @@ other laptop with ~120 GB free), stress-test the pipeline (PSNR, SSIM, colour er
 the earlier models, keep this log, update graphify at the end, one commit at the end that includes the new
 RefineNet weights, pushed to branch `RefineNet`. No unnecessary commits.
 
+### Findings (read this first)
+All on the original BetaNet `baseline_v1_60ep_bigdata`. Real references are preferred edits, not ground truth. Numbers:
+`results/stress_test/summary.json`, duplicate-free: `clean_rescore.json` (`src/stress_clean.py`), figures: `figures/9_stress_test/`.
+
+**Verdict:** keep `refine_ft` as the RefineNet to use. `refine_mix` (the new weights) is not a replacement: it wins only
+on LSUI and EUVP, the styles it trained on, and it is slightly worse on UIEB. Main's touch-up is still clearly ahead.
+
+Paired sets, PSNR dB / ΔE00, test photos with a copy in training removed (except synthetic):
+
+| Set (photos kept) | BetaNet | + Day 1b | `refine_ft` | `refine_mix` | mix − ft, PSNR [95 % CI] | mix − ft, ΔE [95 % CI] |
+|---|---|---|---|---|---|---|
+| Synthetic NYU test (654) | 21.22 / 13.48 | 20.32 / 13.76 | 23.42 / 10.55 | 23.40 / 10.52 | −0.02 [−0.09, +0.05] | −0.03 [−0.10, +0.04] |
+| UIEB held out (158/160) | 17.70 / 13.22 | 19.02 / 11.81 | **20.21 / 11.50** | 19.97 / 11.73 | −0.24 [−0.41, −0.06] | +0.23 [+0.06, +0.40] |
+| UIEB val (89/90) | 17.66 / 13.72 | 19.21 / 12.19 | 19.67 / 12.02 | 19.64 / 12.16 | −0.03 [−0.24, +0.18] | +0.14 [−0.09, +0.38] |
+| LSUI held out (379/400) | 18.35 / 13.97 | 20.10 / 12.61 | 20.37 / 12.27 | **21.30 / 11.43** | +0.93 [+0.77, +1.09] | −0.84 [−1.01, −0.68] |
+| EUVP held out (497/500) | 15.98 / 20.32 | 18.07 / 17.22 | 16.92 / 19.00 | **19.17 / 16.02** | +2.25 [+2.09, +2.41] | −2.98 [−3.26, −2.72] |
+
+Sets no model trained on:
+
+| Test | BetaNet | + Day 1b | `refine_ft` | `refine_mix` |
+|---|---|---|---|---|
+| TUB drift ΔE, 320 photos, lower = steadier (raw 10.2) | 15.53 | **12.28** | 14.10 | 14.26 |
+| Grey charts, 2 Sea-thru frames, degrees (gray-world 8.46) | 25.33 | 12.97 | 14.44 | **11.10** |
+| Colour cast, U45 (45) | 20.81 | **13.92** | 17.19 | 17.72 |
+| Colour cast, UIQS (200) | 18.18 | **5.96** | 10.43 | 10.80 |
+| Colour cast, TankImage-I (78) | 18.14 | **8.65** | 16.73 | 15.91 |
+| Colour cast, UCCS green (100) | 23.21 | **4.40** | 14.04 | 13.55 |
+
+What this means:
+- **Fine-tuning on real photos is what helps.** `refine_v1` (synthetic only) is worst on real pairs (UIEB 16.54 / 17.10)
+  and best on synthetic (23.84 / 10.08); `refine_ft` gives up 0.4 dB on synthetic for +3.7 dB on UIEB.
+- **More datasets did not make RefineNet more robust.** On unseen sets `refine_mix` and `refine_ft` are about level.
+  The one gain is the charts (11.10° vs 14.44°), but that is 2 frames from one dive: indicative only. On the UIEB fins
+  photo `refine_ft` turns the fins yellow, `refine_mix` leaves them yellow-green.
+- **Caveat on that test:** `refine_mix` saw only ~2 passes of the LSUI subset and <1 of EUVP, and UIEB fell from 12
+  passes to ~5, at equal compute. This does not rule out a longer run on all the data.
+- **RefineNet's lead over Day 1b is small.** UIEB val: +0.46 dB, −0.17 ΔE. Day 1b has less colour cast than RefineNet on
+  every unseen set except UCCS blue (11.81 vs 11.18 / 10.27), and is the steadiest of the restorations as turbidity
+  rises. Low cast alone is not quality (gray-world is ~1).
+- **Main's touch-up is ahead.** `day3a_touchup_global` on UIEB val: 21.68 / 9.66 (their report) vs `refine_ft` 19.67 /
+  11.99 (all 90 photos). Fair enough to read: same BetaNet and photos, and this harness gives Day 1b 19.22 / 12.16 vs their
+  19.11 / 12.22. Not run here (no weights). Their chart degrees (Day 1b 10.3° / 10.6°) do not match this harness
+  (12.59° / 13.34°), so do not compare chart numbers across the two.
+- **Turbidity is a BetaNet weak spot.** Its fog reading β_B rises to ~0.6 by 11–14 NTU, then stays flat up to 35 NTU
+  (Spearman with NTU 0.46). BetaNet, Day 1b and RefineNet all drift more than raw does. RefineNet does not fix this.
+- TUB PSNR/ΔE against the stage-1 raw photo favour raw by construction; ignore them, use drift.
+
+Best next experiments: RefineNet on Day 1b output instead of raw BetaNet (not tried; Day 1b and RefineNet fix different
+things), LSUI first then UIEB on all the data, and running `day3a` here if its weights turn up.
+
 ### Machine and setup facts (Mac)
 - Apple M2, 16 GB, no CUDA. PyTorch uses the M2 GPU via MPS. Venv: `.venv/` (git-ignored), built by
   `src/mac_setup.sh` (uv, Python 3.12, torch 2.15). Run scripts from `src/` with `../.venv/bin/python`.
@@ -57,7 +107,7 @@ ignored and the user copies `results/baseline_v1_60ep_bigdata/best.pt` (45 MB) b
 The user runs the git commands for the code push themselves. No `Co-Authored-By` or other Claude attribution in commit messages or PRs (user's rule). GitHub account on the Mac: `na23b068-svg` (push rights: yes).
 
 ### Handoff: bigger run on the RTX 3060 laptop (120 GB free, 6 GB VRAM)
-The Mac is still finishing `refine_mix` and the stress test, so do not repeat those here. Not tested on this laptop yet.
+`refine_mix` and the stress test are done on the Mac (see Findings), do not repeat them. Not tested on this laptop yet.
 1. Pull branch `RefineNet`; copy the BetaNet weights to `results/baseline_v1_60ep_bigdata/best.pt`. `src/mac_setup.sh`
    is Mac-only: install a CUDA torch and follow its data steps by hand if `data/` is missing.
 2. Check the base: `refine_ft` on the 160 UIEB photos must give about 20.20 dB / ΔE 11.51.
@@ -78,9 +128,9 @@ The Mac is still finishing `refine_mix` and the stress test, so do not repeat th
 - [x] Venv + base data rebuilt (`src/mac_setup.sh`, log `results/logs/mac_setup.log`)
 - [x] BetaNet: original weights supplied by the user (Mac retrain `baseline_v1_mac` kept only as a check)
 - [x] RefineNet stage 1 and UIEB-only stage 2 on the original: `refine_v1`, `refine_ft` (session 4)
-- [ ] RefineNet stage 2 with UIEB + LSUI + EUVP on the original: `refine_mix`
-- [ ] Stress test + figures
-- [ ] Code push (user runs it), then docs, graphify update, final commit with `refine_mix` weights and results
+- [x] RefineNet stage 2 with UIEB + LSUI + EUVP on the original: `refine_mix`
+- [x] Stress test + figures
+- [x] Code push (`1a8c47d`), docs, graphify update, final commit with `refine_mix` weights and results
 
 ### Log
 - (01:3x) Cloned, graphify run (513 nodes, 1,477 edges, 29 communities).
@@ -132,3 +182,9 @@ The Mac is still finishing `refine_mix` and the stress test, so do not repeat th
   comparable across machines (Mac reads higher while the same-machine test reads lower).
 - (13:2x) Stopped `refine_mix_mac` at about epoch 5 (its log: `s5_refine_mix_mac_stopped.log`). `run_session5.sh` now
   trains `refine_mix` on the original BetaNet from `refine_v1`, then stress-tests `refine_v1`, `refine_ft`, `refine_mix`.
+- (14:38) `refine_mix` done: UIEB160 19.95 / ΔE 11.75, synthetic val 29.82. First stress run crashed on the Sea-thru
+  charts (RefineNet needs sides divisible by 8). `stress_test.py` now pads and crops; rerun finished 15:15 (18 min).
+- (15:2x) `src/stress_clean.py` added and run (scores without duplicates). Prep logs renamed `s5_prep_*.log` because
+  main also has a `results/logs/prep_lsui.log`. Findings at the top of this entry.
+- (15:3x) Graphify updated with `graphify update .` (576 nodes, 1,704 edges, 39 communities; code only). The 5 edited docs
+  were not re-extracted and figures stay excluded; run `/graphify --update` for docs. `graphify-out/` is not in git.

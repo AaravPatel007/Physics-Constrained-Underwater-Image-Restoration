@@ -1,0 +1,172 @@
+W1104 14:57:26.899000 17311 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+synth
+uieb160
+  uieb160 0
+  uieb160 100
+uieb90
+  uieb90 0
+lsui
+  lsui 0
+  lsui 100
+  lsui 200
+  lsui 300
+euvp
+  euvp 0
+  euvp 100
+  euvp 200
+  euvp 300
+  euvp 400
+tub
+/Users/sameerksujish/Desktop/MLOE-RefineNet/.venv/lib/python3.12/site-packages/skimage/metrics/simple_metrics.py:171: RuntimeWarning: divide by zero encountered in scalar divide
+  return 10 * np.log10((data_range**2) / err)
+  tub 0
+  tub 100
+  tub 200
+  tub 300
+uccs_blue
+  uccs_blue 0
+uccs_green
+  uccs_green 0
+uccs_blue-green
+  uccs_blue-green 0
+uiqs
+  uiqs 0
+  uiqs 100
+u45
+  u45 0
+tank
+  tank 0
+charts
+
+== synth (n=654)
+  raw                                psnr 14.454  ssim 0.616  de2000 24.327  cast 18.126
+  gray-world                         psnr 15.398  ssim 0.621  de2000 17.768  cast 2.489
+  BetaNet                            psnr 21.218  ssim 0.659  de2000 13.478  cast 15.338
+  BetaNet + Day 1b                   psnr 20.321  ssim 0.703  de2000 13.761  cast 11.162
+  RefineNet [refine_v1]              psnr 23.837  ssim 0.728  de2000 10.076  cast 15.691
+  RefineNet [refine_ft]              psnr 23.420  ssim 0.717  de2000 10.549  cast 15.239
+  RefineNet [refine_mix]             psnr 23.400  ssim 0.718  de2000 10.521  cast 15.339
+  oracle (true coefs)                psnr 25.110  ssim 0.684  de2000 9.281  cast 11.969
+
+== uieb160 (n=160)
+  raw                                uciqe 0.345  cast 21.867  speck 4.244  psnr 17.667  ssim 0.777  de2000 14.258
+  gray-world                         uciqe 0.307  cast 4.636  speck 7.876  psnr 18.005  ssim 0.794  de2000 13.682
+  BetaNet                            uciqe 0.434  cast 15.588  speck 7.649  psnr 17.673  ssim 0.756  de2000 13.244
+  BetaNet + Day 1b                   uciqe 0.400  cast 12.990  speck 6.650  psnr 18.984  ssim 0.818  de2000 11.833
+  RefineNet [refine_v1]              uciqe 0.425  cast 14.890  speck 5.285  psnr 16.538  ssim 0.788  de2000 17.099
+  RefineNet [refine_ft]              uciqe 0.424  cast 13.745  speck 6.549  psnr 20.201  ssim 0.825  de2000 11.510
+  RefineNet [refine_mix]             uciqe 0.422  cast 13.838  speck 6.304  psnr 19.955  ssim 0.810  de2000 11.753
+
+== uieb90 (n=90)
+  raw                                uciqe 0.313  cast 24.237  speck 3.786  psnr 16.442  ssim 0.739  de2000 17.512
+  gray-world                         uciqe 0.255  cast 3.134  speck 6.695  psnr 17.721  ssim 0.764  de2000 13.787
+  BetaNet                            uciqe 0.423  cast 16.232  speck 7.609  psnr 17.656  ssim 0.760  de2000 13.679
+  BetaNet + Day 1b                   uciqe 0.379  cast 10.879  speck 6.599  psnr 19.217  ssim 0.826  de2000 12.162
+  RefineNet [refine_v1]              uciqe 0.415  cast 14.638  speck 5.030  psnr 16.822  ssim 0.772  de2000 16.682
+  RefineNet [refine_ft]              uciqe 0.415  cast 13.763  speck 6.378  psnr 19.669  ssim 0.811  de2000 11.990
+  RefineNet [refine_mix]             uciqe 0.415  cast 13.803  speck 6.172  psnr 19.640  ssim 0.799  de2000 12.128
+
+== lsui (n=400)
+  raw                                uciqe 0.354  cast 24.037  speck 3.060  psnr 18.049  ssim 0.783  de2000 16.728
+  gray-world                         uciqe 0.295  cast 3.226  speck 4.720  psnr 19.602  ssim 0.813  de2000 12.899
+  BetaNet                            uciqe 0.407  cast 14.141  speck 6.122  psnr 18.438  ssim 0.770  de2000 13.793
+  BetaNet + Day 1b                   uciqe 0.368  cast 10.537  speck 5.147  psnr 20.151  ssim 0.816  de2000 12.517
+  RefineNet [refine_v1]              uciqe 0.400  cast 12.963  speck 4.055  psnr 17.760  ssim 0.782  de2000 15.093
+  RefineNet [refine_ft]              uciqe 0.398  cast 11.919  speck 4.981  psnr 20.446  ssim 0.810  de2000 12.105
+  RefineNet [refine_mix]             uciqe 0.393  cast 11.540  speck 4.834  psnr 21.353  ssim 0.814  de2000 11.290
+
+== euvp (n=500)
+  raw                                uciqe 0.375  cast 18.709  speck 9.334  psnr 15.914  ssim 0.816  de2000 20.812
+  gray-world                         uciqe 0.325  cast 3.301  speck 14.998  psnr 19.329  ssim 0.848  de2000 16.228
+  BetaNet                            uciqe 0.403  cast 13.992  speck 15.832  psnr 15.978  ssim 0.786  de2000 20.327
+  BetaNet + Day 1b                   uciqe 0.368  cast 8.447  speck 14.571  psnr 18.076  ssim 0.818  de2000 17.227
+  RefineNet [refine_v1]              uciqe 0.385  cast 10.735  speck 8.691  psnr 16.261  ssim 0.800  de2000 20.043
+  RefineNet [refine_ft]              uciqe 0.392  cast 11.337  speck 11.737  psnr 16.922  ssim 0.815  de2000 18.999
+  RefineNet [refine_mix]             uciqe 0.373  cast 7.355  speck 11.435  psnr 19.179  ssim 0.829  de2000 16.009
+
+== tub (n=320)
+  raw                                uciqe 0.166  cast 17.234  speck 0.380  psnr 30.079  ssim 0.707  de2000 10.224  drift_de2000 10.224
+  gray-world                         uciqe 0.088  cast 0.254  speck 0.342  psnr 17.066  ssim 0.696  de2000 16.383  drift_de2000 10.171
+  BetaNet                            uciqe 0.260  cast 13.307  speck 0.685  psnr 16.757  ssim 0.647  de2000 13.226  drift_de2000 15.534
+  BetaNet + Day 1b                   uciqe 0.196  cast 3.964  speck 0.587  psnr 17.245  ssim 0.689  de2000 14.735  drift_de2000 12.278
+  RefineNet [refine_v1]              uciqe 0.280  cast 12.937  speck 0.679  psnr 17.006  ssim 0.652  de2000 12.703  drift_de2000 14.131
+  RefineNet [refine_ft]              uciqe 0.292  cast 12.949  speck 0.788  psnr 16.982  ssim 0.651  de2000 12.811  drift_de2000 14.099
+  RefineNet [refine_mix]             uciqe 0.316  cast 14.504  speck 0.828  psnr 16.582  ssim 0.635  de2000 12.859  drift_de2000 14.260
+
+== uccs_blue (n=100)
+  raw                                uciqe 0.308  cast 29.875  speck 4.258
+  gray-world                         uciqe 0.248  cast 3.027  speck 8.447
+  BetaNet                            uciqe 0.356  cast 14.008  speck 10.467
+  BetaNet + Day 1b                   uciqe 0.315  cast 11.814  speck 8.384
+  RefineNet [refine_v1]              uciqe 0.331  cast 8.815  speck 4.668
+  RefineNet [refine_ft]              uciqe 0.339  cast 11.184  speck 7.227
+  RefineNet [refine_mix]             uciqe 0.329  cast 10.275  speck 7.324
+
+== uccs_green (n=100)
+  raw                                uciqe 0.307  cast 39.044  speck 1.073
+  gray-world                         uciqe 0.138  cast 1.056  speck 2.025
+  BetaNet                            uciqe 0.355  cast 23.208  speck 4.955
+  BetaNet + Day 1b                   uciqe 0.259  cast 4.398  speck 4.497
+  RefineNet [refine_v1]              uciqe 0.330  cast 15.252  speck 2.637
+  RefineNet [refine_ft]              uciqe 0.312  cast 14.041  speck 2.406
+  RefineNet [refine_mix]             uciqe 0.310  cast 13.549  speck 2.162
+
+== uccs_blue-green (n=100)
+  raw                                uciqe 0.270  cast 33.525  speck 1.270
+  gray-world                         uciqe 0.156  cast 0.934  speck 2.132
+  BetaNet                            uciqe 0.361  cast 12.694  speck 4.523
+  BetaNet + Day 1b                   uciqe 0.317  cast 6.609  speck 4.041
+  RefineNet [refine_v1]              uciqe 0.341  cast 7.928  speck 2.448
+  RefineNet [refine_ft]              uciqe 0.320  cast 8.517  speck 2.702
+  RefineNet [refine_mix]             uciqe 0.327  cast 8.550  speck 2.703
+
+== uiqs (n=200)
+  raw                                uciqe 0.311  cast 36.071  speck 1.674
+  gray-world                         uciqe 0.167  cast 1.333  speck 2.785
+  BetaNet                            uciqe 0.356  cast 18.179  speck 5.497
+  BetaNet + Day 1b                   uciqe 0.293  cast 5.960  speck 4.994
+  RefineNet [refine_v1]              uciqe 0.333  cast 10.828  speck 2.981
+  RefineNet [refine_ft]              uciqe 0.322  cast 10.434  speck 3.309
+  RefineNet [refine_mix]             uciqe 0.324  cast 10.799  speck 3.174
+
+== u45 (n=45)
+  raw                                uciqe 0.324  cast 31.572  speck 3.363
+  gray-world                         uciqe 0.263  cast 4.532  speck 8.066
+  BetaNet                            uciqe 0.440  cast 20.811  speck 7.773
+  BetaNet + Day 1b                   uciqe 0.389  cast 13.925  speck 6.317
+  RefineNet [refine_v1]              uciqe 0.434  cast 18.977  speck 5.435
+  RefineNet [refine_ft]              uciqe 0.433  cast 17.189  speck 6.610
+  RefineNet [refine_mix]             uciqe 0.429  cast 17.719  speck 6.404
+
+== tank (n=78)
+  raw                                uciqe 0.358  cast 21.838  speck 2.709
+  gray-world                         uciqe 0.287  cast 1.992  speck 3.155
+  BetaNet                            uciqe 0.458  cast 18.140  speck 4.107
+  BetaNet + Day 1b                   uciqe 0.320  cast 8.653  speck 3.552
+  RefineNet [refine_v1]              uciqe 0.455  cast 15.684  speck 2.997
+  RefineNet [refine_ft]              uciqe 0.468  cast 16.725  speck 3.567
+  RefineNet [refine_mix]             uciqe 0.464  cast 15.915  speck 3.588
+
+== charts (n=)
+  raw                                grey_patch_deg 29.421  D1/T_S03272 29.449  D1/T_S03425 29.393
+  gray-world                         grey_patch_deg 8.462  D1/T_S03272 8.870  D1/T_S03425 8.054
+  BetaNet                            grey_patch_deg 25.328  D1/T_S03272 24.907  D1/T_S03425 25.750
+  BetaNet + Day 1b                   grey_patch_deg 12.966  D1/T_S03272 12.593  D1/T_S03425 13.339
+  RefineNet [refine_v1]              grey_patch_deg 12.867  D1/T_S03272 10.928  D1/T_S03425 14.806
+  RefineNet [refine_ft]              grey_patch_deg 14.437  D1/T_S03272 12.953  D1/T_S03425 15.921
+  RefineNet [refine_mix]             grey_patch_deg 11.097  D1/T_S03272 10.796  D1/T_S03425 11.397
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/full_reference_bars.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/no_reference_bars.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/tub_turbidity_curves.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_synth.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_uieb160.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_uieb90.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_lsui.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_euvp.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_tub.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_uccs_blue.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_uccs_green.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_uccs_blue-green.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_uiqs.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_u45.png
+wrote /Users/sameerksujish/Desktop/MLOE-RefineNet/figures/9_stress_test/gallery_tank.png
