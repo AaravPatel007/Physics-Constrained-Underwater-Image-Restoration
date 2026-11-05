@@ -1,0 +1,21 @@
+{
+ "uieb_val_real": {
+  "BetaNet": {
+   "psnr": 18.983816417734964,
+   "ssim": 0.8176303038373589,
+   "de2000": 11.829645138978957
+  },
+  "RefineNet": {
+   "psnr": 21.06065010858815,
+   "ssim": 0.8572843616828323,
+   "de2000": 10.599005329608918
+  }
+ },
+ "synth_val": {
+  "betanet": 25.295325487852097,
+  "refined": 28.764446940686966
+ },
+ "n_real_val": 160,
+ "input": "day1b",
+ "note": "uieb scored vs reference (not ground truth); same 160 held-out photos as the before run"
+}

@@ -3,6 +3,8 @@
 
   lsui : LSUI (Peng et al. 2023), data/external/lsui/LSUI/{input,GT}/ -> data/lsui_pairs.npz
   euvp : EUVP "Underwater Dark" (HF Ken1053/EUVP parquet)            -> data/euvp_pairs.npz
+  hicrd: HICRD train pairs, data/external/hicrd/HICRD_paired/train{A,B}_paired/ -> data/hicrd_pairs.npz (its own
+         300 test pairs stay on disk for stress_test.py, so nothing is split off here)
 
 Both are random subsets (seed 0) to fit a ~18 GB disk; N_TEST of each is the held-out test split (see TEST_SPLIT,
 used by finetune_refine.py and stress_test.py). References are enhanced photos, not ground truth (like UIEB).
@@ -21,8 +23,8 @@ from prep_uieb import resize_pair, save_pairs
 
 ROOT = Path(__file__).resolve().parents[1]
 EXT = ROOT / "data" / "external"
-N_KEEP = {"lsui": 2000, "euvp": 2500}  # shortcut: subsets for disk; use all (4279 / 5550) on the 120 GB laptop
-TEST_SPLIT = {"lsui": 400, "euvp": 500}  # last N of the stored order = held-out test, never trained on
+N_KEEP = {"lsui": 4279, "euvp": 5550}  # all pairs (session 6, RTX 3060 laptop)
+TEST_SPLIT = {"lsui": 400, "euvp": 500, "hicrd": 0}  # last N of the stored order = held-out test, never trained on
 
 
 def rgb(x):
@@ -49,8 +51,17 @@ def euvp():
     save_pairs([a for a, _ in pairs], [b for _, b in pairs], ROOT / "data" / "euvp_pairs.npz")
 
 
+def hicrd():
+    H = EXT / "hicrd" / "HICRD_paired"
+    ps = sorted((H / "trainA_paired").glob("*.png"))
+    ps = [ps[i] for i in np.random.default_rng(0).permutation(len(ps))]
+    pairs = [resize_pair(rgb(p), rgb(H / "trainB_paired" / p.name.replace("_good_", "_ref_")), upscale=False) for p in ps]
+    print(f"hicrd: {len(pairs)} pairs", flush=True)
+    save_pairs([a for a, _ in pairs], [b for _, b in pairs], ROOT / "data" / "hicrd_pairs.npz")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("which", nargs="+", choices=["lsui", "euvp"])
+    ap.add_argument("which", nargs="+", choices=["lsui", "euvp", "hicrd"])
     for w in ap.parse_args().which:
         globals()[w]()

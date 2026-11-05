@@ -1,0 +1,112 @@
+day3b_touchup_global_plus_local params 224351 held-out ΔE at start 11.506
+day3b_touchup_global_plus_local ep 5 L1 0.0808 held-out ΔE 10.231 best 10.231 (22s)
+day3b_touchup_global_plus_local ep 10 L1 0.0793 held-out ΔE 10.151 best 10.151 (44s)
+day3b_touchup_global_plus_local ep 15 L1 0.0774 held-out ΔE 10.182 best 10.151 (66s)
+day3b_touchup_global_plus_local ep 20 L1 0.0761 held-out ΔE 10.062 best 10.062 (88s)
+day3b_touchup_global_plus_local ep 25 L1 0.0732 held-out ΔE 9.817 best 9.817 (109s)
+day3b_touchup_global_plus_local ep 30 L1 0.0747 held-out ΔE 9.959 best 9.817 (131s)
+day3b_touchup_global_plus_local ep 35 L1 0.0701 held-out ΔE 9.547 best 9.547 (153s)
+day3b_touchup_global_plus_local ep 40 L1 0.0680 held-out ΔE 9.626 best 9.547 (175s)
+day3b_touchup_global_plus_local ep 45 L1 0.0677 held-out ΔE 9.679 best 9.547 (197s)
+day3b_touchup_global_plus_local ep 50 L1 0.0662 held-out ΔE 9.264 best 9.264 (219s)
+day3b_touchup_global_plus_local ep 55 L1 0.0640 held-out ΔE 9.475 best 9.264 (241s)
+day3b_touchup_global_plus_local ep 60 L1 0.0616 held-out ΔE 9.556 best 9.264 (263s)
+day3b_touchup_global_plus_local ep 65 L1 0.0620 held-out ΔE 9.602 best 9.264 (285s)
+day3b_touchup_global_plus_local ep 70 L1 0.0602 held-out ΔE 9.386 best 9.264 (307s)
+day3b_touchup_global_plus_local ep 75 L1 0.0580 held-out ΔE 9.466 best 9.264 (329s)
+day3b_touchup_global_plus_local ep 80 L1 0.0559 held-out ΔE 9.405 best 9.264 (351s)
+day3b_touchup_global_plus_local ep 85 L1 0.0547 held-out ΔE 9.488 best 9.264 (372s)
+day3b_touchup_global_plus_local ep 90 L1 0.0538 held-out ΔE 9.393 best 9.264 (394s)
+day3b_touchup_global_plus_local ep 95 L1 0.0524 held-out ΔE 9.387 best 9.264 (416s)
+day3b_touchup_global_plus_local ep 100 L1 0.0520 held-out ΔE 9.428 best 9.264 (439s)
+day3b_touchup_global_plus_local ep 105 L1 0.0518 held-out ΔE 9.461 best 9.264 (460s)
+day3b_touchup_global_plus_local ep 110 L1 0.0515 held-out ΔE 9.409 best 9.264 (482s)
+day3b_touchup_global_plus_local ep 115 L1 0.0518 held-out ΔE 9.404 best 9.264 (505s)
+day3b_touchup_global_plus_local ep 120 L1 0.0521 held-out ΔE 9.406 best 9.264 (527s)
+Day 1b                             PSNR 19.11 ΔE 12.22 edgeΔE 12.56 specks 6.56 haze 0.170
+day3b_touchup_global_plus_local    PSNR 21.89 ΔE 9.54 edgeΔE 9.85 specks 6.60 haze 0.194
+{
+"ci_vs_day1b": {
+"day3b_touchup_global_plus_local": {
+"psnr": [
+2.7879928606798194,
+2.1681796798915296,
+3.411952290311864
+],
+"ssim": [
+0.05498961468500377,
+0.0403374403585697,
+0.07074183519726697
+],
+"de2000": [
+-2.6733763213221082,
+-3.343391898633355,
+-1.9765183597884308
+],
+"edge_de2000": [
+-2.716669489160343,
+-3.428741030915275,
+-2.0025185845206126
+],
+"speck": [
+0.03865403864118788,
+-0.12165837006436453,
+0.20273808532290988
+],
+"haze": [
+0.024170189789017766,
+0.00782938571601537,
+0.04049555385843429
+]
+}
+},
+"n_better_de2000_vs_day1b": {
+"day3b_touchup_global_plus_local": 77
+},
+"fins_val2": {
+"Day 1b": {
+"psnr": 10.125523297772851,
+"ssim": 0.6409654928445326,
+"de2000": 18.639544883858278,
+"edge_de2000": 19.22175787752688,
+"speck": 5.798738956451416,
+"haze": 0.0010448179673403502
+},
+"day3b_touchup_global_plus_local": {
+"psnr": 20.059429136563413,
+"ssim": 0.9228382000689367,
+"de2000": 10.490806260637825,
+"edge_de2000": 11.150469389529311,
+"speck": 7.326941967010498,
+"haze": 0.23079265654087067
+}
+},
+"charts": {
+"SfM range": {
+"D1/T_S03272": {
+"Day 1b": 10.328513745170335,
+"day3b_touchup_global_plus_local": 6.462083327318573
+},
+"D1/T_S03425": {
+"Day 1b": 10.646693299871918,
+"day3b_touchup_global_plus_local": 6.098543886458022
+}
+},
+"DAv2 + 1 range reading": {
+"D1/T_S03272": {
+"Day 1b": 10.881533264883922,
+"day3b_touchup_global_plus_local": 7.126754268302921
+},
+"D1/T_S03425": {
+"Day 1b": 10.569128371809851,
+"day3b_touchup_global_plus_local": 5.847065370511132
+}
+}
+},
+"held_out_de2000": {
+"day3b_touchup_global_plus_local": 9.263554867509065
+},
+"best_epoch": {
+"day3b_touchup_global_plus_local": 50
+}
+}

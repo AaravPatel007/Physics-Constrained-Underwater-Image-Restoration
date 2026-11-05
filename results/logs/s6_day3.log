@@ -1,0 +1,43 @@
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 9920.35it/s]
+cache /home/smeer/Downloads/MLOE---Group-4/data/day3_cache.npz
+day3b_touchup_global_plus_local params 224351 held-out ΔE at start 11.506
+day3b_touchup_global_plus_local ep 5 L1 0.0810 held-out ΔE 10.223 best 10.223 (23s)
+day3b_touchup_global_plus_local ep 10 L1 0.0786 held-out ΔE 10.120 best 10.120 (44s)
+day3b_touchup_global_plus_local ep 15 L1 0.0769 held-out ΔE 10.193 best 10.120 (66s)
+day3b_touchup_global_plus_local ep 20 L1 0.0758 held-out ΔE 10.202 best 10.120 (88s)
+day3b_touchup_global_plus_local ep 25 L1 0.0733 held-out ΔE 9.814 best 9.814 (109s)
+day3b_touchup_global_plus_local ep 30 L1 0.0717 held-out ΔE 9.957 best 9.814 (131s)
+day3b_touchup_global_plus_local ep 35 L1 0.0709 held-out ΔE 9.819 best 9.814 (153s)
+day3b_touchup_global_plus_local ep 40 L1 0.0696 held-out ΔE 9.821 best 9.814 (175s)
+day3b_touchup_global_plus_local ep 45 L1 0.0678 held-out ΔE 9.581 best 9.581 (197s)
+day3b_touchup_global_plus_local ep 50 L1 0.0672 held-out ΔE 9.662 best 9.581 (219s)
+day3b_touchup_global_plus_local ep 55 L1 0.0625 held-out ΔE 9.654 best 9.581 (241s)
+day3b_touchup_global_plus_local ep 60 L1 0.0614 held-out ΔE 9.547 best 9.547 (263s)
+day3b_touchup_global_plus_local ep 65 L1 0.0581 held-out ΔE 9.695 best 9.547 (286s)
+day3b_touchup_global_plus_local ep 70 L1 0.0548 held-out ΔE 9.732 best 9.547 (308s)
+day3b_touchup_global_plus_local ep 75 L1 0.0535 held-out ΔE 9.703 best 9.547 (329s)
+day3b_touchup_global_plus_local ep 80 L1 0.0521 held-out ΔE 9.840 best 9.547 (351s)
+day3b_touchup_global_plus_local ep 85 L1 0.0500 held-out ΔE 9.878 best 9.547 (373s)
+day3b_touchup_global_plus_local ep 90 L1 0.0490 held-out ΔE 9.897 best 9.547 (395s)
+day3b_touchup_global_plus_local ep 95 L1 0.0478 held-out ΔE 9.941 best 9.547 (417s)
+day3b_touchup_global_plus_local ep 100 L1 0.0475 held-out ΔE 9.928 best 9.547 (439s)
+day3b_touchup_global_plus_local ep 105 L1 0.0476 held-out ΔE 9.973 best 9.547 (462s)
+day3b_touchup_global_plus_local ep 110 L1 0.0475 held-out ΔE 9.959 best 9.547 (484s)
+day3b_touchup_global_plus_local ep 115 L1 0.0468 held-out ΔE 9.968 best 9.547 (506s)
+day3b_touchup_global_plus_local ep 120 L1 0.0471 held-out ΔE 9.966 best 9.547 (528s)
+day3a_touchup_global params 105612 held-out ΔE at start 11.506
+day3a_touchup_global ep 5 L1 0.0815 held-out ΔE 10.332 best 10.332 (14s)
+day3a_touchup_global ep 10 L1 0.0779 held-out ΔE 10.156 best 10.156 (28s)
+day3a_touchup_global ep 15 L1 0.0755 held-out ΔE 9.832 best 9.832 (42s)
+day3a_touchup_global ep 20 L1 0.0738 held-out ΔE 10.166 best 9.832 (56s)
+day3a_touchup_global ep 25 L1 0.0726 held-out ΔE 9.492 best 9.492 (70s)
+day3a_touchup_global ep 30 L1 0.0712 held-out ΔE 9.871 best 9.492 (84s)
+day3a_touchup_global ep 35 L1 0.0695 held-out ΔE 9.586 best 9.492 (98s)
+day3a_touchup_global ep 40 L1 0.0676 held-out ΔE 9.605 best 9.492 (112s)
+day3a_touchup_global ep 45 L1 0.0652 held-out ΔE 9.655 best 9.492 (126s)
+day3a_touchup_global ep 50 L1 0.0642 held-out ΔE 9.440 best 9.440 (141s)
+day3a_touchup_global ep 55 L1 0.0612 held-out ΔE 9.675 best 9.440 (157s)
+day3a_touchup_global ep 60 L1 0.0583 held-out ΔE 9.503 best 9.440 (172s)
+day3a_touchup_global ep 65 L1 0.0570 held-out ΔE 9.520 best 9.440 (187s)
+Terminated
+S6_DAY3_FAILED

@@ -21,6 +21,10 @@ and the synthetic-only model is scored on the SAME 160 for a fair before/after.
 --mix adds more real pairs (prep_extra_pairs.py) at the SAME number of steps per epoch: each step draws its real
 photo from a source picked with the given weights, e.g. --mix uieb:0.4,lsui:0.4,euvp:0.2. Selection is still on
 the 160 held-out UIEB photos, so runs with and without --mix are chosen the same way.
+
+--day1b feeds RefineNet the BetaNet + Day 1b restoration (safe_restore, CURRENT_RECIPE) instead of plain restore(),
+and anchors to it. Start from --init refine_ft: stage-1 weights expect plain BetaNet output. The flag is saved in
+best.pt, so --test and stress_test.py pick the right input; in the logs "BetaNet" is then the Day 1b input.
 """
 import argparse
 import json
@@ -36,6 +40,7 @@ from model import RefineNet
 from physics import add_water, restore, sample_water, srgb_to_linear
 from train import ROOT, load_split, make_batch
 from device import DEV, autocast
+from safe_restore import CURRENT_RECIPE, safe_restore
 
 N_VAL_REAL = 160  # held-out real photos (never trained on); rest of the 800 are train
 
@@ -67,12 +72,25 @@ def betanet_restore(base, I, z):
         return restore(I, z, base(I, z)).clamp(0, 1.5)
 
 
+def plain_restore(base, I, z):
+    return restore(I, z, base(I, z)).clamp(0, 1.5)
+
+
 @torch.no_grad()
-def eval_real(base, ref_net, d, val_idx):
+def day1b_restore(base, I, z):
+    """BetaNet + Day 1b, one image at a time (safe_restore's fog cap and white balance are per image)."""
+    with autocast():
+        p = {k: v.float() for k, v in base(I, z).items()}
+    return torch.cat([safe_restore(I[i:i + 1], z[i:i + 1], {k: v[i:i + 1] for k, v in p.items()}, **CURRENT_RECIPE)[0]
+                      for i in range(len(I))]).clamp(0, 1.5)
+
+
+@torch.no_grad()
+def eval_real(base, ref_net, d, val_idx, stage1=betanet_restore):
     res = {"BetaNet": {}, "RefineNet": {}}
     for i in val_idx:
         I, z, refimg = load_real(d, int(i))
-        Jb = betanet_restore(base, I, z)
+        Jb = stage1(base, I, z)
         with autocast():
             Jr = ref_net(Jb, I, z)
         tgt = refimg[0].permute(1, 2, 0).cpu().numpy()  # reference is already sRGB [0,1]; to_np(J) is too
@@ -83,7 +101,7 @@ def eval_real(base, ref_net, d, val_idx):
 
 
 @torch.no_grad()
-def eval_synth(base, ref_net, rgb, depth, nval=288):
+def eval_synth(base, ref_net, rgb, depth, nval=288, stage1=plain_restore):
     """Synthetic val PSNR, same 288 held-out frames as refine.py, to confirm the gain survives."""
     va = torch.arange(len(rgb) - nval, len(rgb))
     vgen = torch.Generator().manual_seed(123)
@@ -92,7 +110,7 @@ def eval_synth(base, ref_net, rgb, depth, nval=288):
     for b in range(0, nval, 24):
         sl = slice(b, b + 24)
         I, z, J, _ = make_batch(rgb, depth, va[sl], vgen, DEV, augment=False, water={k: v[sl] for k, v in water.items()})
-        Jb = restore(I, z, base(I, z)).clamp(0, 1.5)
+        Jb = stage1(base, I, z)
         with autocast():
             Jr = ref_net(Jb, I, z)
         for out, acc in [(Jb, pb), (Jr, pr)]:
@@ -112,6 +130,8 @@ def main():
     ap.add_argument("--w-real", type=float, default=1.0)     # match the UIEB reference
     ap.add_argument("--w-anchor", type=float, default=0.3)   # stay near BetaNet on real (no drift/collapse)
     ap.add_argument("--mix", default="uieb:1", help="real sources and weights, e.g. uieb:0.4,lsui:0.4,euvp:0.2")
+    ap.add_argument("--day1b", action="store_true", help="RefineNet input and anchor = BetaNet + Day 1b")
+    ap.add_argument("--last", action="store_true", help="keep the last epoch: no selection on UIEB, needed when UIEB is held out")
     ap.add_argument("--test", action="store_true")
     a = ap.parse_args()
 
@@ -123,15 +143,19 @@ def main():
     rgb, depth = load_split("train_big")
 
     if a.test:
-        ref_net.load_state_dict(torch.load(out / "best.pt", map_location=DEV)["state"])
+        ck = torch.load(out / "best.pt", map_location=DEV)
+        ref_net.load_state_dict(ck["state"])
         ref_net.eval()
-        r = {"uieb_val_real": eval_real(base, ref_net, d, val_real),
-             "synth_val": eval_synth(base, ref_net, rgb, depth), "n_real_val": len(val_real),
+        d1b = ck["args"].get("day1b", False)
+        r = {"uieb_val_real": eval_real(base, ref_net, d, val_real, day1b_restore if d1b else betanet_restore),
+             "synth_val": eval_synth(base, ref_net, rgb, depth, stage1=day1b_restore if d1b else plain_restore),
+             "n_real_val": len(val_real), "input": "day1b" if d1b else "betanet",
              "note": "uieb scored vs reference (not ground truth); same 160 held-out photos as the before run"}
         json.dump(r, open(out / "ft_eval.json", "w"), indent=1)
         print(json.dumps(r, indent=1))
         return
 
+    s1_real, s1_synth = (day1b_restore, day1b_restore) if a.day1b else (betanet_restore, plain_restore)
     # start from the synthetic-pretrained RefineNet
     ref_net.load_state_dict(torch.load(ROOT / "results" / a.init / "best.pt", map_location=DEV)["state"])
     tr_idx = torch.arange(len(rgb) - 288)  # synthetic train frames (last 288 are val)
@@ -143,8 +167,8 @@ def main():
     print(f"{a.name}: fine-tune RefineNet on {len(tr_real)} steps/epoch, real pools "
           f"{ {k: len(p[1]) for k, p in pools.items()} } mix {mix}, {len(val_real)} UIEB val, init {a.init}", flush=True)
 
-    log = [{"epoch": 0, "uieb": eval_real(base, ref_net.eval(), d, val_real),
-            "synth": eval_synth(base, ref_net, rgb, depth)}]
+    log = [{"epoch": 0, "uieb": eval_real(base, ref_net.eval(), d, val_real, s1_real),
+            "synth": eval_synth(base, ref_net, rgb, depth, stage1=s1_synth)}]
     print("start:", json.dumps(log[0]), flush=True)
     best = -1.0
     for ep in range(a.epochs):
@@ -159,9 +183,9 @@ def main():
                      for s in src.tolist()]
         for dd, i in order:
             I_r, z_r, ref_r = load_real(dd, int(i))
-            Jb_r = betanet_restore(base, I_r, z_r)
+            Jb_r = s1_real(base, I_r, z_r)
             I_s, z_s, J_s, _ = make_batch(rgb, depth, tr_idx[torch.randint(len(tr_idx), (a.bs_synth,), generator=gen)], gen, DEV)
-            Jb_s = restore(I_s, z_s, base(I_s, z_s)).clamp(0, 1.5)
+            Jb_s = s1_synth(base, I_s, z_s)
             with autocast():
                 Jr_r = ref_net(Jb_r, I_r, z_r)
                 Jr_s = ref_net(Jb_s, I_s, z_s)
@@ -174,13 +198,13 @@ def main():
             torch.nn.utils.clip_grad_norm_(ref_net.parameters(), 1.0)
             opt.step(), sched.step()
             tl.append(loss.item())
-        u = eval_real(base, ref_net.eval(), d, val_real)
-        s = eval_synth(base, ref_net, rgb, depth)
+        u = eval_real(base, ref_net.eval(), d, val_real, s1_real)
+        s = eval_synth(base, ref_net, rgb, depth, stage1=s1_synth)
         rec = {"epoch": ep + 1, "train_loss": float(np.mean(tl)), "uieb": u, "synth": s, "time": time.time() - t0}
         log.append(rec)
         print(json.dumps(rec), flush=True)
         # select on real val PSNR, but only while synthetic gain is not thrown away (refined >= betanet there)
-        if u["RefineNet"]["psnr"] > best and s["refined"] >= s["betanet"] - 0.3:
+        if a.last or (u["RefineNet"]["psnr"] > best and s["refined"] >= s["betanet"] - 0.3):
             best = u["RefineNet"]["psnr"]
             torch.save({"state": ref_net.state_dict(), "args": vars(a)}, out / "best.pt")
         json.dump(log, open(out / "log.json", "w"), indent=1)

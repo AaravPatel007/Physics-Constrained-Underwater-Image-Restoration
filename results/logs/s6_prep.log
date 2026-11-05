@@ -1,0 +1,6 @@
+lsui: 4279 pairs found, 4279 kept
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 3599.66it/s]
+saved 4279 /home/smeer/Downloads/MLOE---Group-4/data/lsui_pairs.npz
+euvp: 5550 pairs found, 5550 kept
+saved 5550 /home/smeer/Downloads/MLOE---Group-4/data/euvp_pairs.npz
+S6_PREP_DONE

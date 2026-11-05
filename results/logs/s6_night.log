@@ -1,0 +1,21 @@
+[00:36:18] stress stress_test_bridge
+[01:33:33] done stress_test_bridge
+[01:33:33] train refine_all_d1b: --init refine_mix_d1b --day1b --mix uieb:0.3,lsui:0.3,euvp:0.2,hicrd:0.2
+[02:14:50] done refine_all_d1b
+[02:14:50] train refine_only_uieb: --init refine_v1 --day1b --last
+[03:00:06] done refine_only_uieb
+[03:00:06] train refine_no_hicrd: --init refine_v1 --day1b --last --mix uieb:0.4,lsui:0.4,euvp:0.2
+[03:42:35] done refine_no_hicrd
+[03:42:35] train refine_no_lsui: --init refine_v1 --day1b --last --mix uieb:0.4,euvp:0.3,hicrd:0.3
+[04:23:36] done refine_no_lsui
+[04:23:36] train refine_no_euvp: --init refine_v1 --day1b --last --mix uieb:0.4,lsui:0.4,hicrd:0.2
+[05:03:57] done refine_no_euvp
+[05:03:57] train refine_no_uieb: --init refine_v1 --day1b --last --mix lsui:0.4,euvp:0.3,hicrd:0.3
+[05:43:29] done refine_no_uieb
+[05:43:29] train refine_d1b_free: --init refine_ft --day1b --last --w-anchor 0 --w-synth 0
+[06:22:13] done refine_d1b_free
+[06:22:13] stress stress_test_final
+[06:59:11] done stress_test_final
+[06:59:11] day3b seed 1
+[07:08:47] day3b seed 2
+S6_NIGHT_DONE

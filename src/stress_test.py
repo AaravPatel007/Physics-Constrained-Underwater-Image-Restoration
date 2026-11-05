@@ -1,8 +1,8 @@
 """Stress test (session 5): every system on every test set we have, one table + figures.
 
 Systems (all on the same frozen BetaNet --base): raw, gray-world, BetaNet (plain restore), BetaNet + Day 1b
-(safe_restore, CURRENT_RECIPE), and BetaNet + RefineNet for each --refiners checkpoint. RefineNet gets the plain
-restore() output at full size, exactly as in finetune_refine.py (its training input).
+(safe_restore, CURRENT_RECIPE), and BetaNet + RefineNet for each --refiners checkpoint. RefineNet gets what it was
+trained on, at full size: plain restore() output, or the Day 1b output if best.pt was trained with --day1b.
 
 Full-reference sets (PSNR / SSIM / CIEDE2000 colour error vs a reference):
   synth   654 NYU test rooms, one random water each (refine.test protocol)      reference = true clean image
@@ -47,6 +47,7 @@ from model import RefineNet
 from physics import add_water, gray_world, linear_to_srgb, restore, sample_water, srgb_to_linear
 from prep_uieb import resize_pair
 from safe_restore import CURRENT_RECIPE, safe_restore, speck_score
+from day3_touchup import load_touchup, run_full, u8
 from train import ROOT, load_split
 
 EXT = ROOT / "data" / "external"
@@ -55,8 +56,10 @@ OUT = ROOT / "results" / "stress_test"
 FIG = ROOT / "figures" / "9_stress_test"
 TUB_EXPS = (9, 14, 15, 18, 19, 20, 22, 24)  # TUB's own test split
 N_GALLERY = 4
-FULL_REF = ["synth", "uieb160", "uieb90", "lsui", "euvp", "tub"]
-NO_REF = ["uccs_blue", "uccs_green", "uccs_blue-green", "uiqs", "u45", "tank"]
+TOUCH = {}
+EXTRA = []  # bridge_system.system when --bridge is on
+FULL_REF = ["synth", "uieb160", "uieb90", "lsui", "euvp", "tub", "hicrd"]
+NO_REF = ["uccs_blue", "uccs_green", "uccs_blue-green", "uiqs", "u45", "tank", "c60"]
 
 
 def cast(s):
@@ -82,9 +85,15 @@ def systems(base, refs, I, z):
             "BetaNet + Day 1b": safe_restore(I, z, p, **CURRENT_RECIPE)[0]}
     h, w = I.shape[-2:]
     pad = lambda x: torch.nn.functional.pad(x, (0, -w % 8, 0, -h % 8), mode="replicate")  # U-Net needs sides divisible by 8
-    for name, r in refs.items():
+    for name, (r, day1b) in refs.items():
+        x = outs["BetaNet + Day 1b"].clamp(0, 1.5) if day1b else Jb
         with autocast():
-            outs[f"RefineNet [{name}]"] = r(pad(Jb), pad(I), pad(z)).float()[..., :h, :w]
+            outs[f"RefineNet [{name}]"] = r(pad(x), pad(I), pad(z)).float()[..., :h, :w]
+    for name, m in TOUCH.items():  # Aarav's touch-up works on 8-bit sRGB, as in day3_touchup.py
+        o = run_full(m, u8(srgb_np(outs["BetaNet + Day 1b"])), u8(srgb_np(I)))
+        outs[f"TouchUp [{name}]"] = srgb_to_linear(t(o))
+    for f in EXTRA:
+        outs.update(f(I, z, outs))
     return p, outs
 
 
@@ -147,6 +156,14 @@ def load_set(name):
         return files(name, [p for lvl in "ABCDE" for p in sorted((EXT / "ruie" / "UIQS" / lvl).glob("*"))[:40]])
     if name == "u45":
         return files(name, sorted((EXT / "u45" / "upload" / "U45" / "U45").glob("*.png")))
+    if name == "hicrd":  # 300 test pairs; references were restored with the site's measured water, no model trained on them
+        H = EXT / "hicrd" / "HICRD_paired"
+        ps = sorted((H / "testA").glob("*.png"), key=lambda p: int(p.stem[4:]))
+        pairs = [resize_pair(*(np.array(Image.open(q).convert("RGB")) for q in (p, H / "testB" / p.name.replace("test", "test_ref"))),
+                             upscale=False) for p in ps]
+        return ((a, b, z, {"file": p.name}) for p, (a, b), z in zip(ps, pairs, with_depth(name, [a for a, _ in pairs])))
+    if name == "c60":  # UIEB challenging set: no references, three files are JPEGs named .png
+        return files(name, sorted((EXT / "uieb_c60" / "extracted" / "challenging-60").glob("*.png")))
     if name == "tank":
         return files(name, sorted((EXT / "tankimage_i").glob("*/*/*.bmp")))
     raise ValueError(name)
@@ -226,8 +243,8 @@ def summarise(raw, refiners):
         e = {m: {k: float(np.nanmean(v)) for k, v in d.items()} for m, d in res.items()}
         e["n"] = len(next(iter(res.values()))["cast"])
         if "psnr" in res["BetaNet"]:  # paired bootstrap CIs (b - a): RefineNets vs BetaNet, and refiner vs refiner
-            names = [f"RefineNet [{r}]" for r in refiners]
-            pairs = [("BetaNet", n) for n in names] + [(names[i], names[j]) for i in range(len(names)) for j in range(i + 1, len(names))]
+            names = [f"RefineNet [{r}]" for r in refiners] + [f"TouchUp [{r}]" for r in TOUCH] + (["BridgeNet", "Hybrid"] if EXTRA else [])
+            pairs = [(b, n) for b in ("BetaNet", "BetaNet + Day 1b") for n in names] + [(names[i], names[j]) for i in range(len(names)) for j in range(i + 1, len(names))]
             e["ci"] = {f"{b} - {a}": {k: boot_ci(res[a][k], res[b][k]) for k in ("psnr", "de2000")} for a, b in pairs}
         if name == "tub":
             ntu = np.array([m["ntu"] for m in metas], dtype=float)
@@ -254,6 +271,8 @@ def short(m):
 def bars(summary, sets, metrics, path, title):
     from vizstyle import INK2, MUTED, SERIES, plt
     sets = [x for x in sets if x in summary["sets"]]
+    if not sets:
+        return
     systems_ = [m for m, v in summary["sets"][sets[0]].items()
                 if isinstance(v, dict) and m not in ("ci", "per_stage", "coef_vs_ntu_spearman", "oracle (true coefs)")]
     fig, axs = plt.subplots(len(metrics), 1, figsize=(1.6 * len(sets) * len(systems_) / 3 + 3, 3.2 * len(metrics)))
@@ -333,16 +352,29 @@ def main():
     ap.add_argument("--base", default="baseline_v1_60ep_bigdata")
     ap.add_argument("--refiners", default="refine_v1,refine_ft,refine_mix")
     ap.add_argument("--only", default="", help="comma list of sets (default: all)")
+    ap.add_argument("--bridge", action="store_true", help="add BridgeNet and the hybrid (needs day3a in --touchups)")
+    ap.add_argument("--touchups", default="", help="comma list of day3_touchup.py variants trained in results/review2_day3_touchup")
     ap.add_argument("--figures-only", action="store_true")
+    ap.add_argument("--out", default="stress_test", help="results/<out> and figures/<out>, so a new run keeps older results")
     a = ap.parse_args()
+    global OUT, FIG
+    if a.out != "stress_test":
+        OUT, FIG = ROOT / "results" / a.out, ROOT / "figures" / a.out
     if a.figures_only:
         return figures()
     base = load(a.base)[0].requires_grad_(False).eval()
     refs = {}
     for n in a.refiners.split(","):
         r = RefineNet().to(DEV).eval()
-        r.load_state_dict(torch.load(ROOT / "results" / n / "best.pt", map_location=DEV)["state"])
-        refs[n] = r
+        ck = torch.load(ROOT / "results" / n / "best.pt", map_location=DEV)
+        r.load_state_dict(ck["state"])
+        refs[n] = (r, ck["args"].get("day1b", False))
+    if a.bridge:
+        from bridge_system import system
+        EXTRA.append(system)
+    if a.touchups:
+        for n in a.touchups.split(","):
+            TOUCH[n] = load_touchup(n)[0]
     sets = a.only.split(",") if a.only else FULL_REF + NO_REF + ["charts"]
     OUT.mkdir(parents=True, exist_ok=True)
     raw, gal = {}, {}
@@ -355,7 +387,7 @@ def main():
         raw[name], gal[name] = (res, g, coefs, metas), g
         json.dump({"per_image": res, "meta": metas, "coefs": coefs}, open(OUT / f"per_image_{name}.json", "w"))
     summary = summarise(raw, a.refiners.split(","))
-    summary["base"] = a.base
+    summary["base"], summary["touchups"], summary["extra"] = a.base, list(TOUCH), ["BridgeNet", "Hybrid"] if EXTRA else []
     json.dump(summary, open(OUT / "summary.json", "w"), indent=1)
     np.savez_compressed(OUT / "galleries.npz", gal=np.array(gal, dtype=object))
     for name, e in summary["sets"].items():

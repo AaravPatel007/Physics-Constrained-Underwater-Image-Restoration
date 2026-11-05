@@ -1,0 +1,7 @@
+skip refine_d1b
+skip refine_mix_full
+skip refine_lsui
+skip refine_lsui_uieb
+[20:17:44] train refine_mix_d1b: --init refine_mix_full --day1b --mix uieb:0.4,lsui:0.4,euvp:0.2
+[20:56:31] done refine_mix_d1b
+S6_TRAIN_DONE

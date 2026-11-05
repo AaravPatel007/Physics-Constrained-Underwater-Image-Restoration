@@ -1,0 +1,203 @@
+synth
+uieb160
+  uieb160 0
+  uieb160 100
+uieb90
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 4176.00it/s]
+  uieb90 0
+lsui
+  lsui 0
+  lsui 100
+  lsui 200
+  lsui 300
+euvp
+  euvp 0
+  euvp 100
+  euvp 200
+  euvp 300
+  euvp 400
+tub
+/home/smeer/Downloads/Garment/piper_x/.venv_vla/lib/python3.12/site-packages/skimage/metrics/simple_metrics.py:171: RuntimeWarning: divide by zero encountered in scalar divide
+  return 10 * np.log10((data_range**2) / err)
+  tub 0
+  tub 100
+  tub 200
+  tub 300
+uccs_blue
+  uccs_blue 0
+uccs_green
+  uccs_green 0
+uccs_blue-green
+  uccs_blue-green 0
+uiqs
+  uiqs 0
+  uiqs 100
+u45
+  u45 0
+tank
+  tank 0
+charts
+
+== synth (n=654)
+  raw                                psnr 14.454  ssim 0.616  de2000 24.327  cast 18.126
+  gray-world                         psnr 15.398  ssim 0.621  de2000 17.768  cast 2.489
+  BetaNet                            psnr 21.211  ssim 0.659  de2000 13.480  cast 15.254
+  BetaNet + Day 1b                   psnr 20.318  ssim 0.703  de2000 13.763  cast 11.109
+  RefineNet [refine_ft]              psnr 23.431  ssim 0.718  de2000 10.540  cast 15.157
+  RefineNet [refine_d1b]             psnr 23.505  ssim 0.750  de2000 10.083  cast 12.590
+  RefineNet [refine_mix_full]        psnr 23.555  ssim 0.722  de2000 10.305  cast 15.520
+  RefineNet [refine_lsui]            psnr 23.479  ssim 0.721  de2000 10.358  cast 16.631
+  RefineNet [refine_lsui_uieb]       psnr 23.528  ssim 0.720  de2000 10.401  cast 15.274
+  oracle (true coefs)                psnr 25.110  ssim 0.684  de2000 9.281  cast 11.969
+
+== uieb160 (n=160)
+  raw                                uciqe 0.345  cast 21.867  speck 4.246  psnr 17.667  ssim 0.777  de2000 14.258
+  gray-world                         uciqe 0.307  cast 4.636  speck 7.876  psnr 18.005  ssim 0.794  de2000 13.682
+  BetaNet                            uciqe 0.434  cast 15.610  speck 7.655  psnr 17.676  ssim 0.757  de2000 13.241
+  BetaNet + Day 1b                   uciqe 0.400  cast 12.986  speck 6.648  psnr 18.984  ssim 0.818  de2000 11.830
+  RefineNet [refine_ft]              uciqe 0.424  cast 13.773  speck 6.557  psnr 20.205  ssim 0.826  de2000 11.506
+  RefineNet [refine_d1b]             uciqe 0.404  cast 11.244  speck 6.331  psnr 21.256  ssim 0.858  de2000 10.366
+  RefineNet [refine_mix_full]        uciqe 0.421  cast 13.934  speck 6.369  psnr 20.421  ssim 0.825  de2000 11.251
+  RefineNet [refine_lsui]            uciqe 0.420  cast 14.053  speck 5.829  psnr 19.623  ssim 0.805  de2000 12.279
+  RefineNet [refine_lsui_uieb]       uciqe 0.423  cast 13.707  speck 6.569  psnr 20.456  ssim 0.829  de2000 11.355
+
+== uieb90 (n=90)
+  raw                                uciqe 0.313  cast 24.237  speck 3.788  psnr 16.442  ssim 0.739  de2000 17.512
+  gray-world                         uciqe 0.255  cast 3.134  speck 6.695  psnr 17.721  ssim 0.764  de2000 13.787
+  BetaNet                            uciqe 0.423  cast 16.224  speck 7.611  psnr 17.659  ssim 0.760  de2000 13.671
+  BetaNet + Day 1b                   uciqe 0.379  cast 10.878  speck 6.600  psnr 19.214  ssim 0.826  de2000 12.159
+  RefineNet [refine_ft]              uciqe 0.414  cast 13.758  speck 6.385  psnr 19.675  ssim 0.811  de2000 11.978
+  RefineNet [refine_d1b]             uciqe 0.385  cast 9.782  speck 6.264  psnr 20.893  ssim 0.851  de2000 10.748
+  RefineNet [refine_mix_full]        uciqe 0.413  cast 13.916  speck 6.210  psnr 20.063  ssim 0.809  de2000 11.718
+  RefineNet [refine_lsui]            uciqe 0.414  cast 14.017  speck 5.777  psnr 19.403  ssim 0.792  de2000 12.703
+  RefineNet [refine_lsui_uieb]       uciqe 0.414  cast 13.755  speck 6.399  psnr 20.078  ssim 0.814  de2000 11.677
+
+== lsui (n=400)
+  raw                                uciqe 0.349  cast 24.703  speck 2.990  psnr 18.169  ssim 0.784  de2000 16.684
+  gray-world                         uciqe 0.289  cast 3.204  speck 4.551  psnr 19.708  ssim 0.813  de2000 13.216
+  BetaNet                            uciqe 0.405  cast 13.682  speck 6.008  psnr 18.249  ssim 0.767  de2000 13.759
+  BetaNet + Day 1b                   uciqe 0.368  cast 10.576  speck 5.143  psnr 20.288  ssim 0.817  de2000 12.371
+  RefineNet [refine_ft]              uciqe 0.394  cast 11.558  speck 4.943  psnr 20.319  ssim 0.810  de2000 12.258
+  RefineNet [refine_d1b]             uciqe 0.375  cast 9.254  speck 4.637  psnr 21.159  ssim 0.827  de2000 11.482
+  RefineNet [refine_mix_full]        uciqe 0.388  cast 11.384  speck 4.752  psnr 21.848  ssim 0.824  de2000 10.694
+  RefineNet [refine_lsui]            uciqe 0.389  cast 11.158  speck 4.591  psnr 21.693  ssim 0.819  de2000 10.795
+  RefineNet [refine_lsui_uieb]       uciqe 0.394  cast 11.472  speck 4.980  psnr 20.687  ssim 0.815  de2000 11.791
+
+== euvp (n=500)
+  raw                                uciqe 0.379  cast 18.950  speck 9.597  psnr 15.874  ssim 0.812  de2000 20.750
+  gray-world                         uciqe 0.328  cast 3.315  speck 15.636  psnr 19.243  ssim 0.846  de2000 16.391
+  BetaNet                            uciqe 0.404  cast 13.936  speck 16.546  psnr 15.963  ssim 0.786  de2000 20.327
+  BetaNet + Day 1b                   uciqe 0.369  cast 8.331  speck 15.131  psnr 18.063  ssim 0.817  de2000 17.259
+  RefineNet [refine_ft]              uciqe 0.393  cast 11.187  speck 12.147  psnr 16.867  ssim 0.814  de2000 19.053
+  RefineNet [refine_d1b]             uciqe 0.365  cast 5.179  speck 12.648  psnr 17.896  ssim 0.821  de2000 16.461
+  RefineNet [refine_mix_full]        uciqe 0.364  cast 7.050  speck 12.037  psnr 19.892  ssim 0.845  de2000 14.758
+  RefineNet [refine_lsui]            uciqe 0.388  cast 10.646  speck 10.789  psnr 17.658  ssim 0.802  de2000 18.552
+  RefineNet [refine_lsui_uieb]       uciqe 0.392  cast 11.184  speck 12.346  psnr 17.055  ssim 0.810  de2000 18.955
+
+== tub (n=320)
+  raw                                uciqe 0.166  cast 17.234  speck 0.380  psnr 30.510  ssim 0.707  de2000 10.224  drift_de2000 10.224
+  gray-world                         uciqe 0.088  cast 0.254  speck 0.342  psnr 17.066  ssim 0.696  de2000 16.383  drift_de2000 10.171
+  BetaNet                            uciqe 0.260  cast 13.267  speck 0.685  psnr 16.758  ssim 0.647  de2000 13.245  drift_de2000 15.548
+  BetaNet + Day 1b                   uciqe 0.195  cast 3.946  speck 0.587  psnr 17.247  ssim 0.689  de2000 14.737  drift_de2000 12.276
+  RefineNet [refine_ft]              uciqe 0.292  cast 12.897  speck 0.820  psnr 16.981  ssim 0.651  de2000 12.819  drift_de2000 14.095
+  RefineNet [refine_d1b]             uciqe 0.296  cast 6.981  speck 0.836  psnr 16.224  ssim 0.640  de2000 17.951  drift_de2000 15.006
+  RefineNet [refine_mix_full]        uciqe 0.335  cast 14.192  speck 0.997  psnr 15.961  ssim 0.613  de2000 14.476  drift_de2000 15.111
+  RefineNet [refine_lsui]            uciqe 0.348  cast 15.323  speck 1.102  psnr 15.245  ssim 0.590  de2000 15.755  drift_de2000 16.770
+  RefineNet [refine_lsui_uieb]       uciqe 0.320  cast 13.175  speck 0.920  psnr 16.438  ssim 0.634  de2000 14.094  drift_de2000 14.616
+
+== uccs_blue (n=100)
+  raw                                uciqe 0.308  cast 29.875  speck 4.259
+  gray-world                         uciqe 0.248  cast 3.027  speck 8.447
+  BetaNet                            uciqe 0.356  cast 14.035  speck 10.460
+  BetaNet + Day 1b                   uciqe 0.315  cast 11.810  speck 8.382
+  RefineNet [refine_ft]              uciqe 0.338  cast 11.192  speck 7.219
+  RefineNet [refine_d1b]             uciqe 0.317  cast 7.700  speck 6.682
+  RefineNet [refine_mix_full]        uciqe 0.327  cast 10.979  speck 7.363
+  RefineNet [refine_lsui]            uciqe 0.331  cast 11.540  speck 6.576
+  RefineNet [refine_lsui_uieb]       uciqe 0.337  cast 11.216  speck 7.504
+
+== uccs_green (n=100)
+  raw                                uciqe 0.307  cast 39.044  speck 1.064
+  gray-world                         uciqe 0.138  cast 1.056  speck 2.025
+  BetaNet                            uciqe 0.355  cast 23.169  speck 4.953
+  BetaNet + Day 1b                   uciqe 0.259  cast 4.389  speck 4.497
+  RefineNet [refine_ft]              uciqe 0.311  cast 13.943  speck 2.423
+  RefineNet [refine_d1b]             uciqe 0.288  cast 9.455  speck 2.684
+  RefineNet [refine_mix_full]        uciqe 0.313  cast 13.206  speck 2.203
+  RefineNet [refine_lsui]            uciqe 0.311  cast 13.284  speck 2.313
+  RefineNet [refine_lsui_uieb]       uciqe 0.315  cast 13.748  speck 2.417
+
+== uccs_blue-green (n=100)
+  raw                                uciqe 0.270  cast 33.525  speck 1.272
+  gray-world                         uciqe 0.156  cast 0.934  speck 2.132
+  BetaNet                            uciqe 0.361  cast 12.763  speck 4.524
+  BetaNet + Day 1b                   uciqe 0.317  cast 6.569  speck 4.043
+  RefineNet [refine_ft]              uciqe 0.320  cast 8.526  speck 2.727
+  RefineNet [refine_d1b]             uciqe 0.312  cast 5.143  speck 3.215
+  RefineNet [refine_mix_full]        uciqe 0.323  cast 7.322  speck 2.684
+  RefineNet [refine_lsui]            uciqe 0.324  cast 6.830  speck 2.598
+  RefineNet [refine_lsui_uieb]       uciqe 0.329  cast 6.819  speck 2.912
+
+== uiqs (n=200)
+  raw                                uciqe 0.311  cast 36.071  speck 1.671
+  gray-world                         uciqe 0.167  cast 1.333  speck 2.785
+  BetaNet                            uciqe 0.356  cast 18.173  speck 5.500
+  BetaNet + Day 1b                   uciqe 0.292  cast 5.938  speck 4.995
+  RefineNet [refine_ft]              uciqe 0.321  cast 10.379  speck 3.322
+  RefineNet [refine_d1b]             uciqe 0.305  cast 6.801  speck 3.609
+  RefineNet [refine_mix_full]        uciqe 0.325  cast 10.004  speck 3.225
+  RefineNet [refine_lsui]            uciqe 0.321  cast 9.907  speck 3.204
+  RefineNet [refine_lsui_uieb]       uciqe 0.327  cast 9.975  speck 3.441
+
+== u45 (n=45)
+  raw                                uciqe 0.324  cast 31.572  speck 3.365
+  gray-world                         uciqe 0.263  cast 4.532  speck 8.066
+  BetaNet                            uciqe 0.440  cast 20.829  speck 7.780
+  BetaNet + Day 1b                   uciqe 0.389  cast 13.909  speck 6.318
+  RefineNet [refine_ft]              uciqe 0.433  cast 17.211  speck 6.614
+  RefineNet [refine_d1b]             uciqe 0.390  cast 10.832  speck 6.099
+  RefineNet [refine_mix_full]        uciqe 0.428  cast 17.742  speck 6.489
+  RefineNet [refine_lsui]            uciqe 0.428  cast 17.819  speck 6.178
+  RefineNet [refine_lsui_uieb]       uciqe 0.430  cast 17.386  speck 6.697
+
+== tank (n=78)
+  raw                                uciqe 0.358  cast 21.838  speck 2.707
+  gray-world                         uciqe 0.287  cast 1.992  speck 3.155
+  BetaNet                            uciqe 0.458  cast 18.171  speck 4.108
+  BetaNet + Day 1b                   uciqe 0.320  cast 8.652  speck 3.550
+  RefineNet [refine_ft]              uciqe 0.468  cast 16.760  speck 3.577
+  RefineNet [refine_d1b]             uciqe 0.356  cast 9.754  speck 3.412
+  RefineNet [refine_mix_full]        uciqe 0.461  cast 15.665  speck 3.641
+  RefineNet [refine_lsui]            uciqe 0.460  cast 16.814  speck 3.342
+  RefineNet [refine_lsui_uieb]       uciqe 0.467  cast 16.858  speck 3.562
+
+== charts (n=)
+  raw                                grey_patch_deg 29.421  D1/T_S03272 29.449  D1/T_S03425 29.393
+  gray-world                         grey_patch_deg 8.462  D1/T_S03272 8.870  D1/T_S03425 8.054
+  BetaNet                            grey_patch_deg 25.314  D1/T_S03272 24.901  D1/T_S03425 25.728
+  BetaNet + Day 1b                   grey_patch_deg 12.973  D1/T_S03272 12.598  D1/T_S03425 13.348
+  RefineNet [refine_ft]              grey_patch_deg 14.491  D1/T_S03272 13.032  D1/T_S03425 15.950
+  RefineNet [refine_d1b]             grey_patch_deg 7.437  D1/T_S03272 7.449  D1/T_S03425 7.425
+  RefineNet [refine_mix_full]        grey_patch_deg 8.289  D1/T_S03272 9.459  D1/T_S03425 7.118
+  RefineNet [refine_lsui]            grey_patch_deg 15.516  D1/T_S03272 13.926  D1/T_S03425 17.106
+  RefineNet [refine_lsui_uieb]       grey_patch_deg 14.338  D1/T_S03272 13.869  D1/T_S03425 14.807
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/full_reference_bars.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/no_reference_bars.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/tub_turbidity_curves.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_synth.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_uieb160.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_uieb90.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_lsui.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_euvp.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_tub.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_uccs_blue.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_uccs_green.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_uccs_blue-green.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_uiqs.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_u45.png
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_s6/gallery_tank.png
+uieb160 157 of 160 {"RefineNet [refine_ft] - BetaNet": {"psnr": [2.528693743819368, 2.072421246134599, 2.9948990524129444], "de2000": [-1.7222621720503868, -2.0634877607100264, -1.3826645228047576]}, "RefineNet [refine_d1b] - BetaNet": {"psnr": [3.581408602705473, 3.080300637991932, 4.115425632249226], "de2000": [-2.8295119743259525, -3.426430221750433, -2.2169889088915937]}, "RefineNet [refine_mix_full] - BetaNet": {"psnr": [2.762183094938742, 2.3008172374603557, 3.2478135827375496], "de2000": [-1.9901086477022552, -2.3666354364770523, -1.6036396766061267]}, "RefineNet [refine_lsui] - BetaNet": {"psnr": [1.942829650763556, 1.4545703257186369, 2.4307796687706924], "de2000": [-0.976913612729099, -1.3933722942112277, -0.5665320709180658]}, "RefineNet [refine_lsui_uieb] - BetaNet": {"psnr": [2.7933991129060187, 2.3442749577685578, 3.2782675402037746], "de2000": [-1.8730902670158478, -2.232749836340921, -1.5315940439324696]}, "RefineNet [refine_ft] - BetaNet + Day 1b": {"psnr": [1.2179970239648799, 0.6970155186187943, 1.7432632702396504], "de2000": [-0.34920301001818455, -0.9309988794036625, 0.25519934718128484]}, "RefineNet [refine_d1b] - BetaNet + Day 1b": {"psnr": [2.2707118828509842, 1.8089579892927006, 2.7396620945170285], "de2000": [-1.4564528122937503, -1.774473300199115, -1.131156051207899]}, "RefineNet [refine_mix_full] - BetaNet + Day 1b": {"psnr": [1.4514863750842542, 0.9352051119009838, 1.9733089892721591], "de2000": [-0.617049485670053, -1.199728134159025, 0.0008143195641403335]}, "RefineNet [refine_lsui] - BetaNet + Day 1b": {"psnr": [0.632132930909068, 0.1369936749207112, 1.1348292443891186], "de2000": [0.3961455493031032, -0.14918791092404, 0.9798712122429025]}, "RefineNet [refine_lsui_uieb] - BetaNet + Day 1b": {"psnr": [1.4827023930515306, 0.9562972388521639, 2.0197960303603963], "de2000": [-0.5000311049836457, -1.0928619432939204, 0.09971018179643602]}, "RefineNet [refine_d1b] - RefineNet [refine_ft]": {"psnr": [1.0527148588861044, 0.7063990132908381, 1.3806336283414609], "de2000": [-1.1072498022755657, -1.6170582578542996, -0.5877635020950138]}, "RefineNet [refine_mix_full] - RefineNet [refine_ft]": {"psnr": [0.23348935111937427, 0.04346421821543367, 0.43153209301759926], "de2000": [-0.26784647565186853, -0.44971881942767766, -0.08731612605763084]}, "RefineNet [refine_lsui] - RefineNet [refine_ft]": {"psnr": [-0.5858640930558118, -0.8296599006259031, -0.3312283738373235], "de2000": [0.7453485593212877, 0.47360672705019125, 1.0158720339743945]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_ft]": {"psnr": [0.2647053690866508, 0.12519545488446465, 0.4044388761194125], "de2000": [-0.1508280949654611, -0.2635770532511676, -0.037435045177848236]}, "RefineNet [refine_mix_full] - RefineNet [refine_d1b]": {"psnr": [-0.8192255077667301, -1.1591374421929896, -0.46343426241766716], "de2000": [0.8394033266236973, 0.3222524274060362, 1.3592230217000525]}, "RefineNet [refine_lsui] - RefineNet [refine_d1b]": {"psnr": [-1.638578951941916, -1.985173237960659, -1.2956133830093848], "de2000": [1.8525983615968533, 1.3417617016047465, 2.3682682652458045]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_d1b]": {"psnr": [-0.7880094897994536, -1.1128142581768798, -0.4456249741835617], "de2000": [0.9564217073101048, 0.43058637735005734, 1.4771406051890923]}, "RefineNet [refine_lsui] - RefineNet [refine_mix_full]": {"psnr": [-0.8193534441751859, -1.0196724279058638, -0.6065632288837186], "de2000": [1.013195034973156, 0.7618015931186861, 1.2593800337823378]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_mix_full]": {"psnr": [0.031216017967276515, -0.13308622588009733, 0.20881637830967018], "de2000": [0.11701838068640734, -0.06162513609234812, 0.2939275339321493]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_lsui]": {"psnr": [0.8505694621424627, 0.5796906655462739, 1.1091469803006957], "de2000": [-0.8961766542867488, -1.1690954645523322, -0.5985901262019249]}}
+uieb90 89 of 90 {"RefineNet [refine_ft] - BetaNet": {"psnr": [2.0074074978226775, 1.4948023001165103, 2.5670957127176846], "de2000": [-1.699698017507433, -2.220251202664321, -1.2005359241602824]}, "RefineNet [refine_d1b] - BetaNet": {"psnr": [3.2212074240393616, 2.5887729516131186, 3.8484146039756295], "de2000": [-2.934680813129221, -3.691286960085666, -2.172191998573421]}, "RefineNet [refine_mix_full] - BetaNet": {"psnr": [2.3939313325915434, 1.8235154084210696, 2.980622230605228], "de2000": [-1.953936441585194, -2.476738656401666, -1.4204025464526213]}, "RefineNet [refine_lsui] - BetaNet": {"psnr": [1.7102445128629427, 1.1225712552998905, 2.295341739474039], "de2000": [-0.9611996119998277, -1.5983311867136585, -0.28096288315559403]}, "RefineNet [refine_lsui_uieb] - BetaNet": {"psnr": [2.4076050346657523, 1.8649166857604094, 2.9610450019065313], "de2000": [-1.9939433760119758, -2.5316686245976667, -1.4738847503407009]}, "RefineNet [refine_ft] - BetaNet + Day 1b": {"psnr": [0.466350191266841, -0.21300721579157006, 1.1935459388380332], "de2000": [-0.17734489362458244, -1.0440765782972268, 0.6580221750958237]}, "RefineNet [refine_d1b] - BetaNet + Day 1b": {"psnr": [1.680150117483526, 1.1189231592401538, 2.2482173186208794], "de2000": [-1.4123276892463705, -2.0002691692490258, -0.8249879103901515]}, "RefineNet [refine_mix_full] - BetaNet + Day 1b": {"psnr": [0.8528740260357073, 0.17861648464545263, 1.5533970896720202], "de2000": [-0.4315833177023432, -1.3361487076279315, 0.4372832001797069]}, "RefineNet [refine_lsui] - BetaNet + Day 1b": {"psnr": [0.16918720630710668, -0.5237508879547139, 0.8534421133423726], "de2000": [0.5611535118830229, -0.3405228758135721, 1.4946586934391266]}, "RefineNet [refine_lsui_uieb] - BetaNet + Day 1b": {"psnr": [0.8665477281099156, 0.16402470140646264, 1.583360240432116], "de2000": [-0.4715902521291253, -1.3680952693219646, 0.3983120766974005]}, "RefineNet [refine_d1b] - RefineNet [refine_ft]": {"psnr": [1.213799926216685, 0.8353327472180778, 1.6203328964897508], "de2000": [-1.234982795621788, -1.8599848141553448, -0.6143911387328226]}, "RefineNet [refine_mix_full] - RefineNet [refine_ft]": {"psnr": [0.3865238347688663, 0.1519483588539397, 0.6318298581175266], "de2000": [-0.25423842407776087, -0.505296198319509, 0.012614634099886614]}, "RefineNet [refine_lsui] - RefineNet [refine_ft]": {"psnr": [-0.2971629849597343, -0.5653197051358057, -0.03164197603259741], "de2000": [0.7384984055076055, 0.39882209675315883, 1.1023780920367927]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_ft]": {"psnr": [0.40019753684307474, 0.22497501160360708, 0.5784494417124159], "de2000": [-0.2942453585045428, -0.44279111719459113, -0.13568224559031772]}, "RefineNet [refine_mix_full] - RefineNet [refine_d1b]": {"psnr": [-0.8272760914478186, -1.2840968036898264, -0.41035541627134065], "de2000": [0.9807443715440273, 0.31355754533581964, 1.6634191344411449]}, "RefineNet [refine_lsui] - RefineNet [refine_d1b]": {"psnr": [-1.5109629111764191, -1.9982761509457936, -1.0328356116241304], "de2000": [1.9734812011293936, 1.2623678252242234, 2.716578948246038]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_d1b]": {"psnr": [-0.8136023893736102, -1.2593292488372225, -0.39210572854723236], "de2000": [0.9407374371172451, 0.2834618607526483, 1.619282075559341]}, "RefineNet [refine_lsui] - RefineNet [refine_mix_full]": {"psnr": [-0.6836868197286005, -0.9022579878894077, -0.46025258159569166], "de2000": [0.9927368295853661, 0.6381037962250952, 1.3646486323547602]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_mix_full]": {"psnr": [0.01367370207420852, -0.17274455084473556, 0.19172319814557706], "de2000": [-0.04000693442678205, -0.25231234129873426, 0.16365081733974193]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_lsui]": {"psnr": [0.697360521802809, 0.40608399964082276, 0.9821172142664407], "de2000": [-1.0327437640121482, -1.364749641931396, -0.6857917560024399]}}
+lsui 355 of 400 {"RefineNet [refine_ft] - BetaNet": {"psnr": [2.0592573156675975, 1.7682085613676295, 2.334662369559134], "de2000": [-1.525408106147058, -1.7863234357199997, -1.253383961498835]}, "RefineNet [refine_d1b] - BetaNet": {"psnr": [2.9458041418458367, 2.562328892919592, 3.301198564514566], "de2000": [-2.3684310692698025, -2.8466064535043425, -1.8813432245948276]}, "RefineNet [refine_mix_full] - BetaNet": {"psnr": [3.571980393792846, 3.2843542593562516, 3.8619664653982855], "de2000": [-3.046367495518725, -3.339135364363849, -2.7667057790157514]}, "RefineNet [refine_lsui] - BetaNet": {"psnr": [3.4623914047715143, 3.175174305415925, 3.7423648679738752], "de2000": [-3.0067775834938057, -3.291647574096388, -2.7245354236608192]}, "RefineNet [refine_lsui_uieb] - BetaNet": {"psnr": [2.4235385487716035, 2.114724485298108, 2.7250902242251778], "de2000": [-2.006309493952135, -2.2913314673449916, -1.7177126246877552]}, "RefineNet [refine_ft] - BetaNet + Day 1b": {"psnr": [-0.05197660707959278, -0.37375608544302685, 0.2582375067835662], "de2000": [-0.0320024081667559, -0.4133211237019057, 0.352348788866727]}, "RefineNet [refine_d1b] - BetaNet + Day 1b": {"psnr": [0.8345702190986469, 0.5432891940597181, 1.1258141601257], "de2000": [-0.8750253712895006, -1.1316605421757764, -0.6216700026112609]}, "RefineNet [refine_mix_full] - BetaNet + Day 1b": {"psnr": [1.4607464710456561, 1.1410932642993559, 1.7610737615517096], "de2000": [-1.552961797538424, -1.9346654773306635, -1.1536719421281025]}, "RefineNet [refine_lsui] - BetaNet + Day 1b": {"psnr": [1.3511574820243244, 1.0265634253567215, 1.6502709195214662], "de2000": [-1.5133718855135037, -1.9028153485999943, -1.1069419019469389]}, "RefineNet [refine_lsui_uieb] - BetaNet + Day 1b": {"psnr": [0.31230462602441345, -0.030301573535889664, 0.6472903810897601], "de2000": [-0.5129037959718331, -0.9168424043297446, -0.11353870515613973]}, "RefineNet [refine_d1b] - RefineNet [refine_ft]": {"psnr": [0.8865468261782395, 0.6959145464842607, 1.082555872484082], "de2000": [-0.8430229631227447, -1.2071307902938697, -0.4869727389164392]}, "RefineNet [refine_mix_full] - RefineNet [refine_ft]": {"psnr": [1.5127230781252488, 1.3407392576532784, 1.6730061550484792], "de2000": [-1.5209593893716677, -1.7112615229918773, -1.327421488591483]}, "RefineNet [refine_lsui] - RefineNet [refine_ft]": {"psnr": [1.4031340891039172, 1.2216038194663044, 1.5676598734530818], "de2000": [-1.4813694773467476, -1.686500909334374, -1.279713590993387]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_ft]": {"psnr": [0.3642812331040062, 0.27164306051088355, 0.4558662432188573], "de2000": [-0.48090138780507735, -0.600548397980275, -0.3687536528967447]}, "RefineNet [refine_mix_full] - RefineNet [refine_d1b]": {"psnr": [0.6261762519470091, 0.3833565892566192, 0.8514459534035497], "de2000": [-0.6779364262489234, -1.0304357974617635, -0.3080016997591756]}, "RefineNet [refine_lsui] - RefineNet [refine_d1b]": {"psnr": [0.5165872629256774, 0.2404551177491966, 0.7695038681755526], "de2000": [-0.6383465142240029, -1.0243987447649188, -0.2556633818365496]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_d1b]": {"psnr": [-0.5222655930742334, -0.7275351648462353, -0.3117144150442043], "de2000": [0.36212157531766737, 0.00882529009102209, 0.7070032921567437]}, "RefineNet [refine_lsui] - RefineNet [refine_mix_full]": {"psnr": [-0.10958898902133173, -0.229488449564772, 0.01314939162851762], "de2000": [0.03958991202492032, -0.10025125704291961, 0.18716566371220233]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_mix_full]": {"psnr": [-1.1484418450212426, -1.2865203280300024, -1.0033411341640022], "de2000": [1.0400580015665906, 0.8698919721991039, 1.2031947504862113]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_lsui]": {"psnr": [-1.0388528559999108, -1.1997492776476975, -0.8619478582516222], "de2000": [1.0004680895416704, 0.824477410347201, 1.1764513078316345]}}
+euvp 492 of 500 {"RefineNet [refine_ft] - BetaNet": {"psnr": [0.9077408606829601, 0.8345144206073346, 0.9794805739406757], "de2000": [-1.2777666223693651, -1.3906754293722463, -1.1632349613449762]}, "RefineNet [refine_d1b] - BetaNet": {"psnr": [1.938975195265119, 1.8040694530426968, 2.068444340619056], "de2000": [-3.881314332959635, -4.174731597787432, -3.605399261996547]}, "RefineNet [refine_mix_full] - BetaNet": {"psnr": [3.938440474266768, 3.730900482636442, 4.158438203483359], "de2000": [-5.603990130568776, -5.977410707066971, -5.235247384292504]}, "RefineNet [refine_lsui] - BetaNet": {"psnr": [1.6991211234672858, 1.609792279227888, 1.7899684803732725], "de2000": [-1.7835956652267013, -1.9183318934790063, -1.6474882846203576]}, "RefineNet [refine_lsui_uieb] - BetaNet": {"psnr": [1.091524311378081, 1.0151642437184005, 1.1656501225539095], "de2000": [-1.3738648042661759, -1.4820358642258598, -1.2612625439601037]}, "RefineNet [refine_ft] - BetaNet + Day 1b": {"psnr": [-1.2009567137525001, -1.3405899226246945, -1.0650000267221402], "de2000": [1.8106689583811584, 1.5359149276914863, 2.109420833745296]}, "RefineNet [refine_d1b] - BetaNet + Day 1b": {"psnr": [-0.16972237917034094, -0.2996829238940878, -0.037816292322055904], "de2000": [-0.7928787522091121, -0.9587314982278095, -0.6334739052320063]}, "RefineNet [refine_mix_full] - BetaNet + Day 1b": {"psnr": [1.829742899831308, 1.6748362208907814, 1.998132918146329], "de2000": [-2.5155545498182517, -2.7815507888499065, -2.24158934583168]}, "RefineNet [refine_lsui] - BetaNet + Day 1b": {"psnr": [-0.4095764509681742, -0.5314262720986495, -0.2880620582472033], "de2000": [1.3048399155238217, 1.0648283300236208, 1.5663232855523892]}, "RefineNet [refine_lsui_uieb] - BetaNet + Day 1b": {"psnr": [-1.017173263057379, -1.1576614173543922, -0.8827479278648973], "de2000": [1.7145707764843472, 1.4431001846292135, 2.000726488318857]}, "RefineNet [refine_d1b] - RefineNet [refine_ft]": {"psnr": [1.0312343345821593, 0.9266234284388151, 1.1319227926300672], "de2000": [-2.60354771059027, -2.8599709926890915, -2.362515483951251]}, "RefineNet [refine_mix_full] - RefineNet [refine_ft]": {"psnr": [3.030699613583808, 2.84695469502332, 3.2257248562246548], "de2000": [-4.326223508199409, -4.674641990443738, -3.9971373842968307]}, "RefineNet [refine_lsui] - RefineNet [refine_ft]": {"psnr": [0.7913802627843259, 0.7226908808229294, 0.8608411871471141], "de2000": [-0.5058290428573362, -0.6059228917025765, -0.40815357082722]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_ft]": {"psnr": [0.18378345069512098, 0.14938699890954926, 0.21821499875080766], "de2000": [-0.09609818189681078, -0.1532900080410159, -0.042474570210771105]}, "RefineNet [refine_mix_full] - RefineNet [refine_d1b]": {"psnr": [1.999465279001649, 1.836531361501094, 2.1762564202126713], "de2000": [-1.7226757976091394, -1.9453987601564124, -1.480513753268088]}, "RefineNet [refine_lsui] - RefineNet [refine_d1b]": {"psnr": [-0.23985407179783325, -0.3421995773365764, -0.1308061661940041], "de2000": [2.097718667732934, 1.8710919872188032, 2.3373228693752974]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_d1b]": {"psnr": [-0.8474508838870382, -0.9527611319465928, -0.7362730678542969], "de2000": [2.5074495286934595, 2.2667858826865896, 2.7613730684147946]}, "RefineNet [refine_lsui] - RefineNet [refine_mix_full]": {"psnr": [-2.2393193507994824, -2.4217300507101487, -2.0657314074939066], "de2000": [3.8203944653420736, 3.488350133866243, 4.1474118385904495]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_mix_full]": {"psnr": [-2.846916162888687, -3.042765515656145, -2.667923404728714], "de2000": [4.230125326302599, 3.908799534248921, 4.576939013105175]}, "RefineNet [refine_lsui_uieb] - RefineNet [refine_lsui]": {"psnr": [-0.6075968120892049, -0.6689265211065208, -0.5489391821453767], "de2000": [0.4097308609605254, 0.32052370891475596, 0.5044465207144568]}}
+S6_STRESS_DONE

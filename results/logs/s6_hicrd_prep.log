@@ -1,0 +1,4 @@
+hicrd: 1700 pairs
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 10598.48it/s]
+saved 1700 /home/smeer/Downloads/MLOE---Group-4/data/hicrd_pairs.npz
+S6_HICRD_PREP_DONE

@@ -1,0 +1,40 @@
+uieb90
+  uieb90 0
+hicrd
+Loading weights:   0%|          | 0/287 [00:00<?, ?it/s]Loading weights: 100%|██████████| 287/287 [00:00<00:00, 3940.30it/s]
+  hicrd 0
+  hicrd 100
+  hicrd 200
+
+== uieb90 (n=90)
+  raw                                uciqe 0.313  cast 24.237  speck 3.788  psnr 16.442  ssim 0.739  de2000 17.512
+  gray-world                         uciqe 0.255  cast 3.134  speck 6.695  psnr 17.721  ssim 0.764  de2000 13.787
+  BetaNet                            uciqe 0.423  cast 16.243  speck 7.610  psnr 17.658  ssim 0.760  de2000 13.673
+  BetaNet + Day 1b                   uciqe 0.379  cast 10.876  speck 6.599  psnr 19.218  ssim 0.826  de2000 12.159
+  RefineNet [refine_d1b]             uciqe 0.385  cast 9.781  speck 6.263  psnr 20.894  ssim 0.850  de2000 10.748
+  RefineNet [refine_mix_d1b]         uciqe 0.381  cast 10.205  speck 6.019  psnr 20.780  ssim 0.853  de2000 10.816
+  TouchUp [day3a_touchup_global]     uciqe 0.368  cast 9.956  speck 6.635  psnr 21.561  ssim 0.881  de2000 9.877
+  TouchUp [day3b_touchup_global_plus_local] uciqe 0.373  cast 9.677  speck 7.021  psnr 21.556  ssim 0.882  de2000 9.880
+
+== hicrd (n=300)
+  raw                                uciqe 0.286  cast 22.587  speck 2.068  psnr 18.471  ssim 0.774  de2000 17.212
+  gray-world                         uciqe 0.153  cast 1.472  speck 3.949  psnr 23.810  ssim 0.870  de2000 9.024
+  BetaNet                            uciqe 0.316  cast 5.926  speck 19.512  psnr 18.877  ssim 0.793  de2000 14.537
+  BetaNet + Day 1b                   uciqe 0.272  cast 5.441  speck 12.152  psnr 21.506  ssim 0.839  de2000 11.551
+  RefineNet [refine_d1b]             uciqe 0.299  cast 9.433  speck 9.000  psnr 17.813  ssim 0.839  de2000 18.793
+  RefineNet [refine_mix_d1b]         uciqe 0.291  cast 7.291  speck 7.846  psnr 17.500  ssim 0.842  de2000 17.673
+  TouchUp [day3a_touchup_global]     uciqe 0.290  cast 3.860  speck 14.931  psnr 19.831  ssim 0.840  de2000 12.391
+  TouchUp [day3b_touchup_global_plus_local] uciqe 0.283  cast 2.805  speck 14.208  psnr 20.482  ssim 0.845  de2000 12.105
+wrote /home/smeer/Downloads/MLOE---Group-4/figures/stress_test_hicrd/full_reference_bars.png
+Traceback (most recent call last):
+  File "/home/smeer/Downloads/MLOE---Group-4/src/stress_test.py", line 393, in <module>
+    main()
+  File "/home/smeer/Downloads/MLOE---Group-4/src/stress_test.py", line 389, in main
+    figures()
+  File "/home/smeer/Downloads/MLOE---Group-4/src/stress_test.py", line 339, in figures
+    bars(summary, NO_REF, [("cast", "colour cast ↓"), ("uciqe", "UCIQE ↑"), ("speck", "red specks ↓")],
+  File "/home/smeer/Downloads/MLOE---Group-4/src/stress_test.py", line 271, in bars
+    systems_ = [m for m, v in summary["sets"][sets[0]].items()
+                                              ~~~~^^^
+IndexError: list index out of range
+S6_HICRD_FAILED
