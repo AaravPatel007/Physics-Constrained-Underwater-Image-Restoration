@@ -1,5 +1,9 @@
 # PROJECT SUMMARY: read this first when resuming
 
+> **Latest status (5 Nov 2026):** the newest results and final verdict are in §3f. `day3a` is the main method, and
+> `refine_all_d1b` is the best RefineNet. Raw datasets were removed from the laptop to free space; see "Data state" in §3f
+> before running anything. No further work is planned for now. The notes below are kept as history.
+
 > **Model names changed 2 Nov 2026:** see `docs/MODELS.md` (`beta_rgbd` = `baseline_v0_40ep`, `beta_rgbd_big` = `baseline_v1_60ep_bigdata`; old names still work as links). Review 2 status: `docs/review2_plan.md` (START HERE box at the top).
 
 > **Review 2 (~5–6 Nov 2026), current work:** two methods. Method 1 (Aarav) = keep improving BetaNet; Method 2
@@ -10,8 +14,8 @@
 > fins still green (red is inside the noise; needs Day 2/3). Day 2 (three retrains: murky water, deep red-starved water, camera flaws) is **done and did not fix the tint**; next: Day 3 (touch-up network on UIEB pairs). Details: `docs/review2_plan.md`.
 
 OE5510 (ML for Ocean Engineering), Group 4. **Intermediate review on 29 Oct 2026** (15-min group talk;
-rubric mapping in `docs/presentation_plan.md`). Last updated: 28 Oct 2026, end of session 3 (longer base training
-and verdict, §3c). Presenter's plain-language guide: `docs/presentation_guide.md`.
+rubric mapping in `docs/presentation_plan.md`). Last updated: 5 Nov 2026, end of session 6 (§3f).
+Presenter's plain-language guide: `docs/presentation_guide.md`.
 
 > **Talk structure (29 Oct):** **PART 1 = BetaNet before fine-tuning** (§1–3, figures fig0–fig14): cover fully.
 > **PART 2 = fine-tuning on real dives** (§3b, figures **fig15–fig20**; fig15 is the first fine-tuning figure):
@@ -187,6 +191,55 @@ also `ft_big_nodive` = the ft_nodive recipe on the new base):
 `refine_ft` stays the RefineNet to use: `refine_mix` wins only on the styles it trained on and is level on unseen sets.
 Scripts now run on CUDA or Apple MPS (`src/device.py`). The original BetaNet weights are not in git; copy
 `results/baseline_v1_60ep_bigdata/best.pt` by hand.
+Session 6 replaces this choice: see §3f.
+
+## 3f. Session 6 (4–5 Nov 2026): Day 1b input, touch-up audit and final stress test (branch `RefineNet`)
+Session 6 fed RefineNet the Day 1b output, audited Aarav's `day3` touch-ups, added HICRD, and compared every system with
+one scorer. Full tables and caveats: `agent_logs.md`, "Session 6" and "Overnight results". Scores come from
+`results/stress_test_final/` and `results/stress_test_bridge/`.
+
+| PSNR / ΔE00, duplicates removed | Trained on | UIEB val (89) | LSUI (355) | EUVP (492) | HICRD (300) | Synthetic (654) |
+|---|---|---|---|---|---|---|
+| Gray-world | Nothing | 17.68 / 13.83 | 19.74 / 13.15 | 19.26 / 16.39 | 23.81 / 9.02 | 15.40 / 17.77 |
+| Day 1b | Nothing (recipe) | 19.21 / 12.19 | 20.23 / 12.43 | 18.07 / 17.27 | 21.51 / 11.55 | 20.32 / 13.76 |
+| `day3a` | UIEB | 21.57 / 9.88 | 20.40 / 11.64 | 17.42 / 17.58 | 19.83 / 12.39 | 20.24 / 13.56 |
+| `refine_all_d1b` | All 4 + synthetic | 20.77 / 10.80 | 22.46 / 10.14 | 20.22 / 14.42 | 27.54 / 6.60 | 23.82 / 9.84 |
+| `refine_only_uieb` | UIEB + synthetic | 20.52 / 11.24 | 20.94 / 11.68 | 18.04 / 16.63 | 17.96 / 18.25 | 23.34 / 10.07 |
+| `refine_d1b_free` | UIEB, no anchor | 21.87 / 10.18 | 20.55 / 11.89 | 17.79 / 17.18 | 16.52 / 17.05 | 18.73 / 16.02 |
+| BridgeNet | NYU synthetic | 15.77 / 18.42 | 17.49 / 15.40 | 18.03 / 15.60 | 22.09 / 11.42 | not run |
+
+References on the four real sets are edited or restored images, not ground truth. Only the synthetic set has true ground truth.
+
+**What we found:**
+- **`day3a` is the main method.** Its result reproduces (21.67 / 9.66 on Aarav's scorer), and it leads on UIEB. It does not beat
+  Day 1b on EUVP (−0.65 dB) or HICRD (−1.68 dB), and gray-world beats every system not trained on HICRD.
+- **`refine_all_d1b` is the best RefineNet, not a general winner.** It trained on the sets where it leads, so those wins over
+  `day3a` are not fair comparisons. `day3a` still leads on UIEB val by 0.80 dB and 0.91 ΔE00.
+- **More datasets mostly help on those same datasets.** Against the UIEB-only control, leaving a set out of training changes
+  PSNR on it by +0.22 (LSUI), +0.33 (EUVP) and −0.12 (HICRD). Including it gives +1.52, +2.18 and +9.58. Do not claim this
+  works on any underwater photo.
+- **On data neither system saw, the result is split.** RefineNet leads on LSUI and EUVP, and `day3a` leads on HICRD.
+- **RefineNet's UIEB gap came from its training setup.** With no anchor or synthetic term, `refine_d1b_free` ties `day3a` on UIEB
+  (+0.30 dB, CI −0.16 to +0.72), then loses on HICRD (−3.31 dB) and synthetic. That robustness is the best argument for `day3a`.
+- **Keeping `day3a` over `day3b` is reasonable.** Four `day3b` runs average 21.88 / 9.50 with a 0.41 dB spread, so seed noise covers
+  the gap. `day3a` has one run, so its own spread is unknown.
+- **BetaNet's β_D does not follow measured HICRD water.** Rank correlation with K_d is −0.31 R, −0.26 G and −0.26 B across 6 sites.
+  This is weak evidence from few sites: the claim is unconfirmed on real water, not proven wrong.
+- **BridgeNet and the no-training hybrid are mixed.** They have the best chart errors (3.10° and 3.34°, two photos) but are far
+  behind on UIEB and LSUI. The hybrid is not a clear upgrade.
+
+**Still unsolved:** blue water stays blue, deep-blue and green failures on C60, turbidity, and β_D not tracking measured water.
+The blind test (`results/blind_test/`) is built, but no votes are recorded, so it has no result.
+
+**Data state (5 Nov):** to free disk space, `data/external/`, `data/uieb/` and `data/seathru/` were deleted, along with the old
+`underwater_workspace` clone and its raw NYU files. The `.npz` files and `data/stress_cache/` stay on the laptop, as do `results/`
+and `figures/`. Before re-running:
+- `src/stress_test.py` and `src/prep_extra_pairs.py` need the raw datasets. Sources are in `docs/external_datasets.md`;
+  its "got" statuses are out of date.
+- `results/logs/dashboard.py` will not start until `data/external/squid/record.json` exists again.
+- C60 needs a password and must not be redistributed. HICRD is a manual download. The FathomNet sample cannot be rebuilt exactly.
+- De-water is now at `../underwater_workspace/external/De-water`. `src/run_classical_seathru.py` expects it at `external/De-water`.
+- `.npz` files and most `.pt` weights are git-ignored, so they are not on GitHub.
 
 ## 4. Files
 ```
@@ -218,9 +271,9 @@ src/eval_synth_big.py       original vs longer run on the synthetic test → res
 src/analyze_old_vs_new.py   paired verdict analysis (4 models) → results/old_vs_new_analysis.json + old_vs_new_verdict.png
 src/fig_loss_curves.py, fig_big.py, fig_uieb_compare.py, fig_seathru_compare.py   figures in figures/3_new_runs/
 results/beta_rgbd_big/      longer run (best = epoch 59); results/ft_big_nodive/ = ft_nodive recipe on it
-data/                       NYU shards (19/157 train + val), nyu_train_big.npz (49 shards), UIEB, Sea-thru frames, preprocessed .npz
+data/                       preprocessed .npz and stress_cache only; raw datasets removed 5 Nov 2026 (§3f)
 results/<run>/best.pt|log.json; results/logs/*.log; run_all.sh (training queue); finalize.sh (evals + figures)
-external/De-water/          friend's repo (read-only reference)
+external/De-water/          friend's repo (read-only reference); now at ../underwater_workspace/external/De-water (§3f)
 ```
 
 ## 5. Reproduce (venv: /home/aarav-patel/wec_rl/.venv, do NOT create another)
